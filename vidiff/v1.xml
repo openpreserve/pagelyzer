@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<XML>
+<Document url="http://www.lip6.fr/" Title="Accueil LIP6" Version="" Pos="WindowWidth||PageRectLeft:955.5 WindowHeight||PageRectTop:851.0 ObjectRectWith:0 ObjectRectHeight:0">
+<Block Ref="Block1" internal_id='0' ID="4458cbaa918d236d85df58cc80fef99b" Pos="WindowWidth||PageRectLeft:-1.0 WindowHeight||PageRectTop:0.0 ObjectRectWidth:955.5 ObjectRectHeight:851.0" Doc="4">
+<Block Ref="Block1-1" internal_id='1' ID="d195426136fe982dae01fd6283f4720f" Pos="WindowWidth||PageRectLeft:54.5 WindowHeight||PageRectTop:0.0 ObjectRectWidth:900.0 ObjectRectHeight:147.0" Doc="8">
+<Links ID="bf717f838c97a428baedc462bf758ad3" IDList="a9bdc9a0352c9120221d861b39ece66b,ed1161e73e4367c27c44056bf9b41dfb,65252bae480d539851b0d7d3ec64f10d,322a3559fc0ce4dd03c7f708378d67e8,74a77a19bca87a49851b599edc6501e1,66bff260fcd3c406ce5a851bff01fdef,9a070e04f246fd0b1128d93ffa2c5d58,11134f012d75aa3c9b6b29d355ff2f4d">
+<link ID="a9bdc9a0352c9120221d861b39ece66b" Name="Présentation" Adr="http://www.lip6.fr/presentation/directeur.php"/><link ID="ed1161e73e4367c27c44056bf9b41dfb" Name="Informations pratiques" Adr="http://www.lip6.fr/informations/comment.php"/><link ID="65252bae480d539851b0d7d3ec64f10d" Name="Recherche" Adr="http://www.lip6.fr/recherche/index.php"/><link ID="322a3559fc0ce4dd03c7f708378d67e8" Name="Production" Adr="http://www.lip6.fr/production/publications.php"/><link ID="74a77a19bca87a49851b599edc6501e1" Name="Partenariat" Adr="http://www.lip6.fr/partenariat/partenariat.php"/><link ID="66bff260fcd3c406ce5a851bff01fdef" Name="Actualité" Adr="http://www.lip6.fr/actualite/information.php"/><link ID="9a070e04f246fd0b1128d93ffa2c5d58" Name="Liens" Adr="http://www.lip6.fr/liens/organise.php"/><link ID="11134f012d75aa3c9b6b29d355ff2f4d" Name="Carte du site" Adr="http://www.lip6.fr/carte/carte.php"/></Links>
+<Imgs ID="30e3ca2060253f36bbd29615884b277c" IDList="61fa376529534b762a18828204e60b91">
+<img ID="61fa376529534b762a18828204e60b91" Name="" Src="http://www.lip6.fr/images/Haut.jpg"/></Imgs>
+<Txts ID="df154e13705753896ccd3bc9eca8f4ec" Txt="
+         Présentation
+      
+         Informations pratiques
+      
+         Recherche
+      
+         Production
+      
+         Partenariat
+      
+         Actualité
+      
+         Liens
+      
+         Carte du site
+      ,
+         Présentation
+      ,
+         Informations pratiques
+      ,
+         Recherche
+      ,
+         Production
+      ,
+         Partenariat
+      ,
+         Actualité
+      ,
+         Liens
+      ,
+         Carte du site
+      "/>
+</Block>
+<Block Ref="Block1-2" internal_id='2' ID="9b7c958913c40e3b138b2e487fb844df" Pos="WindowWidth||PageRectLeft:54.5 WindowHeight||PageRectTop:146.0 ObjectRectWidth:900.0 ObjectRectHeight:660.0" Doc="4">
+<Block Ref="Block1-2-1" internal_id='3' ID="a9e419b68c1f1e1d1ec92e61ac54b19b" Pos="WindowWidth||PageRectLeft:54.5 WindowHeight||PageRectTop:146.0 ObjectRectWidth:900.0 ObjectRectHeight:22.0" Doc="8">
+<Links ID="fbc0e25809a97729f1b85e8bd8782b5c" IDList="e987760e82f6973d757d3999df3bd138,152f5d69e4f4d3ae949aaba162c3cfcf,8dbb9adf1935a0eb682a6ee4964c4a67,f7f356c6a4e061c8d67405f51cf781f2,c5dc9eedeedc19ec591a96ca3ade6578,5266deee82779a30836821f3c1ee77ae,9c1a8300c193106cf2ab929dde4ffd34,56a62091035281d142bb5ee9885afd43,f9547e390b13f841bd7bfaf0179a23d0,9650e3ab3ab09a90a5b2a432a3108bb8,02157bb915ec28f14d59d159ab0d71b9,b5cd6ff250e0db60dc6c7f1e432dc104,543f487080bf833d77912b709f04983e,15694195306d64fa0899e6fead7bb121,8ebb866d511487fc6509c2f84314aaf7,fc10a567f52e7cbdfa4a00fe89c0f632">
+<link ID="e987760e82f6973d757d3999df3bd138" Name="" Adr="http://www.lip6.fr/?LANG=fr"/><link ID="152f5d69e4f4d3ae949aaba162c3cfcf" Name="" Adr="http://www.lip6.fr/?LANG=en"/><link ID="8dbb9adf1935a0eb682a6ee4964c4a67" Name="" Adr="http://www.lip6.fr/?LANG=de"/><link ID="f7f356c6a4e061c8d67405f51cf781f2" Name="" Adr="http://www.lip6.fr/?LANG=it"/><link ID="c5dc9eedeedc19ec591a96ca3ade6578" Name="" Adr="http://www.lip6.fr/?LANG=es"/><link ID="5266deee82779a30836821f3c1ee77ae" Name="" Adr="http://www.lip6.fr/?LANG=pt"/><link ID="9c1a8300c193106cf2ab929dde4ffd34" Name="" Adr="http://www.lip6.fr/?LANG=vi"/><link ID="56a62091035281d142bb5ee9885afd43" Name="" Adr="http://www.lip6.fr/?LANG=ar"/><link ID="f9547e390b13f841bd7bfaf0179a23d0" Name="" Adr="http://www.lip6.fr/?LANG=ru"/><link ID="9650e3ab3ab09a90a5b2a432a3108bb8" Name="" Adr="http://www.lip6.fr/?LANG=cn"/><link ID="02157bb915ec28f14d59d159ab0d71b9" Name="Intranet" Adr="https://intra.lip6.fr/"/><link ID="b5cd6ff250e0db60dc6c7f1e432dc104" Name="À propos de ce site" Adr="http://www.lip6.fr/apropos.php"/><link ID="543f487080bf833d77912b709f04983e" Name="Annuaire" Adr="http://www.lip6.fr/informations/annuaire.php"/><link ID="15694195306d64fa0899e6fead7bb121" Name="Colloquium" Adr="http://colloquium.lip6.fr/"/><link ID="8ebb866d511487fc6509c2f84314aaf7" Name="InfosLIP6" Adr="http://www.lip6.fr/recherche/infos_lip6.php"/><link ID="fc10a567f52e7cbdfa4a00fe89c0f632" Name="WebMail" Adr="https://webmail.lip6.fr/"/></Links>
+<Imgs ID="e462852f113fb9eeb3767562cfed5f4d" IDList="6ccd68d6d734139f1a33170ae60b73c8,c22a264a0b9b10fe3ad85d1158088a90,086ea7c9745007de99fafbe4b9358fee,71c8415fd735eef3a1fd96982325fa8f,3b86a62d05813cebc6bcffec0670e0e5,eb769ccc7266e31914bd959a05cbe4db,a2ebac91a26594c2b63a727e6f16e60d,76a087194aca7a6b7a1004da72ffd74e,8420afac42fde5758e021fad2f475977,2fd36700d755e05c1d6becfafbcd9108">
+<img ID="6ccd68d6d734139f1a33170ae60b73c8" Name="Accéder à la version Française" Src="http://www.lip6.fr/lang/fr.png"/><img ID="c22a264a0b9b10fe3ad85d1158088a90" Name="Access English version" Src="http://www.lip6.fr/lang/gb.png"/><img ID="086ea7c9745007de99fafbe4b9358fee" Name="Access German version" Src="http://www.lip6.fr/lang/de.png"/><img ID="71c8415fd735eef3a1fd96982325fa8f" Name="Accesso alla versione italiana" Src="http://www.lip6.fr/lang/it.png"/><img ID="3b86a62d05813cebc6bcffec0670e0e5" Name="Acceder a la versión española" Src="http://www.lip6.fr/lang/es.png"/><img ID="eb769ccc7266e31914bd959a05cbe4db" Name="Acesso a versão brasileira" Src="http://www.lip6.fr/lang/br.png"/><img ID="a2ebac91a26594c2b63a727e6f16e60d" Name="Truy cập vào phiên bản Vietnamien" Src="http://www.lip6.fr/lang/vn.png"/><img ID="76a087194aca7a6b7a1004da72ffd74e" Name="" Src="http://www.lip6.fr/lang/ar.png"/><img ID="8420afac42fde5758e021fad2f475977" Name="" Src="http://www.lip6.fr/lang/ru.png"/><img ID="2fd36700d755e05c1d6becfafbcd9108" Name="Access Chinese version" Src="http://www.lip6.fr/lang/cn.png"/></Imgs>
+<Txts ID="8bf3e18aeaef2acbe41c29381884e547" Txt="
+         Intranet
+      
+         À propos de ce site
+      
+         Annuaire
+      
+         Colloquium
+      
+         InfosLIP6
+      
+         WebMail
+      ,
+         Intranet
+      ,
+         À propos de ce site
+      ,
+         Annuaire
+      ,
+         Colloquium
+      ,
+         InfosLIP6
+      ,
+         WebMail
+      "/>
+</Block>
+<Block Ref="Block1-2-2" internal_id='4' ID="b8e63bf9c65bb676a5580da0c2f88832" Pos="WindowWidth||PageRectLeft:54.5 WindowHeight||PageRectTop:168.0 ObjectRectWidth:900.0 ObjectRectHeight:22.0" Doc="8">
+<Links ID="2efd88f1d672e5e10d4d0abab0f74ff7" IDList="11b677bcb1bdd0c8409576ac355113b0">
+<link ID="11b677bcb1bdd0c8409576ac355113b0" Name="LIP6" Adr="http://www.lip6.fr/"/></Links>
+<Imgs ID="ee87c535f545ac4b9e704f27e9a49b84" IDList="eb2599d15d9d8cc242585f8785340c9d">
+<img ID="eb2599d15d9d8cc242585f8785340c9d" Name="Navigation" Src="http://www.lip6.fr/./images/Glyphes.png"/></Imgs>
+<Txts ID="73cff38cc89c60601c9f0d16dbaef790" Txt="
+        LIP6
+     "/>
+</Block>
+<Block Ref="Block1-2-3" internal_id='5' ID="9bdef1cdd3d99952d1ab1697d7c13f38" Pos="WindowWidth||PageRectLeft:54.5 WindowHeight||PageRectTop:190.0 ObjectRectWidth:900.0 ObjectRectHeight:616.0" Doc="8">
+<Links ID="d30539a1da1d6e2a77162839a1f6725b" IDList="edd96a2adea1e4bd72a2329310e62945,f4b8e263245309ffb7fe771614ed1ed6,6de0beeb8a6dd0f48af2acb88c2973b0,29efffea21a90791fa872e2de27868bc,c1445fd45a47c017b2a475207ce6a8b3,a9f6cc35374ba07a441f955352322c68,f428d3d745650993667e6e17498ed06d,6f8033bc8e65390b5a3aa57924128e5d,5f14bea7a52dd051b19a0a319e79e868,b343b9c67d5b878509bf7beb4402d7d5,4e29f2dce322ceb23e6f4ff61c7fe71c,ae1375fb495c60f2e417655a43d64f88">
+<link ID="edd96a2adea1e4bd72a2329310e62945" Name="" Adr="http://www.lip6.fr/actualite/information-fiche.php?ident=OL58"/><link ID="f4b8e263245309ffb7fe771614ed1ed6" Name="" Adr="http://www.lip6.fr/actualite/information-fiche.php?ident=OL54"/><link ID="6de0beeb8a6dd0f48af2acb88c2973b0" Name="Calcul Scientifique" Adr="http://www.lip6.fr/recherche/team.php?id=100"/><link ID="29efffea21a90791fa872e2de27868bc" Name="DEcision, Systèmes Intelligents Recherche opérationnelle" Adr="http://www.lip6.fr/recherche/team.php?id=300"/><link ID="c1445fd45a47c017b2a475207ce6a8b3" Name="Données et Apprentissage Artificiel" Adr="http://www.lip6.fr/recherche/team.php?id=500"/><link ID="a9f6cc35374ba07a441f955352322c68" Name="Réseaux et Systèmes Répartis" Adr="http://www.lip6.fr/recherche/team.php?id=700"/><link ID="f428d3d745650993667e6e17498ed06d" Name="Systèmes Embarqués sur Puce" Adr="http://www.lip6.fr/recherche/team.php?id=900"/><link ID="6f8033bc8e65390b5a3aa57924128e5d" Name="En savoir plus..." Adr="http://www.lip6.fr/presentation/directeur.php"/><link ID="5f14bea7a52dd051b19a0a319e79e868" Name="" Adr="http://www.lip6.fr/actualite/rss_news.php"/><link ID="b343b9c67d5b878509bf7beb4402d7d5" Name="Global Seismic Monitoring: A Bayesian Approach" Adr="http://www.lip6.fr/liens/organise-fiche.php?ident=O495"/><link ID="4e29f2dce322ceb23e6f4ff61c7fe71c" Name="2012 IEEE 1
+         
+            st
+         
+           Int. Conference on Cloud Networking" Adr="http://www.lip6.fr/liens/organise-fiche.php?ident=O467"/><link ID="ae1375fb495c60f2e417655a43d64f88" Name="Toutes les actualités..." Adr="http://www.lip6.fr/actualite/information.php"/></Links>
+<Imgs ID="690cc7bc9ee3fb18606df45134503172" IDList="616545ea86e0028481de41b7af78c48b,9bd345f662fd4757ccc02a09013120e1">
+<img ID="616545ea86e0028481de41b7af78c48b" Name="Chaire Blaise Pascal" Src="http://www.lip6.fr/actualite/images/OL54.png"/><img ID="9bd345f662fd4757ccc02a09013120e1" Name="RSS" Src="http://www.lip6.fr/images/rss.gif"/></Imgs>
+<Txts ID="f71be20ae5045e126de9cdcd302eec08" Txt="
+         
+        
+           Colloquium d'informatique
+        
+           Le génie mathématique, du théorème des quatre couleurs à la classification des groupes.
+        
+           Georges Gonthier
+         
+           27 novembre 2012 - 18h00
+        
+           Chaire Blaise Pascal
+        
+       Le LIP6 est un laboratoire de recherche en informatique sous tutelle de l'Université Pierre &amp;amp; Marie Curie, et du CNRS (UMR 7606). Avec 191 chercheurs permanents et 257 doctorants, il est l'un des principaux laboratoires de recherche en informatique en France.
+     
+       Le laboratoire couvre un large spectre d'activités regroupées au sein de 5 départements :
+    
+        Département «
+      
+         Calcul Scientifique
+      
+        » : Calcul symbolique, systèmes algébriques, erreur d'arrondi, validation numérique, calcul sur grille, parallélisme, reconstruction d'images, séquence 3D, modélisation, génération aléatoire.
+     
+        Département «
+      
+         DEcision, Systèmes Intelligents Recherche opérationnelle
+      
+        » : Ordonnancement et optimisation combinatoire, aide à la décision, décision multi-critère et collective, multi-agents, environnements interactifs pour l'apprentissage humain.
+     
+        Département «
+      
+         Données et Apprentissage Artificiel
+      
+        » : Apprentissage automatique, statistique et symbolique, bases de données distribuées, recherche d'information texte et multimédia, interfaces et modélisation utilisateur, web sémantique.
+     
+        Département «
+      
+         Réseaux et Systèmes Répartis
+      
+        » : Ingénierie des modèles, modélisation et vérification des systèmes répartis, interopérabilité, adaptabilité, intergiciels, pair-à-pair, large échelle, qualité de service, mobilité, métrologie, réseaux sans fil, internet du futur, réseaux de capteurs, graphes, algorithmique, complex networks, graphes dynamiques.
+     
+        Département «
+      
+         Systèmes Embarqués sur Puce
+      
+        » : Systèmes sur puces, conception de systèmes multiprocesseurs intégrés, systèmes d'exploitation embarqués, conception de composant numériques analogiques, vérification, compilation.
+     
+       En savoir plus...
+    
+        Le LIP6 organise
+     
+          22/11/2012
+       
+         -
+       
+           Global Seismic Monitoring: A Bayesian Approach
+        
+         Horaire :
+       
+          10h
+       
+         Intervenant(s) :
+       
+          Stuart Russell* (University of California, Berkeley et LIP6, UPMC)
+       
+          28/11/2012
+       
+         -
+       
+           2012 IEEE 1
+         
+            st
+         
+           Int. Conference on Cloud Networking
+        
+        Toutes les actualités...
+     
+       wadm (at) lip6.fr
+    ,
+         
+        
+           Colloquium d'informatique
+        
+           Le génie mathématique, du théorème des quatre couleurs à la classification des groupes.
+        
+           Georges Gonthier
+         
+           27 novembre 2012 - 18h00
+        
+           Chaire Blaise Pascal
+        ,
+         
+        
+           Colloquium d'informatique
+        
+           Le génie mathématique, du théorème des quatre couleurs à la classification des groupes.
+        
+           Georges Gonthier
+         
+           27 novembre 2012 - 18h00
+        ,
+         ,
+           Colloquium d'informatique
+        ,
+           Le génie mathématique, du théorème des quatre couleurs à la classification des groupes.
+        ,
+           Georges Gonthier
+         
+           27 novembre 2012 - 18h00
+        ,
+           Georges Gonthier
+         ,
+           27 novembre 2012 - 18h00
+        ,
+           Chaire Blaise Pascal
+        ,
+       Le LIP6 est un laboratoire de recherche en informatique sous tutelle de l'Université Pierre &amp;amp; Marie Curie, et du CNRS (UMR 7606). Avec 191 chercheurs permanents et 257 doctorants, il est l'un des principaux laboratoires de recherche en informatique en France.
+     
+       Le laboratoire couvre un large spectre d'activités regroupées au sein de 5 départements :
+    ,
+       Le LIP6 est un laboratoire de recherche en informatique sous tutelle de l'Université Pierre &amp;amp; Marie Curie, et du CNRS (UMR 7606). Avec 191 chercheurs permanents et 257 doctorants, il est l'un des principaux laboratoires de recherche en informatique en France.
+     ,
+       Le laboratoire couvre un large spectre d'activités regroupées au sein de 5 départements :
+    ,
+        Département «
+      
+         Calcul Scientifique
+      
+        » : Calcul symbolique, systèmes algébriques, erreur d'arrondi, validation numérique, calcul sur grille, parallélisme, reconstruction d'images, séquence 3D, modélisation, génération aléatoire.
+     
+        Département «
+      
+         DEcision, Systèmes Intelligents Recherche opérationnelle
+      
+        » : Ordonnancement et optimisation combinatoire, aide à la décision, décision multi-critère et collective, multi-agents, environnements interactifs pour l'apprentissage humain.
+     
+        Département «
+      
+         Données et Apprentissage Artificiel
+      
+        » : Apprentissage automatique, statistique et symbolique, bases de données distribuées, recherche d'information texte et multimédia, interfaces et modélisation utilisateur, web sémantique.
+     
+        Département «
+      
+         Réseaux et Systèmes Répartis
+      
+        » : Ingénierie des modèles, modélisation et vérification des systèmes répartis, interopérabilité, adaptabilité, intergiciels, pair-à-pair, large échelle, qualité de service, mobilité, métrologie, réseaux sans fil, internet du futur, réseaux de capteurs, graphes, algorithmique, complex networks, graphes dynamiques.
+     
+        Département «
+      
+         Systèmes Embarqués sur Puce
+      
+        » : Systèmes sur puces, conception de systèmes multiprocesseurs intégrés, systèmes d'exploitation embarqués, conception de composant numériques analogiques, vérification, compilation.
+     ,
+        Département «
+      
+         Calcul Scientifique
+      
+        » : Calcul symbolique, systèmes algébriques, erreur d'arrondi, validation numérique, calcul sur grille, parallélisme, reconstruction d'images, séquence 3D, modélisation, génération aléatoire.
+     ,
+        Département «
+      ,
+         Calcul Scientifique
+      ,
+        » : Calcul symbolique, systèmes algébriques, erreur d'arrondi, validation numérique, calcul sur grille, parallélisme, reconstruction d'images, séquence 3D, modélisation, génération aléatoire.
+     ,
+        Département «
+      
+         DEcision, Systèmes Intelligents Recherche opérationnelle
+      
+        » : Ordonnancement et optimisation combinatoire, aide à la décision, décision multi-critère et collective, multi-agents, environnements interactifs pour l'apprentissage humain.
+     ,
+         DEcision, Systèmes Intelligents Recherche opérationnelle
+      ,
+        » : Ordonnancement et optimisation combinatoire, aide à la décision, décision multi-critère et collective, multi-agents, environnements interactifs pour l'apprentissage humain.
+     ,
+        Département «
+      
+         Données et Apprentissage Artificiel
+      
+        » : Apprentissage automatique, statistique et symbolique, bases de données distribuées, recherche d'information texte et multimédia, interfaces et modélisation utilisateur, web sémantique.
+     ,
+         Données et Apprentissage Artificiel
+      ,
+        » : Apprentissage automatique, statistique et symbolique, bases de données distribuées, recherche d'information texte et multimédia, interfaces et modélisation utilisateur, web sémantique.
+     ,
+        Département «
+      
+         Réseaux et Systèmes Répartis
+      
+        » : Ingénierie des modèles, modélisation et vérification des systèmes répartis, interopérabilité, adaptabilité, intergiciels, pair-à-pair, large échelle, qualité de service, mobilité, métrologie, réseaux sans fil, internet du futur, réseaux de capteurs, graphes, algorithmique, complex networks, graphes dynamiques.
+     ,
+         Réseaux et Systèmes Répartis
+      ,
+        » : Ingénierie des modèles, modélisation et vérification des systèmes répartis, interopérabilité, adaptabilité, intergiciels, pair-à-pair, large échelle, qualité de service, mobilité, métrologie, réseaux sans fil, internet du futur, réseaux de capteurs, graphes, algorithmique, complex networks, graphes dynamiques.
+     ,
+        Département «
+      
+         Systèmes Embarqués sur Puce
+      
+        » : Systèmes sur puces, conception de systèmes multiprocesseurs intégrés, systèmes d'exploitation embarqués, conception de composant numériques analogiques, vérification, compilation.
+     ,
+         Systèmes Embarqués sur Puce
+      ,
+        » : Systèmes sur puces, conception de systèmes multiprocesseurs intégrés, systèmes d'exploitation embarqués, conception de composant numériques analogiques, vérification, compilation.
+     ,
+       En savoir plus...
+    ,
+        Le LIP6 organise
+     
+          22/11/2012
+       
+         -
+       
+           Global Seismic Monitoring: A Bayesian Approach
+        
+         Horaire :
+       
+          10h
+       
+         Intervenant(s) :
+       
+          Stuart Russell* (University of California, Berkeley et LIP6, UPMC)
+       
+          28/11/2012
+       
+         -
+       
+           2012 IEEE 1
+         
+            st
+         
+           Int. Conference on Cloud Networking
+        
+        Toutes les actualités...
+     ,
+        Le LIP6 organise
+     ,
+          22/11/2012
+       
+         -
+       
+           Global Seismic Monitoring: A Bayesian Approach
+        
+         Horaire :
+       
+          10h
+       
+         Intervenant(s) :
+       
+          Stuart Russell* (University of California, Berkeley et LIP6, UPMC)
+       
+          28/11/2012
+       
+         -
+       
+           2012 IEEE 1
+         
+            st
+         
+           Int. Conference on Cloud Networking
+        ,
+          22/11/2012
+       
+         -
+       
+           Global Seismic Monitoring: A Bayesian Approach
+        
+         Horaire :
+       
+          10h
+       
+         Intervenant(s) :
+       
+          Stuart Russell* (University of California, Berkeley et LIP6, UPMC)
+       ,
+          22/11/2012
+       ,
+         -
+       ,
+           Global Seismic Monitoring: A Bayesian Approach
+        ,
+         Horaire :
+       ,
+          10h
+       ,
+         Intervenant(s) :
+       ,
+          Stuart Russell* (University of California, Berkeley et LIP6, UPMC)
+       ,
+          28/11/2012
+       
+         -
+       
+           2012 IEEE 1
+         
+            st
+         
+           Int. Conference on Cloud Networking
+        ,
+          28/11/2012
+       ,
+           2012 IEEE 1
+         
+            st
+         
+           Int. Conference on Cloud Networking
+        ,
+           2012 IEEE 1
+         ,
+            st
+         ,
+           Int. Conference on Cloud Networking
+        ,
+        Toutes les actualités...
+     ,
+       wadm (at) lip6.fr
+    "/>
+</Block>
+</Block>
+<Block Ref="Block1-3" internal_id='6' ID="7e8b47ccf5df1fb6a76aa6858918812b" Pos="WindowWidth||PageRectLeft:54.5 WindowHeight||PageRectTop:805.7999877929688 ObjectRectWidth:900.0 ObjectRectHeight:43.0" Doc="8">
+<Links ID="95dcfa932270d2012dad09d7dcf632c5" IDList="3edf59bbf5b50edc6dd1b0ae2d3531c3">
+<link ID="3edf59bbf5b50edc6dd1b0ae2d3531c3" Name="Mentions légales" Adr="http://www.lip6.fr/legal"/></Links>
+<Imgs ID="d41d8cd98f00b204e9800998ecf8427e" IDList="">
+</Imgs>
+<Txts ID="d7004e1489fece4457cd3baa6ef9b9be" Txt="
+        Mentions légales
+     "/>
+</Block>
+</Block>
+</Document>
+</XML>
