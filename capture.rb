@@ -46,7 +46,7 @@ def save_image(filename,content)
 end
 
 def usage
-	puts "USAGE: ruby capture.rb --url=URL --js_files_url=BASE_URL [--output-folder=FOLDER] [--browser=BROWSER_CODE] [--thumbnail]"
+	puts "USAGE: ruby capture.rb --url=URL [--js_files_url=BASE_URL] [--output-folder=FOLDER] [--browser=BROWSER_CODE] [--thumbnail] [--help]"
 end
 
 def help
@@ -58,9 +58,13 @@ def help
 	puts " - iexploreproxy"
 	puts " - safariproxy"
 	puts " - opera"
-	puts
+	puts ""
+	puts "Note: the browser should be installed in your machine to work with selenium webdriver"
+ 	puts ""
 	puts "The JS Files must be available for the browser, i.e.: http://myserver/path/myfolder"
 	puts "Inside 'myfolder' should be all the js files provided. Do not include last slash '/'"
+	puts "As defualt a fixed location is provided but if you would like to change it can edit "
+	puts "the source code or pass the command line parameter with yours"
 	
 end
 
@@ -72,7 +76,7 @@ end
 url = ""
 browser = "firefox"
 output_folder = "out"
-js_files_url = ""
+js_files_url = "http://www-ia.lip6.fr/~sanojaa/SCAPE"
 remote = false
 thumb = false
 
@@ -94,6 +98,16 @@ ARGV.each do |op|
 	end
 end
 
+if browser.nil? or browser.strip == "" 
+	puts "ERROR: browser not specified"
+	exit
+end
+
+if url.nil? or url.strip  == ""
+	puts "ERROR: url not given"
+	exit
+end
+
 host = "#{URI.parse(url).scheme}://#{URI.parse(url).host}:#{URI.parse(url).port}"
 path = URI.parse(url).path
 
@@ -103,9 +117,13 @@ else
 	local_browsers = [browser]
 end
 
-if js_files_url.nil? or js_files_url==""
+if js_files_url.nil? or js_files_url.strip==""
 	puts "ERROR: parameter --js-files-url not included. Sorry, can't continue"
 	exit
+end
+
+unless File.exist?('out')
+	FileUtils.mkdir 'out'
 end
 
 jquerify = <<FIN
@@ -146,11 +164,13 @@ callback(func_dump());
 FIN
 
 local_browsers.each do |browser|
-	puts "Processing local #{browser}"
+	puts "Processing local #{browser} with #{url}"
 	begin
 		driver = Selenium::WebDriver.for browser.to_sym
 	rescue
 		puts "Connection not possible with #{browser.to_sym}"
+		puts "WARNING: Is #{browser} installed in your system?"
+		help
 		next
 	end
 	driver.manage.timeouts.implicit_wait = 20
@@ -173,6 +193,7 @@ local_browsers.each do |browser|
 		driver.execute_async_script(jquerify)
 		driver.execute_async_script(jsuid)
 		driver.execute_async_script(jsdump)
+		#sleep 120000
 		loaded = false
 		k=0
 		while !loaded and k<10
@@ -181,10 +202,10 @@ local_browsers.each do |browser|
 				loaded = (r==true);
 				puts "Waiting page to finish loading..."
 				sleep(0.5)
-			rescue
-				puts "Still waiting page to finish loading..."
-				sleep(2)
-			end
+			 rescue
+				 puts "Still waiting page to finish loading..."
+				 sleep(2)
+			 end
 			k+=1
 		end
 		src = driver.execute_script("return dump_start();")
