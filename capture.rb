@@ -34,7 +34,7 @@
 #
 
 require 'selenium-webdriver'
-require 'selenium/client'
+#require 'selenium/client'
 require 'base64'
 require 'uri'
 require 'fileutils'
@@ -61,10 +61,7 @@ def help
 	puts ""
 	puts "Note: the browser should be installed in your machine to work with selenium webdriver"
  	puts ""
-	puts "The JS Files must be available for the browser, i.e.: http://myserver/path/myfolder"
-	puts "Inside 'myfolder' should be all the js files provided. Do not include last slash '/'"
-	puts "As defualt a fixed location is provided but if you would like to change it can edit "
-	puts "the source code or pass the command line parameter with yours"
+	puts "The output is sent to 'out' folder. If it doesn't exists it will be created"
 	
 end
 
@@ -117,45 +114,23 @@ else
 	local_browsers = [browser]
 end
 
-if js_files_url.nil? or js_files_url.strip==""
-	puts "ERROR: parameter --js-files-url not included. Sorry, can't continue"
-	exit
-end
+# this is no longer needed
+#~ if js_files_url.nil? or js_files_url.strip==""
+	#~ puts "ERROR: parameter --js-files-url not included. Sorry, can't continue"
+	#~ exit
+#~ end
 
 unless File.exist?('out')
 	FileUtils.mkdir 'out'
 end
 
-jquerify = <<FIN
-function func_jquery() {
-	var script_url = '#{js_files_url}/jquery.min.js';
-	var script = document.createElement('script');
-	script.src = script_url;
-	document.getElementsByTagName('head')[0].appendChild(script);
-}
+dump = File.open("js/decorate_mini.js").read
 
-var callback = arguments[arguments.length - 1];
-callback(func_jquery());
-FIN
-
-jsuid = <<FIN
-function func_uid() {
-	var script_url = "#{js_files_url}/jquery.unique-element-id.js";
-	var script = document.createElement('script');
-	script.src = script_url;
-	document.getElementsByTagName('head')[0].appendChild(script);
-}
-
-var callback = arguments[arguments.length - 1];
-callback(func_uid());
-FIN
-
-
-jsdump = <<FIN
+load_dump = <<FIN
 function func_dump() {
-	var script_url = "#{js_files_url}/dump.js";
 	var script = document.createElement('script');
-	script.src = script_url;
+	script.type = "text/javascript"
+	script.appendChild(document.createTextNode("#{dump}"));
 	document.getElementsByTagName('head')[0].appendChild(script);
 }
 
@@ -177,8 +152,9 @@ local_browsers.each do |browser|
 	driver.navigate.to host+path
 	src =""
 	status="OK"
-	driver.execute_script %Q{window.resizeTo(1024,768);}	
-	filename = url.gsub('/','_')
+	driver.manage.window.resize_to(1024,768)
+	filename = url.gsub('/','_').gsub('http:','').gsub('__','_')
+	File.open("#{output_folder}/#{browser}_#{filename}_original.html",'w') {|f| f.write driver.page_source}
 	driver.save_screenshot("#{output_folder}/#{browser}_#{filename}.png")
 	if thumb
 		begin
@@ -190,9 +166,7 @@ local_browsers.each do |browser|
 		end
 	end
 	begin
-		driver.execute_async_script(jquerify)
-		driver.execute_async_script(jsuid)
-		driver.execute_async_script(jsdump)
+		driver.execute_async_script(load_dump)
 		#sleep 120000
 		loaded = false
 		k=0
@@ -200,10 +174,10 @@ local_browsers.each do |browser|
 			begin
 				r = driver.execute_script("return dump_loaded!=undefined;")
 				loaded = (r==true);
-				puts "Waiting page to finish loading..."
+				puts "Waiting page to finish loading... (Timeout in #{10-k})"
 				sleep(0.5)
 			 rescue
-				 puts "Still waiting page to finish loading..."
+				 puts "Something maybe is wrong, but still waiting page to finish loading... (Timeout in #{10-k})"
 				 sleep(2)
 			 end
 			k+=1
@@ -211,14 +185,13 @@ local_browsers.each do |browser|
 		src = driver.execute_script("return dump_start();")
 	rescue Exception=>e
 		puts "#{browser} failed!"
-		puts "The JavaScript files could not be injected into page"
+		puts "The JavaScript could not be injected into page"
 		status="FAIL"
 		#puts e.backtrace
 		driver.close
 		next
 	end
 	
-	File.open("#{output_folder}/#{browser}_#{filename}_original.html",'w') {|f| f.write driver.page_source}
 	File.open("#{output_folder}/#{browser}_#{filename}_decorated.html",'w') {|f| f.write src}
 	driver.close
 	puts "done."

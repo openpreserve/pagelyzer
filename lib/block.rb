@@ -538,6 +538,9 @@ class Block
 				
 				@text.delete(nil)
 				@text.delete('')
+				@text.collect! {|t| 
+					t.gsub(/(?<!\n)\n(?!\n)/,' ').gsub(/^$\n/,'').gsub(/\s+/,' ').strip
+				}
 				txt = escape_html(@text.join(","))
 				src += "<Txts ID=\"#{crypt(txt)}\" Txt=\"#{txt}\"/>\n"
 			else
