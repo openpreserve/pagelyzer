@@ -38,7 +38,7 @@
 require 'open3'
 
 def usage
-	puts "USAGE: ruby change_detection.rb --url1=URL --url2=URL --js-files-url=BASE_URL [--doc=(1..10)] [--output-folder=FOLDER] [--browser=BROWSER_CODE] [--verbose]"
+	puts "USAGE: ruby change_detection.rb --url1=URL --url2=URL [--doc=(1..10)] [--output-folder=FOLDER] [--browser=BROWSER_CODE] [--verbose]"
 end
 
 def help
@@ -53,9 +53,6 @@ def help
 	puts " - safariproxy"
 	puts " - opera"
 	puts
-	puts "The JS Files must be available for the browser, i.e.: http://myserver/path/myfolder"
-	puts "Inside 'myfolder' should be all the js files provided. Do not include last slash '/'"
-	
 end
 
 if ARGV==[]
@@ -76,17 +73,18 @@ webshot2 = ""
 verbose = false
 
 ARGV.each do |op|
-	url1 = op.strip.split("=")[1] if op.strip.split("=")[0] == "--url1"
-	url2 = op.strip.split("=")[1] if op.strip.split("=")[0] == "--url2"
-	browser = op.strip.split("=")[1] if op.strip.split("=")[0] == "--browser"
-	output_folder = op.strip.split("=")[1] if op.strip.split("=")[0] == "--output-folder"
-	js_files_url = op.strip.split("=")[1] if op.strip.split("=")[0] == "--js-files-url"
-	doc = op.strip.split("=")[1] if op.strip.split("=")[0] == "--doc"
-	webshot1 = op.strip.split("=")[1] if op.strip.split("=")[0] == "--webshot1"
-	webshot2 = op.strip.split("=")[1] if op.strip.split("=")[0] == "--webshot2"
-	type = op.strip.split("=")[1] if op.strip.split("=")[0] == "--type"
-	verbose = true if op.strip.split("=")[0] == "--verbose"
-	thumb = true if op.strip.split("=")[0] == "--thumbnail"
+	sop = op.strip.split("=")
+	url1 			= sop[1] if sop[0] == "--url1"
+	url2 			= sop[1] if sop[0] == "--url2"
+	browser 		= sop[1] if sop[0] == "--browser"
+	output_folder 	= sop[1] if sop[0] == "--output-folder"
+	js_files_url 	= sop[1] if sop[0] == "--js-files-url"
+	doc 			= sop[1] if sop[0] == "--doc"
+	webshot1 		= sop[1] if sop[0] == "--webshot1"
+	webshot2 		= sop[1] if sop[0] == "--webshot2"
+	type 			= sop[1] if sop[0] == "--type"
+	verbose 		= true if op.strip.split("=")[0] == "--verbose"
+	thumb 			= true if op.strip.split("=")[0] == "--thumbnail"
 	
 	if op[0..6] == "--help"
 		help
@@ -99,21 +97,22 @@ ARGV.each do |op|
 	end
 end
 
-if js_files_url.nil? or js_files_url==""
-	puts "ERROR: parameter --js-files-url not included. Sorry, can't continue"
-	exit
-end
+#No longer needed
+#~ if js_files_url.nil? or js_files_url==""
+	#~ puts "ERROR: parameter --js-files-url not included. Sorry, can't continue"
+	#~ exit
+#~ end
 
 filename1 = url1.gsub('/','_').gsub('http://','')
 filename2 = url2.gsub('/','_').gsub('http://','')
 
 cmd = []
 
-cmd.push "ruby capture.rb --url=#{url1} --js-files-url=#{js_files_url} #{"--thumbnail" if thumb} --browser=#{browser} --output-folder=#{output_folder}"
-cmd.push "ruby capture.rb --url=#{url2} --js-files-url=#{js_files_url} #{"--thumbnail" if thumb} --browser=#{browser} --output-folder=#{output_folder}"
+cmd.push "ruby capture.rb --url=#{url1} #{"--thumbnail" if thumb} --browser=#{browser} --output-folder=#{output_folder}"
+cmd.push "ruby capture.rb --url=#{url2} #{"--thumbnail" if thumb} --browser=#{browser} --output-folder=#{output_folder}"
 
-cmd.push "ruby pageanalyzer.rb --source-file=#{output_folder}/#{browser}_#{filename1}_decorated.html --pdoc=#{doc} --output-file=#{output_folder}/#{browser}_#{filename1}.xml"
-cmd.push "ruby pageanalyzer.rb --source-file=#{output_folder}/#{browser}_#{filename2}_decorated.html --pdoc=#{doc} --output-file=#{output_folder}/#{browser}_#{filename2}.xml"
+cmd.push "ruby pageanalyzer.rb --decorated-file=#{output_folder}/#{browser}_#{filename1}_decorated.html --pdoc=#{doc} --output-file=#{output_folder}/#{browser}_#{filename1}.xml"
+cmd.push "ruby pageanalyzer.rb --decorated-file=#{output_folder}/#{browser}_#{filename2}_decorated.html --pdoc=#{doc} --output-file=#{output_folder}/#{browser}_#{filename2}.xml"
 
 cmd.push "cp #{output_folder}/#{browser}_#{filename1}.xml vidiff/v1.xml"
 cmd.push "cp #{output_folder}/#{browser}_#{filename2}.xml vidiff/v2.xml"

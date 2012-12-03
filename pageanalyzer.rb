@@ -30,8 +30,8 @@
 # ISSUES:
 # 1. For commandline parameters is better to escape them, e.g:
 #
-# pageanalyzer.rb --input-file=/my/path with/spaces -- only processes /my/path !
-# pageanalyzer.rb --input-file=/my/path\ with/spaces -- results in correct behaviour
+# pageanalyzer.rb --decorated-file=/my/path with/spaces -- only processes /my/path !
+# pageanalyzer.rb --decorated-file=/my/path\ with/spaces -- results in correct behaviour
 #
 
 Encoding.default_external = Encoding::UTF_8
@@ -224,7 +224,7 @@ end
 
 def usage
 	#puts "USAGE:\nruby pageanalyzer.rb --source-file=FILE [--output-file=FILE] [--pdoc=(0..10)] [--interactive=(yes|no)] [--use-database=(yes|no) [--db-job-id=INT] [--db-browser-id=INT]] [--debug=(yes|no)] [--help]"
-	puts "USAGE: ruby pageanalyzer.rb --source-file=FILE [--output-file=FILE] [--pdoc=(0..10)] [--version] [--help]"
+	puts "USAGE: ruby pageanalyzer.rb --decorated-file=FILE [--output-file=FILE] [--pdoc=(0..10)] [--version] [--help]"
 end
 
 #main
@@ -236,19 +236,20 @@ if ARGV == []
 end
 
 ARGV.each do |op|
-	$source_file = op.split("=")[1] if op[0..13] == "--source-file="
-	$output_file = op.split("=")[1] if op[0..13] == "--output-file="
-	$pdoc = op.split("=")[1].to_i if op[0..6] == "--pdoc="
-	$interactive = op.split("=")[1]=='yes' if op[0..13]  == "--interactive="
-	$use_database = op.split("=")[1]=='yes' if op[0..14] == "--use-database="
-	$job_id = op.split("=")[1].to_i if op[0..11] == "--db-job-id="
-	$browser_id = op.split("=")[1].to_i if op[0..15] == "--db-browser-id="
-	$debug = op.split("=")[1]=='yes' if op[0..7] == "--debug="
-	if op[0..6] == "--help"
+	sop = op.split("=")
+	$source_file 	= sop[1] 		if sop[0] == "--decorated-file"
+	$output_file 	= sop[1] 		if sop[0] == "--output-file"
+	$pdoc 			= sop[1].to_i 	if sop[0] == "--pdoc"
+	$interactive 	= sop[1]=='yes' if sop[0] == "--interactive"
+	$use_database 	= sop[1]=='yes' if sop[0] == "--use-database"
+	$job_id 		= sop[1].to_i 	if sop[0] == "--db-job-id"
+	$browser_id 	= sop[1].to_i 	if sop[0] == "--db-browser-id"
+	$debug 			= sop[1]=='yes' if sop[0] == "--debug"
+	if sop[0] == "--help"
 		help
 		exit
 	end
-	if op[0..9] == "--version"
+	if sop[0] == "--version"
 		puts "SCAPE Webpage Analyzer. Version 0.9"
 		puts "UPMC - LIP6"
 		exit
