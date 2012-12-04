@@ -160,7 +160,7 @@ local_browsers.each do |browser|
 	driver.save_screenshot("#{output_folder}/#{browser}_#{filename}.png")
 	if thumb
 		begin
-			system("cp \"#{output_folder}/#{browser}_#{filename}.png\" \"#{output_folder}/#{browser}_#{filename}.png\"")
+			system("cp \"#{output_folder}/#{browser}_#{filename}.png\" \"#{output_folder}/#{browser}_#{filename}_thumb.png\"")
 			system("convert \"#{output_folder}/#{browser}_#{filename}_thumb.png\" -crop 1024x768+0+0 \"#{output_folder}/#{browser}_#{filename}_thumb.png\"")
 			system("convert \"#{output_folder}/#{browser}_#{filename}_thumb.png\" -filter Lanczos 300x225 \"#{output_folder}/#{browser}_#{filename}_thumb.png\"")
 		rescue Exception=>e
