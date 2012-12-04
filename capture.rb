@@ -78,11 +78,12 @@ remote = false
 thumb = false
 
 ARGV.each do |op|
-	url = op.strip.split("=")[1] if op[0..5] == "--url="
-	browser = op.strip.split("=")[1] if op[0..9] == "--browser="
-	output_folder = op.strip.split("=")[1] if op[0..15] == "--output-folder="
-	js_files_url = op.strip.split("=")[1] if op[0..14] == "--js-files-url="
-	thumb = true if op[0..12] == "--thumbnail="
+	sop = op.strip.split("=")
+	url 			= sop[1] if sop[0] == "--url"
+	browser 		= sop[1] if sop[0] == "--browser"
+	output_folder 	= sop[1] if sop[0] == "--output-folder"
+	js_files_url 	= sop[1] if sop[0] == "--js-files-url"
+	thumb = true 	if sop[0] == "--thumbnail"
 	
 	if op[0..6] == "--help"
 		help
