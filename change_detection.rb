@@ -103,8 +103,8 @@ end
 	#~ exit
 #~ end
 
-filename1 = url1.gsub('/','_').gsub('http://','')
-filename2 = url2.gsub('/','_').gsub('http://','')
+filename1 = url1.gsub('/','_').gsub('http:','').gsub('__','_')
+filename2 = url2.gsub('/','_').gsub('http:','').gsub('__','_')
 
 cmd = []
 
@@ -133,15 +133,24 @@ else
 	cmd.push "cd marcalizer; java -jar marcalizer.jar -snapshot1 view1.png -snapshot2 view2.png"
 end
 
-stdin=nil
-stdout=nil
-stderr=nil
+output = []
 cmd.each do |c|
-	unless verbose
-		stdin,stdout,stderr = Open3.popen3(c)
-		#puts stderr.readlines
+	r = `#{c}`
+	output.push r.split("\n")
+	puts r if verbose
+end
+unless verbose
+	unless output.nil?
+		unless output.last.nil? 
+			if output.last.is_a? Array
+				puts output.last.last
+			else
+				puts output.last
+			end
+		else
+			puts output
+		end
 	else
-		system(c)
+		puts "No output produced"
 	end
 end
-puts stdout.readlines.last unless verbose
