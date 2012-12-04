@@ -139,12 +139,13 @@ callback(func_dump());
 FIN
 
 local_browsers.each do |browser|
-	puts "Processing local #{browser} with #{url}"
+	puts "Capturing #{url} with local #{browser}"
 	begin
 		driver = Selenium::WebDriver.for browser.to_sym
 	rescue
 		puts "Connection not possible with #{browser.to_sym}"
 		puts "WARNING: Is #{browser} installed in your system?"
+		puts "Try with the --browser=your_installed_browser"
 		help
 		next
 	end
