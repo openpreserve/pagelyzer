@@ -60,7 +60,9 @@ function walk(pNode,nLevel) {
 		}
 		
 		if ((pNode.tagName!='TBODY') && (pNode.tagName!='IMG') && (pNode.tagName!='CANVAS') && (pNode.id!='fxdriver-screenshot-canvas')) {
-			src += tab + '<'+pNode.tagName+' '+ attr+'>';
+			if (!textNode(pNode) && (pNode.tagName)) {
+				src += tab + '<'+pNode.tagName+' '+ attr+'>';
+			}
 		}
 		if (pNode.tagName=='IMG') {
 			src += tab + \"<\"+pNode.tagName+\" \"+ attr +\" src='\"+pNode.src+\"' alt='\"+pNode.alt+\"'/>\";
@@ -75,7 +77,9 @@ function walk(pNode,nLevel) {
 		}
 		
 		if ((pNode.tagName!='TBODY') && (pNode.tagName!='IMG') && (pNode.tagName!='CANVAS') && (pNode.id!='fxdriver-screenshot-canvas')) {
-			src += tab + '</'+pNode.tagName+'>';
+			if (!textNode(pNode) && (pNode.tagName)) {
+				src += tab + '</'+pNode.tagName+'>';
+			}
 		}
 	return(src);
 }
