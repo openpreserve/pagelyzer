@@ -1,0 +1,239 @@
+#! /usr/bin/ruby1.9.1
+#-*- mode: ruby; encoding: utf-8 -*-
+# Andrés Sanoja
+# UPMC - LIP6
+#
+#
+#
+# pagelyzer_changedetection
+#
+# Requires: Ruby 1.9.1+ (1.8.x versions won't work), rubygems 1.3.7+
+#
+# Copyright (C) 2011, 2012 Andrés Sanoja, Université Pierre et Marie Curie -
+# Laboratoire d'informatique de Paris 6 (LIP6)
+#
+# Contributors: Stephane Gançarski - LIP6
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# This script covers all the change detection process. It is integrated with
+# the pageanalyzer, marcalizer and VIDIFF tools.
+#
+# Default Degree of Coherence (DOC=6)
+#
+
+require 'open3'
+require 'fileutils'
+
+def usage
+	puts "USAGE: pagelyzer_changedetection --url1=URL --url2=URL [--doc=(1..10)] [--output-folder=FOLDER] [--browser=BROWSER_CODE | --browser1=BROWSER_CODE --browser2=BROWSER_CODE] [--verbose] --type=[hybrid|visual]"
+end
+
+def help
+	usage
+	puts "This tool aims integrates all the change detection and segmentation tools"
+	puts "Help:"
+	puts " type = hybrid | webshot\n"
+	puts "Browsers code are the same as defined in selenium. For instance:"
+	puts " - firefox"
+	puts " - chrome"
+	puts " - iexploreproxy"
+	puts " - safariproxy"
+	puts " - opera"
+	puts
+end
+
+def config(key,current_folder)
+	conf = File.open("#{current_folder}/conf/pagelyzer.conf",'r')
+	value = ""
+	conf.each_line do |line|
+		pair = line.split(":")
+		if pair[0].strip == key
+			value = pair[1].strip
+			break
+		end
+	end
+	return value
+end
+
+def remove_slash(path)
+	path.sub(/(\/)+$/,'')
+end
+
+def verify_installation_of_marcalizer(path)
+	state = true
+	state = File.exists? path+"/marcalizer.jar"
+	state
+end
+
+def verify_data_folder(path)
+	state = true
+	state = File.exists? path+"/js/decorate_mini.js"
+	state
+end
+
+if ARGV==[]
+	usage
+	exit 
+end
+
+current_folder = File.expand_path(File.dirname(File.dirname(__FILE__)))
+output_folder = "#{current_folder}/out"
+marcalizer_folder = "#{current_folder}/ext/marcalizer"
+
+#~ config not needed in standalone configuration
+#~ marcalizer_folder = config('marcalizer',current_folder) #get marcalizer custom folder
+#~ marcalizer_folder = remove_slash(marcalizer_folder)
+#~ data_folder = config('data-folder',current_folder) #get the data folder usually /usr/share/pagelyzer-ruby
+#~ data_folder = remove_slash(data_folder)
+
+unless verify_installation_of_marcalizer(marcalizer_folder)
+	puts "ERROR: marcalizer tool is not available in #{marcalizer_folder}. Please edit /etc/pagelyzer.conf file and point it to the folder where marcalizer tool is"
+	exit
+else
+	puts "Using marcalizer.jar found in #{marcalizer_folder}"
+end
+
+#~ unless verify_data_folder(data_folder)
+	#~ puts "ERROR: necessary files are not found in #{data_folder}. Please edit #{current_folder}/conf/pagelyzer.conf file and point it to the folder where data files are"
+	#~ exit
+#~ end
+
+url1 =""
+url2=""
+browser = ""
+js_files_url =""
+thumb=false
+type = 'visual'
+doc=6
+browser1 = ""
+browser2 = ""
+verbose = false
+general_browser = false
+
+unless File.exists? output_folder
+	FileUtils.mkdir_p output_folder
+end
+
+ARGV.each do |op|
+	sop = op.strip.split("=")
+	url1 			= sop[1] if sop[0] == "--url1"
+	url2 			= sop[1] if sop[0] == "--url2"
+	if sop[0] == "--browser"
+		browser 		= sop[1] 
+		general_browser = true
+	end
+	output_folder 	= sop[1] if sop[0] == "--output-folder"
+	js_files_url 	= sop[1] if sop[0] == "--js-files-url"
+	doc 			= sop[1] if sop[0] == "--doc"
+	browser1 		= sop[1] if sop[0] == "--browser1"
+	browser2 		= sop[1] if sop[0] == "--browser2"
+	browser 		= sop[1] if sop[0] == "--browser"
+	type 			= sop[1] if sop[0] == "--type"
+	verbose 		= true if sop[0] == "--verbose"
+	thumb 			= true if sop[0] == "--thumbnail"
+
+	if op[0..6] == "--help"
+		help
+		exit
+	end
+	if op[0..9] == "--version"
+		puts "SCAPE Change Detection. Version 0.9"
+		puts "UPMC - LIP6"
+		exit
+	end
+end
+
+if url1.nil? or url2.nil? or url1.empty? or url2.empty?
+	puts "ERROR: there were problems with url1 or url2. Verify that they are included as parameters and has the http:// before"
+	exit
+end
+
+if browser.empty? 
+	if browser1.empty? and browser2.empty?
+		puts "Notice: using 'firefox' as default browser"
+		browser1="firefox"
+		browser2="firefox"
+	else
+		browser1 = "firefox" if browser1.empty?
+		browser2 = "firefox" if browser2.empty?
+	end
+else
+	puts "Notice: using '#{browser}' as default browser"
+	browser1 = browser # if browser1.empty?
+	browser2 = browser # if browser2.empty?
+end
+
+filename1 = url1.gsub('http://','').gsub('/','_').gsub('.','_')
+filename2 = url2.gsub('http://','').gsub('/','_').gsub('.','_')
+
+cmd = []
+
+# "Pagelyzer: capturing #{url1}"
+cmd.push "#{current_folder}/bin/pagelyzer_capture --url=#{url1} #{"--thumbnail" if thumb} --browser=#{browser1} --output-folder=#{output_folder}"
+if url1!=url2 or browser1!=browser2
+	puts "Pagelyzer: capturing #{url2}"
+	cmd.push "#{current_folder}/bin/pagelyzer_capture --url=#{url2} #{"--thumbnail" if thumb} --browser=#{browser2} --output-folder=#{output_folder}"
+end
+
+#we need to clean up marcalizer enviroment to work properly
+# "Pagelyzer: cleaning up marcalizer enviroment" 
+tail = " > /dev/null 2>&1 "
+#tail = ""
+opts = "-iv"
+opts = "-r"
+cmd.push "rm #{opts} #{marcalizer_folder}/in/images/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/in/xml/1/*.xml #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/in/xml/1/*.XML #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/in/xml/1/delta/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/bow/top/sift/100/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/bow/top/sift/200/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/bow/top/color/100/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/bow/top/color/200/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/bow/webpage/color/100/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/bow/webpage/color/200/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/bow/webpage/sift/100/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/bow/webpage/sift/200/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/hsv/top/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/hsv/webpage/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/sift/top/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/sift/webpage/1/* #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/M.txt #{tail}"
+cmd.push "rm #{opts} #{marcalizer_folder}/out/images/1/* #{tail}"
+
+cmd.push "cp #{output_folder}/#{browser1}_#{filename1}.png #{output_folder}/snapshot1.png"
+cmd.push "cp #{output_folder}/#{browser2}_#{filename2}.png #{output_folder}/snapshot2.png"
+
+if type == 'hybrid'
+	#segmenting web pages
+	puts "Pagelyzer: analyzing web pages" #if verbose
+	cmd.push "#{current_folder}/bin/pagelyzer_analyzer --decorated-file=#{output_folder}/#{browser1}_#{filename1}_decorated.html --pdoc=#{doc} --output-file=#{output_folder}/1_#{browser1}_#{filename1}.xml"
+	cmd.push "#{current_folder}/bin/pagelyzer_analyzer --decorated-file=#{output_folder}/#{browser2}_#{filename2}_decorated.html --pdoc=#{doc} --output-file=#{output_folder}/2_#{browser2}_#{filename2}.xml"
+
+	#calculating structural changements ViDIFF
+	cmd.push "java -jar #{current_folder}/lib/DIFF.jar #{output_folder}/1_#{browser1}_#{filename1}.xml #{output_folder}/2_#{browser2}_#{filename2}.xml #{marcalizer_folder}/in/xml/1/delta/"
+		
+	cmd.push "cp #{output_folder}/1_#{browser1}_#{filename1}.xml #{marcalizer_folder}/in/xml/1/snapshot1.xml"
+	cmd.push "cp #{output_folder}/2_#{browser2}_#{filename2}.xml #{marcalizer_folder}/in/xml/1/snapshot2.xml"
+	
+	# "Pagelyzer: marcalizing with structural information"  #if verbose
+	cmd.push "cd #{marcalizer_folder}; java -jar marcalizer.jar -snapshot1 #{output_folder}/snapshot1.png -snapshot2 #{output_folder}/snapshot2.png -vips1 in/xml/ -vips2 #{marcalizer_folder}/in/xml/ -vidiff #{marcalizer_folder}/in/xml/"
+else
+	# "Pagelyzer: marcalizing" if verbose
+	cmd.push "cd #{marcalizer_folder}; java -jar marcalizer.jar -snapshot1 #{output_folder}/snapshot1.png -snapshot2 #{output_folder}/snapshot2.png"
+end
+
+cmd.each do |c|
+	system c
+end
