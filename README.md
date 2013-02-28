@@ -6,12 +6,12 @@ Suite of tools for detecting changes in web pages and their rendering
 
 Authors
 -------
-Andrés Sanoja <andres.sanoja@lip6.fr>
-Zeynep Pehlivan <zeynep.pehlivan@lip6.fr>
-Myriam Ben Saad <myriam.ben-saad@lip6.fr>
-Marc Law <marc.law@lip6.fr>
-Carlos Sureda <carlos.sureda@lip6.fr>
-Jordi Creus <jordi.creus@lip6.fr>
+* Andrés Sanoja <andres.sanoja@lip6.fr>
+* Zeynep Pehlivan <zeynep.pehlivan@lip6.fr>
+* Myriam Ben Saad <myriam.ben-saad@lip6.fr>
+* Marc Law <marc.law@lip6.fr>
+* Carlos Sureda <carlos.sureda@lip6.fr>
+* Jordi Creus <jordi.creus@lip6.fr>
 
 LIP6 / Université Pierre et Marie Curie
 
@@ -28,7 +28,7 @@ by the European Union under FP7 ICT-2009.4.1 (Grant Agreement number 270137).
 The tools pagelyzer: analyzer, changedetection and capture are written in Ruby 1.9.1. In the other
 hand for the change detection process others tools are used that are written in Java, therefore this
 should be taken into account in the enviroment verification process. The development enviroment
-was Linux Ubuntu 11.40, the package description is done following its repositories, but in theory
+was Linux Ubuntu, the package description is done following its repositories, but in theory
 should be compatible with Debian repos.
 
 ## Ruby Installation
@@ -36,14 +36,17 @@ We need to be carefull with this step because the software won't work on the 1.8
 sudo apt-get install ruby1.9.1-full
 After that we should check that both, ruby and rubygems, are been properly installed.
 
-`$ ruby -v
-1.9.2p290 (2011-07-09 revision 32533) [i686-linux]
+`$ ruby -v`
+`1.9.2p290 (2011-07-09 revision 32533) [i686-linux]`
+
 It is enough to match the version number. Any doubts there are several tutorials to do this [1]. Now
 we check the rubygems package manager:
-$ gem -v
-1.3.7`
+
+`$ gem -v`
+`1.3.7`
 
 # Instalation of Pagelyzer 0.9
+
 Pagelyzer is a set of components that can be used (most of them) independently, but in the case of
 change detection they are all used as a chain for simplicity of integration.
 The software can be downloaded from:
@@ -71,9 +74,9 @@ parameters.
 ## Installing Dependencies
 After the language and the package manager are properly configured and installed, we may proceed
 to install the dependencies:
-`$ sudo apt-get install libxslt-dev libxml2-dev
-$ sudo apt-get install openjdk-7-jdk
-$ sudo apt-get install imagemagick`
+`$ sudo apt-get install libxslt-dev libxml2-dev`
+`$ sudo apt-get install openjdk-7-jdk`
+`$ sudo apt-get install imagemagick`
 
 Note1: Installing the selenium-webdriver may cause some warnings in text encoding that should be
 fine, in almost all the cases.
@@ -85,9 +88,11 @@ other tools and for future optimization of change detection process .
 We need to install also some ruby libraries needed by the software. This step can be done simple
 using Bundler gem. To install it:
 
-`$ sudo gem install bundler
+`$ sudo gem install bundler`
+
 Get into the project folder and type:
-$ bundle` 
+
+`$ bundle` 
 
 When finished we will have all dependencies installed.
 
@@ -120,6 +125,40 @@ Browsers code are the same as defined in selenium. For instance:
 * iexploreproxy
 * safariproxy
 * opera
+
+# Examples
+
+1. Capture a web page with default parameters:
+
+`$ ./pagelyzer capture --url=http://www.google.fr`
+
+It will copy to $HOME_FOLDER/pagelyzer the outcome. If the folder does not exist it will be created. It will create three files: 
+
+* firefox_www_google_fr_original.html (rendered version of the web page)
+* firefox_www_google_fr_decorated.html (rendered version with visual cues included for segmentation algorithm)
+* firefox_www_google_fr.png (webshot of the page)
+
+2. Change detection on two pages with default parameters
+
+`$ ./pagelyzer changedetection --url1=http://www.host.com/page1.html --url2=http://www.host.com/page2.html`
+
+3. Change detection on two pages with hybrid method
+
+`$ ./pagelyzer changedetection --url1=http://www.host.com/page1.html --url2=http://www.host.com/page2.html --type=hybrid`
+
+will create the same files as above for each url and also the ViXMLs and delta file.
+
+4. Change detection with different browsers
+
+`$ ./pagelyzer changedetection --url1=http://www.host.com/page1.html --url2=http://www.host.com/page2.html --browser1=firefox --browser2=chrome`
+
+url1 will be evaluated with browser1 and url2 with browser2
+
+4. Change detection with different browsers (the most common case)
+
+`$ ./pagelyzer changedetection --url1=http://www.host.com/page1.html --url2=http://www.host.com/page2.html --browser=firefox`
+
+same browser for both urls
 
 ## Remarks:
 * Firefox driver is the default to selenium. For installing other browsers can reference to [2],
