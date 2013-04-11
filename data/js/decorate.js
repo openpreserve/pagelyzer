@@ -28,7 +28,7 @@ function css(pNode,prop) {
 	return(document.defaultView.getComputedStyle(pNode,null).getPropertyValue(prop));
 }
 
-function walk(pNode,nLevel) {
+function walk(pNode,nLevel,pretext) {
 	var tab = '';
 	var src = '';
 	var aux = '';
@@ -39,10 +39,10 @@ function walk(pNode,nLevel) {
 	} else {
 		attr += \" id='element-\"+(cont)+\"'\";
 	}
-	attr += \" left='\"+new String(pNode.offsetLeft)+\"'\";
-	attr += \" top='\"+new String(pNode.offsetTop)+\"'\";
-	attr += \" width='\"+(new String(pNode.offsetLeft+pNode.offsetWidth))+\"'\";
-	attr += \" height='\"+(new String(pNode.offsetTop+pNode.offsetHeight))+\"'\";
+	attr += \" elem_left='\"+(new String(getElemLeft(pNode)))+\"'\";
+	attr += \" elem_top='\"+(new String(getElemTop(pNode)))+\"'\";
+	attr += \" elem_width='\"+(new String(getElemLeft(pNode)+getElemWidth(pNode)))+\"'\";
+	attr += \" elem_height='\"+(new String(getElemTop(pNode)+getElemHeight(pNode)))+\"'\";
 	if (pNode.style) {
 		attr += \" margin_left='\"+(new String(css(pNode,'margin-left')))+\"'\";
 		attr += \" background_color='\"+(new String(css(pNode,'background-color')))+\"'\";
@@ -62,6 +62,9 @@ function walk(pNode,nLevel) {
 		if ((pNode.tagName!='TBODY') && (pNode.tagName!='IMG') && (pNode.tagName!='CANVAS') && (pNode.id!='fxdriver-screenshot-canvas')) {
 			if (!textNode(pNode) && (pNode.tagName)) {
 				src += tab + '<'+pNode.tagName+' '+ attr+'>';
+				if (nLevel==0) {
+					src += pretext;
+				}
 			}
 		}
 		if (pNode.tagName=='IMG') {
@@ -72,7 +75,7 @@ function walk(pNode,nLevel) {
 			if (textNode(pNode.childNodes[i])) {
 				src += pNode.childNodes[i].data.trim();
 			} else {
-				src += walk(pNode.childNodes[i],nLevel+1);
+				src += walk(pNode.childNodes[i],nLevel+1,'');
 			}
 		}
 		
@@ -84,13 +87,47 @@ function walk(pNode,nLevel) {
 	return(src);
 }
 
+function getDocHeight() {
+	var d = document;
+	return Math.max(
+		Math.max(d.body.scrollHeight, d.documentElement.scrollHeight),
+		Math.max(d.body.offsetHeight, d.documentElement.offsetHeight),
+		Math.max(d.body.clientHeight, d.documentElement.clientHeight)
+		);
+}
+
+function getDocWidth() {
+	var d = document;
+	return Math.max(
+		Math.max(d.body.scrollWidth, d.documentElement.scrollWidth),
+		Math.max(d.body.offsetWidth, d.documentElement.offsetWidth),
+		Math.max(d.body.clientWidth, d.documentElement.clientWidth)
+		);
+}
+
+function getElemLeft(element) {
+	return element.offsetLeft;
+}
+
+function getElemTop(element) {
+	return element.offsetTop;
+}
+
+function getElemWidth(element) {
+	return element.offsetWidth;
+}
+
+function getElemHeight(element) {
+	return element.offsetHeight;
+}
+
 function dump_start() {
 	var src = '';
 	var now = new Date();
 	var then = now.getFullYear()+'-'+now.getMonth()+'-'+now.getDay()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-	src += '<!-- window: {width : '+ window.innerWidth + ', height: ' + window.innerHeight+'} -->';
-	src += '<!-- document: {width: '+ document.documentElement.offsetWidth + ', height: ' + document.documentElement.offsetHeight+'} -->';
-	src += '<!-- page: {url: '+  location.href + ', date: '+ then + '} -->';
-	src += walk(document.getElementsByTagName('html')[0],0);
+	pre = '<!-- window: {width : '+ window.innerWidth + ', height: ' + window.innerHeight+'}, ';
+	pre += 'document: {width: '+ getDocWidth() + ', height: ' + getDocHeight()+'}, ';
+	pre += 'page: {url: \"'+  location.href + '\", date: \"'+ then + '\"} -->';
+	src += walk(document.getElementsByTagName('html')[0],0,pre);
 	return(src);
 }

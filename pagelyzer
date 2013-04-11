@@ -37,6 +37,7 @@ def version
 end
 
 def help
+	version
 	usage
 	puts "This tool aims to be an interface to pagelyzer suite"
 	puts "Help:"
@@ -44,12 +45,13 @@ def help
 	puts " - capture"
 	puts " - analyzer"
 	puts " - change_detection"
+	puts " - train"
 	puts ""
 	puts "To have information on the usage of each command use: ./pagelyzer <command> --help "
 	puts
 end
 
-app_folder = File.expand_path(File.dirname(File.dirname(__FILE__)))
+app_folder = File.expand_path(File.dirname(__FILE__))
 parameters = ARGV.to_a
 command = parameters[0]
 
@@ -62,8 +64,7 @@ showhelp = (parameters.collect {|x| x=='--help'}.include? true)
 showversion = (parameters.collect {|x| x=='--version'}.include? true)
 
 if showhelp and (parameters.size==1)
-	version
-	usage
+	help
 	exit
 end
 
@@ -72,7 +73,7 @@ if showversion and (parameters.size==1)
 	exit
 end
 
-unless ["capture","analyzer","changedetection","showxml"].include? command
+unless ["capture","analyzer","changedetection","test","view","train"].include? command
 	puts "Command #{command} not recognized"
 	usage
 	exit

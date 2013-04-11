@@ -3,7 +3,7 @@
 # Andrés Sanoja
 # UPMC - LIP6
 #
-# heuristic.rb
+# block.rb
 #
 # Requires: Ruby 1.9.1+ (1.8.x versions won't work) and rubygems 1.3.7+
 #
@@ -138,11 +138,15 @@ class Block
 			x=[]
 			y=[]
 			@candidates.each do |n|
-				y.push [n['top'].to_f,n['height'].to_f]
-				x.push [n['left'].to_f,n['width'].to_f]
+				#p "#{n['elem_left']} #{n['elem_top']} #{n['elem_width']} #{n['elem_height']} #{n['background_color']} #{n.xpath}"
+				y.push [n['elem_top'].to_f,n['elem_height'].to_f]
+				x.push [n['elem_left'].to_f,n['elem_width'].to_f]
 			end
 			x.flatten!
 			y.flatten!
+			
+			
+			
 			unless x==[] or y==[]
 				@path.push Point.new(x.min,y.min)
 				@path.push Point.new(x.min,y.max)
@@ -154,10 +158,10 @@ class Block
 			y = @path.collect {|p| p.y}
 		end
 		
-		@min_x = x.min
-		@max_x = x.max
-		@min_y = y.min
-		@max_y = y.max
+		 @min_x = x.min
+		 @max_x = x.max
+		 @min_y = y.min
+		 @max_y = y.max
 	end
 
 	def minimum_distance_to?(block)
@@ -505,6 +509,9 @@ class Block
 	def to_xml
 		src = ""
 		src+= "<Block Ref=\"Block#{sid}\" internal_id='#{@id}' ID=\"$BLOCK_ID$\" Pos=\"WindowWidth||PageRectLeft:#{@min_x} WindowHeight||PageRectTop:#{@min_y} ObjectRectWidth:#{@max_x - @min_x} ObjectRectHeight:#{@max_y - @min_y}\" Doc=\"#{@doc}\">\n"
+			src += "<Paths>\n"
+			src += @candidates.collect {|c| "<path>#{c.path},#{c["elem_left"]},#{c["elem_top"]},#{c["elem_width"]},#{c["elem_height"]},#{c["id"]},#{c["uid"]}</path>\n"}.join("")
+			src += "</Paths>\n"
 			if @children.empty?
 				src += "<Links ID=\"$LINKS_ID$\" IDList=\"$ID_LIST_LINKS$\">\n"
 				lid = []

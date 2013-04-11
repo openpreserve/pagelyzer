@@ -1,0 +1,27 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    childprocess (0.3.9)
+      ffi (~> 1.0, >= 1.0.11)
+    ffi (1.4.0)
+    hpricot (0.8.6)
+    multi_json (1.6.1)
+    nokogiri (1.5.5)
+    rubyzip (0.9.9)
+    sanitize (2.0.3)
+      nokogiri (>= 1.4.4, < 1.6)
+    selenium-webdriver (2.29.0)
+      childprocess (>= 0.2.5)
+      multi_json (~> 1.0)
+      rubyzip
+      websocket (~> 1.0.4)
+    websocket (1.0.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  hpricot (= 0.8.6)
+  nokogiri (= 1.5.5)
+  sanitize (= 2.0.3)
+  selenium-webdriver (= 2.29.0)

@@ -1,27 +1,66 @@
 require 'cgi'
 require 'digest/md5'
 
-def load(source_file,job_id)
-	if !File.exists? "#{source_file}"
-		puts "File '#{source_file}' not found"
-		exit
-	else
-		doc = open("#{source_file}") { |f| Hpricot(f, :fixup_tags => true) }
+class String
+	def numeric?
+		Float(self) != nil rescue false
 	end
-	data = YAML.load(doc.at("//comment()[1]").content)
-	$window.width = data['window']['width'].to_i
-	$window.height = data['window']['height'].to_i
-	
-	data = YAML.load(doc.at("//comment()[2]").content) 
-	$document.width = data['document']['width'].to_i
-	$document.height = data['document']['height'].to_i
-	$document_area = doc.at('//body')['width'].to_f * doc.at('//body')['height'].to_f
-	
-	data = YAML.load(doc.at("//comment()[3]").content) 
-	$document.url = data['page']['url'].to_s
-	$document.date = data['page']['date'].to_s
-	$document.title = doc.at('//title').inner_text.strip
+end
 
+def load(source_file,type)
+	if $type==:file
+		if !File.exists? "#{source_file}"
+			puts "File '#{source_file}' not found"
+			exit
+		else
+			doc = Nokogiri::HTML(File.open(source_file))
+		end
+	else
+		doc = Nokogiri::HTML(source_file)
+	end
+	
+	unless doc.at("//comment()[1]").content.nil?
+		metadata = doc.at("//comment()[1]").content.gsub("}","").gsub("{","").split(",").collect {|x| x.split(":")}
+		$window.width = metadata[0][2].to_i
+		$window.height = metadata[1][1].to_i
+		$document.width = metadata[2][2].to_i
+		$document.height = metadata[3][1].to_i
+		$document.url = metadata[4][2..(metadata[4].size-1)].join.strip
+		$document.date = metadata[5][1..(metadata[5].size-1)].join.strip
+	else
+		$window.width = 0
+		$window.height = 0
+		$document.width = 0
+		$document.height = 0
+		$document.url = ""
+		$document.date = ""
+		puts "warning: empty metadata in input file"
+	end
+	$document.title  = doc.at('//title').inner_text.strip
+	
+	
+	#~ data = YAML.load(doc.at("//comment()[1]").content)
+	#~ $window.width = data['window']['width'].to_i
+	#~ $window.height = data['window']['height'].to_i
+	#~ 
+	#~ data = YAML.load(doc.at("//comment()[2]").content) 
+	#~ #it is giving problems with screenshot geometry and puts all left and top to 0
+	#~ $document.width = data['document']['width'].to_i
+	#~ $document.height = data['document']['height'].to_i
+	#~ 
+	#~ #it is givin problems with screenshot geometry and puts all left and top to 0
+	$document.width = doc.at("html")["elem_width"].to_i
+	$document.height = doc.at("html")["elem_height"].to_i 
+	#~ 
+	$document_area = $document.width.to_f * $document.height.to_f
+	
+	#~ data = YAML.load(doc.at("//comment()[3]").content) 
+	#~ $document.url = data['page']['url'].to_s
+	#~ $document.date = data['page']['date'].to_s
+	#~ $document.title = doc.at('//title').inner_text.strip
+	
+	
+	
 	#cleaning up whitespaces and useless tags
 	doc.search("//text()").each do |t|
 		begin
@@ -70,11 +109,13 @@ def rgb2hex(color)
 end
 
 def text?(node)
-	node.is_a? Hpricot::Text or node.is_a? String
+	#node.is_a? Hpricot::Text or node.is_a? String
+	node.text?
 end
 
 def malformed?(node)
-	node.is_a? Hpricot::BogusETag
+	#node.is_a? Hpricot::BogusETag
+	false
 end
 
 def invalid?(node)
@@ -99,7 +140,6 @@ def valid?(node)
 	elsif node.children.nil?
 		return visible?(node)
 	else
-		#puts "#{node.name} #{node.children.size} #{count_reduce(node.children,"visible?")}"
 		vis = 0
 		if visible?(node)
 			vis=0
@@ -114,15 +154,14 @@ end
 def visible?(node)
 	ret = false
 	unless malformed?(node)
-		unless text?(node)
-			#puts "#{node.name} #{node.attributes['visibility']} #{node.attributes['display']}"
-			if node.attributes['display']=="none" or node.attributes['visibility']!="visible"
+		if !text?(node) and !node.is_a? Nokogiri::XML::DTD
+			if node['display']=="none" or node['visibility']!="visible"
 				ret = false
 			else
-				ret = (node.attributes['width'].to_i > 0) or (node.attributes['height'].to_i > 0)
+				ret = (node.attributes['elem_width'].value.to_i > 0) or (node.attributes['elem_height'].value.to_i > 0)
 			end
 		else
-			ret = true
+			ret = false
 		end
 	end
 	#puts ret
@@ -241,8 +280,8 @@ end
 def area(node)
 	unless malformed? node
 		unless text? node
-			b = node['width'].to_f - node['left'].to_f
-			h = node['height'].to_f - node['top'].to_f
+			b = node['elem_width'].to_f - node['elem_left'].to_f
+			h = node['elem_height'].to_f - node['elem_top'].to_f
 			#puts "compute de area of #{node.xpath} (#{node['left']},#{node['top']},#{node['width']},#{node['height']}) b=#{b}, h=#{h} b*h=#{b*h}px^2" if ['93','94'].include? node['uid']
 			return(b * h)
 		else
@@ -286,30 +325,36 @@ def classify(node)
 end
 
 def fix_children_dimension(element)
+	#puts "FIX: #{element.name} #{element.children.nil?} #{text?(element)} #{malformed?(element)}"
 	unless element.children.nil? or text?(element) or malformed?(element)
 		element.children.each do |c|
+			#puts "#{c.name} #{text?(c)} #{malformed?(c)} #{!valid?(c)}"
 			unless text?(c) or malformed?(c) or !valid?(c)
 				fix_children_dimension(c)
 				#puts "verify element #{c.name} (#{c['id']})"
-				if c['left'].to_f<element['left'].to_f or c['left'].to_f<0
+				if c['elem_left'].to_f<element['elem_left'].to_f or c['elem_left'].to_f<0
 					#puts "#{c.name}(#{c['id']}):#{c['left']} is far at left than #{element.name}(#{element['uid']}):#{element['left']}"
-					element['left'] = c['left']
+					c['elem_left'] = element['elem_left']
 				end
-				if c['top'].to_f<element['top'].to_f or c['top'].to_f<0
+				if c['elem_top'].to_f<element['elem_top'].to_f or c['elem_top'].to_f<0
 					#puts "#{c.name}(#{c['id']}):#{c['top']} is far at right than #{element.name}(#{element['uid']}):#{element['top']}"
-					element['top'] = c['top']
+					c['elem_top'] = element['elem_top']
 				end
-				if c['width'].to_f>element['width'].to_f
+				if c['elem_width'].to_f>element['elem_width'].to_f
 					#puts "#{c.name}(#{c['id']}):#{c['width']} is wider than #{element.name}(#{element['uid']}):#{element['width']}"
-					if c['width'].to_i > $document.width
-						c['width'] = element['width']
+					if element['elem_width'].to_i > $document.width
+						c['elem_width'] = $document.width.to_s
 					else
-						element['width'] = c['width'] 
+						unless element['elem_width'].nil?
+							c['elem_width'] = element['elem_width'] 
+						end
 					end
 				end
-				if c['height'].to_f>element['height'].to_f or c['height'].to_f<0
+				if c['elem_height'].to_f>element['elem_height'].to_f or c['elem_height'].to_f<0
 					#puts "#{c.name}(#{c['id']}):#{c['height']} is higher than #{element.name}(#{element['uid']}):#{element['height']}"
-					element['height'] = c['height']
+					unless element['elem_height'].nil?
+						c['elem_height'] = element['elem_height']
+					end
 				end
 			end
 		end
@@ -323,7 +368,7 @@ def fix_no_explicit_nodes(element)
 		unless element['style'].nil?
 			if element['style'].strip[0..16]=='background-image:'
 				iu = element['style'].strip[17..element['style'].strip.size].gsub('url','').gsub('(','').gsub(')','')
-				element.inner_html = "<IMG src='#{iu}' uid='#{element['uid']}_img' id='#{element['id']}_img' left='#{element['left']}' top='#{element['top']}' width='#{element['width']}' height='#{element['height']}' alt='Background Image'/>" + element.inner_html
+				element.inner_html = "<IMG src='#{iu}' uid='#{element['uid']}_img' id='#{element['id']}_img' elem_left='#{element['elem_left']}' elem_top='#{element['elem_top']}' elem_width='#{element['elem_width']}' height='#{element['elem_height']}' alt='Background Image'/>" + element.inner_html
 			end
 		end
 		unless element.children.nil?
@@ -355,18 +400,20 @@ def change_relative_url(element)
 end
 
 def normalize_DOM(element)
-	element.search("/").each do |e|
-		if e.is_a? Hpricot::Elem
+	element.search("//body").each do |e|
+		
+		if e.elem? or e.is_a? Nokogiri::HTML::Document
 			fix_children_dimension(e)
 			
-			$document.width = element.at('//body')['width'].to_f - element.at('//body')['left'].to_f
-			$document.height = element.at('//body')['height'].to_f - element.at('//body')['top'].to_f
+			$document.width = element.at('//body')['elem_width'].to_f - element.at('//body')['elem_left'].to_f
+			$document.height = element.at('//body')['elem_height'].to_f - element.at('//body')['elem_top'].to_f
 			$document_area = $document.width * $document.height
 			
 			fix_no_explicit_nodes(e)
 			change_relative_url(e)
 		end
 	end
+	element
 end
 
 def escape_html(src='')
@@ -453,7 +500,7 @@ def parent_children_cleanup(children,new_parent)
 	to_del = []
 	children.each do |child|
 		parent_children_cleanup(child.children,child) unless child.children==[]
-		puts "cleanup child_id:#{child.id} parent_id:#{child.parent.id} current_block_id:#{new_parent.id}"  if $debug
+		#puts "cleanup child_id:#{child.id} parent_id:#{child.parent.id} current_block_id:#{new_parent.id}"  if $debug
 		if child.parent.id != new_parent.id
 			to_del.push child
 		end
