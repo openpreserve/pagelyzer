@@ -7,6 +7,7 @@ Suite of tools for detecting changes in web pages and their rendering
 Authors
 -------
 * Andrés Sanoja <andres.sanoja@lip6.fr>
+* Alexis Lechervy <alexis.lechervy@lip6.fr> 
 * Zeynep Pehlivan <zeynep.pehlivan@lip6.fr>
 * Myriam Ben Saad <myriam.ben-saad@lip6.fr>
 * Marc Law <marc.law@lip6.fr>
