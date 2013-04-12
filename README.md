@@ -51,7 +51,7 @@ we check the rubygems package manager:
 Pagelyzer is a set of components that can be used (most of them) independently, but in the case of
 change detection they are all used as a chain for simplicity of integration.
 The software can be downloaded from:
-http://www-poleia.lip6.fr/~sanojaa/pagelyzer-ruby-0.9-standalone.zip
+http://www-poleia.lip6.fr/~sanojaa/pagelyzer-ruby-0.9.1-standalone.zip
 Now we un-compress the zip file in the desired destination
 The folder structure should be like the following:
 
