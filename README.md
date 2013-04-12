@@ -78,12 +78,12 @@ to install the dependencies:
 `$ sudo apt-get install libxslt-dev libxml2-dev`
 `$ sudo apt-get install openjdk-7-jdk`
 `$ sudo apt-get install imagemagick`
+`$ sudo apt-get install xvfb`
 
 Note1: Installing the selenium-webdriver may cause some warnings in text encoding that should be
 fine, in almost all the cases.
 Note 2: The java installation is a reference to remember that it should be present.
-Note 3: ImageMagick 6 is mandatory, it is needed for thumb-nailing, cropping web page visible area and get a homogenous 
-image format (RGB 8-bit color) that can be processed by Marcalizer tool. This thumbs area is useful for integrating with 
+Note 3: ImageMagick 6 is optional, it is needed for thumbnailing. This thumbs area is useful for integrating with 
 other tools and for future optimization of change detection process .
 
 We need to install also some ruby libraries needed by the software. This step can be done simple
@@ -107,10 +107,11 @@ The available commands are:
 * capture
 * analyzer
 * changedetection
+* train
 
 Capture:
 
-`USAGE: ./pagelyzer capture --url=URL [--output-folder=FOLDER] [-browser=BROWSER_CODE] [--thumbnail] [--help]`
+`USAGE: ./pagelyzer capture --url=URL [--output-folder=FOLDER] [-browser=BROWSER_CODE] [--thumbnail] [--headless] [--help] [--no-screenshot]`
 
 Analyzer:
 
@@ -118,7 +119,7 @@ Analyzer:
 
 Changedetection:
 
-`USAGE: ./pagelyzer changedetection --url1=URL --url2=URL [--doc=(1..10)] [--output-folder=FOLDER] [--browser=BROWSER_CODE | --browser1=BROWSER_CODE --browser2=BROWSER_CODE] [--verbose] --type=[hybrid|visual]`
+`USAGE: ./pagelyzer_changedetection [--url1=URL --url2=URL | urls=FILE] [conf=CONF_FILE] [--doc=(1..10)] [--browser=BROWSER_CODE | --browser1=BROWSER_CODE --browser2=BROWSER_CODE] [--verbose] --type=[images|structure|hybrid] [--headless]`
 
 Browsers code are the same as defined in selenium. For instance:
 * firefox (default)
@@ -126,6 +127,10 @@ Browsers code are the same as defined in selenium. For instance:
 * iexploreproxy
 * safariproxy
 * opera
+
+For the input URL file it expects the following syntax of each line:
+ - URL1 URL2
+
 
 # Examples
 
@@ -135,8 +140,8 @@ Browsers code are the same as defined in selenium. For instance:
 
 It will copy to $HOME_FOLDER/pagelyzer the outcome. If the folder does not exist it will be created. It will create three files: 
 
-* firefox_www_google_fr_original.html (rendered version of the web page)
-* firefox_www_google_fr_decorated.html (rendered version with visual cues included for segmentation algorithm)
+* firefox_www_google_fr.html (rendered version of the web page)
+* firefox_www_google_fr.dhtml (rendered version with visual cues included for segmentation algorithm)
 * firefox_www_google_fr.png (webshot of the page)
 
 2. Change detection on two pages with default parameters
@@ -155,7 +160,7 @@ will create the same files as above for each url and also the ViXMLs and delta f
 
 url1 will be evaluated with browser1 and url2 with browser2
 
-4. Change detection with different browsers (the most common case)
+4. Change detection with same browser (the most common case)
 
 `$ ./pagelyzer changedetection --url1=http://www.host.com/page1.html --url2=http://www.host.com/page2.html --browser=firefox`
 
@@ -170,8 +175,8 @@ e.g. to run pagelyzer on your chrome/chromium instance, you should install the C
 
 For command-line parameters is better to escape them, e.g:
 
-pagelyzer analyzer --decorated-file=/my/path with/spaces -- only processes /my/path !
-Pagelyzer analyzer --decorated-file=/my/path\ with/spaces -- results in correct behaviour
+./pagelyzer analyzer --decorated-file=/my/path with/spaces -- only processes /my/path !
+./Pagelyzer analyzer --decorated-file=/my/path\ with/spaces -- results in correct behaviour
 
 * If no Degree of Coherence is given, a default of doc=6 will be chosen.
 * The URL's should include the http schema

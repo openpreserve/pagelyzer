@@ -201,7 +201,7 @@ FIN
 				begin
 					r = driver.execute_script("return dump_loaded!=undefined;")
 					loaded = (r==true);
-					puts "Waiting page to finish loading... (Timeout in #{10-k}sec)"
+					puts "Waiting page to finish loading..."
 					sleep(0.5)
 				 rescue
 					 puts "Something maybe is wrong, but still waiting page to finish loading... (Timeout in #{10-k}sec)"

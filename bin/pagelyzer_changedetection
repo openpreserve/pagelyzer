@@ -132,7 +132,7 @@ general_browser = false
 url_archive = true
 headless = false
 urls =""
-param_init="#{current_folder}/ext/ex1.xml"
+param_init=""
 output_file="#{current_folder}/out/result.xml"
 
 ARGV.each do |op|
@@ -189,6 +189,16 @@ if headless
 		exit
 	end
 end
+urls="" if urls.nil?
+url1="" if url1.nil?
+url2="" if url2.nil?
+
+if !urls.empty?
+	unless File.exists? urls
+		puts "ERROR: File #{urls} not found"
+		exit
+	end
+end
 
 if !urls.empty? and (!url1.empty? or !url2.empty?)
 	puts "ERROR: --urls files and --url1 and --url2 parameters can be given at the same time"
@@ -231,6 +241,26 @@ unless urls.empty?
 	File.open(output_file,'a') {|f| f.puts "<results>\n"}
 end
 
+if param_init.empty?
+	if type.strip.downcase=="images"
+		param_init = "#{current_folder}/ext/ex_images.xml"
+	elsif type.strip.downcase=="structure"
+		param_init = "#{current_folder}/ext/ex_structure.xml"
+	elsif type.strip.downcase=="hybrid"
+		param_init = "#{current_folder}/ext/ex_hybride.xml"
+	else
+		puts "ERROR: The #{type} type is not recognized"
+		exit
+	end
+else
+	unless File.exists? param_init
+		puts "ERROR: Configuration file #{param_init} not found"
+		exit
+	end
+end
+
+puts "Type: #{type}. Configuration file: #{param_init}"
+
 filename1 = url1.gsub('http://','').gsub('/','_').gsub('.','_')
 filename2 = url2.gsub('http://','').gsub('/','_').gsub('.','_')
 
@@ -262,7 +292,11 @@ collection.each do |op|
 	end
 
 	score = nil
-
+	
+	fileclass = get_java_class('java.io.File')
+	exf = fileclass.new_with_sig('Ljava.lang.String;',param_init)
+	marcalizer_obj._invoke('init','Ljava.io.File;',exf)
+	
 	if type=='images'
 		bufferedimage = get_java_class("java.awt.image.BufferedImage")
 		bi1 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data1[2])
@@ -281,6 +315,7 @@ collection.each do |op|
 	
 		score = marcalizer_obj._invoke('run','Ljava.io.String;Ljava.io.String;',xml1.to_xml,xml2.to_xml)
 	elsif type=='hybrid'
+	
 		bufferedimage = get_java_class("java.awt.image.BufferedImage")
 		bi1 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data1[2])
 		bi2 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data2[2])
@@ -298,6 +333,7 @@ collection.each do |op|
 		score = marcalizer_obj._invoke('run','Ljava.io.String;Ljava.io.String;Ljava.awt.image.BufferedImage;Ljava.awt.image.BufferedImage;',xml1.to_xml,xml2.to_xml,bi1,bi2)
 	else
 		puts "ERROR: Type '#{type}' not recognized"
+		exit
 	end
 	
 	ptime = Time.now-ti
