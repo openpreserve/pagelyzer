@@ -248,6 +248,7 @@ def set_source_file(f)
 end
 def set_output_file(f) 
 	@output_file = f
+	@type=:file
 end
 def set_pdoc(n) 
 	@pdoc = n

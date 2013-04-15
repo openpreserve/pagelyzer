@@ -112,6 +112,7 @@ class Block
 		nodes.each do |c|
 			c.search("*").each do |tag|
 				if ['a','img'].include? tag.name.downcase
+				
 					if tag.name.downcase == 'a'
 						@links.push tag 
 					end
@@ -129,6 +130,8 @@ class Block
 		@links = @links.uniq
 		@images = @images.uniq
 		@text = @text.uniq
+		
+		puts "#{sid} #{@images.size	}"
 	end
 
 	#construct the block polygon
@@ -512,7 +515,7 @@ class Block
 			src += "<Paths>\n"
 			src += @candidates.collect {|c| "<path>#{c.path},#{c["elem_left"]},#{c["elem_top"]},#{c["elem_width"]},#{c["elem_height"]},#{c["id"]},#{c["uid"]}</path>\n"}.join("")
 			src += "</Paths>\n"
-			if @children.empty?
+			
 				src += "<Links ID=\"$LINKS_ID$\" IDList=\"$ID_LIST_LINKS$\">\n"
 				lid = []
 				sl = ""
@@ -532,8 +535,9 @@ class Block
 				lim = []
 				si = ""
 				@images.each do |image|
+				puts "XML #{image['src']} #{sid} #{malformed?(image)}"
 					unless malformed?(image)
-						iid = crypt(escape_html(image[:alt])+escape_html(image[:src]))
+						iid = crypt(escape_html(image['alt'])+escape_html(image['src']))
 						lim.push iid
 						si += "<img ID=\"#{iid}\" Name=\"#{escape_html(image[:alt])}\" Src=\"#{escape_html(image[:src])}\"/>"
 					end
@@ -550,7 +554,7 @@ class Block
 				}
 				txt = escape_html(@text.join(","))
 				src += "<Txts ID=\"#{crypt(txt)}\" Txt=\"#{txt}\"/>\n"
-			else
+			unless @children.empty?
 				@children.each do |child|
 					src += child.to_xml
 				end

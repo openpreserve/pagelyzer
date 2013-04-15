@@ -17,16 +17,21 @@ if ARGV == []
 	exit
 end
 
+source_file=""
+output_file=""
+pdoc=6
+target_path=""
+
 ARGV.each do |op|
 	sop = op.split("=")
-	$source_file 	= sop[1] 		if sop[0] == "--decorated-file"
-	$output_file 	= sop[1] 		if sop[0] == "--output-file"
-	$pdoc 			= sop[1].to_i 	if sop[0] == "--pdoc"
-	$interactive 	= sop[1]=='yes' if sop[0] == "--interactive"
-	$use_database 	= sop[1]=='yes' if sop[0] == "--use-database"
-	$job_id 		= sop[1].to_i 	if sop[0] == "--db-job-id"
-	$browser_id 	= sop[1].to_i 	if sop[0] == "--db-browser-id"
-	$debug 			= sop[1]=='yes' if sop[0] == "--debug"
+	source_file 	= sop[1] 		if sop[0] == "--decorated-file"
+	output_file 	= sop[1] 		if sop[0] == "--output-file"
+	pdoc 			= sop[1].to_i 	if sop[0] == "--pdoc"
+	interactive 	= sop[1]=='yes' if sop[0] == "--interactive"
+	use_database 	= sop[1]=='yes' if sop[0] == "--use-database"
+	job_id 		= sop[1].to_i 	if sop[0] == "--db-job-id"
+	browser_id 	= sop[1].to_i 	if sop[0] == "--db-browser-id"
+	debug 			= sop[1]=='yes' if sop[0] == "--debug"
 	if sop[0] == "--help"
 		help
 		exit
@@ -38,17 +43,20 @@ ARGV.each do |op|
 	end
 end
 
-unless $output_file.nil?
-	$target_path = $source_file.split("/")
-	$target_path.delete_at($target_path.size-1)
-	$target_path = $target_path.join("/")+"/"
+unless output_file.nil?
+	target_path = source_file.split("/")
+	target_path.delete_at(target_path.size-1)
+	target_path = target_path.join("/")+"/"
 end
 
+
 bom = BlockOMatic.new
+bom.set_source_file(source_file)
 bom.start
-if $output_file.nil?
+
+if output_file.empty?
 	puts bom.to_xml
 else
-	File.open("#{$output_file}",'w') {|x| x.puts bom.to_xml }
+	File.open("#{output_file}",'w') {|x| x.puts bom.to_xml }
 end
 
