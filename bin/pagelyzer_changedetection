@@ -246,11 +246,16 @@ collection.each do |op|
 	#label = ligne[0]
 	
 	begin
-	data1 = cdriver.start(url1,browser1,output_folder,no_screenshot,thumb,current_folder)
-	data2 = cdriver.start(url2,browser2,output_folder,no_screenshot,thumb,current_folder)
+		data1 = cdriver.start(url1,browser1,output_folder,no_screenshot,thumb,current_folder)
+		data2 = cdriver.start(url2,browser2,output_folder,no_screenshot,thumb,current_folder)
 	rescue
 		#there were a problem in the capture of pages
 		puts "ERROR: can't process these urls:\n#{url1}\n#{url2}"
+		x = "#{url1} #{url2} ERROR\n"
+		File.open(output_file,'a') {|f| f.puts x}
+		cdriver.close
+		cdriver = Capture.new
+		cdriver.open([browser1,browser2])
 		next
 	end
 
