@@ -132,7 +132,7 @@ general_browser = false
 url_archive = true
 headless = false
 urls =""
-param_init="#{current_folder}/ext/ex1.xml"
+param_init=""
 output_file="#{current_folder}/out/result.xml"
 
 ARGV.each do |op|
@@ -214,6 +214,12 @@ unless urls.empty?
 	File.open(output_file,'a') {|f| f.puts "<results>\n"}
 end
 
+if param_init.empty?
+	param_init = "#{current_folder}/ext/ex_images.xml" if type=="images"
+	param_init = "#{current_folder}/ext/ex_structure.xml" if type=="structure"
+	param_init = "#{current_folder}/ext/ex_hybrid.xml" if type=="hybrid"
+end
+
 filename1 = url1.gsub('http://','').gsub('/','_').gsub('.','_')
 filename2 = url2.gsub('http://','').gsub('/','_').gsub('.','_')
 
@@ -261,10 +267,19 @@ collection.each do |op|
 		bom1.set_pdoc(doc)
 		xml1 = bom1.start
 		
-		bom2 =  BlockOMatic.new
-		bom2.set_source_content(data2[1])
-		bom2.set_pdoc(doc)
-		xml2 = bom2.start
+		if !bom1.error
+			bom2 =  BlockOMatic.new
+			bom2.set_source_content(data2[1])
+			bom2.set_pdoc(doc)
+			xml2 = bom2.start
+			if bom2.error
+				puts "There was a problem segmenting the pages. Continue to next"
+				next 
+			end
+		else
+			puts "There was a problem segmenting the pages. Continue to next"
+			next
+		end
 	
 		if url_archive
 			string_xml1 = xml1.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
@@ -285,10 +300,20 @@ collection.each do |op|
 		bom1.set_pdoc(doc)
 		xml1 = bom1.start
 		
-		bom2 =  BlockOMatic.new
-		bom2.set_source_content(data2[1])
-		bom2.set_pdoc(doc)
-		xml2 = bom2.start
+		if !bom1.error
+			bom2 =  BlockOMatic.new
+			bom2.set_source_content(data2[1])
+			bom2.set_pdoc(doc)
+			xml2 = bom2.start
+			if bom2.error
+				puts "There was a problem segmenting the pages. Continue to next"
+				next 
+			end
+		else
+			puts "There was a problem segmenting the pages. Continue to next"
+			next
+		end
+		
 
 		if url_archive
 			string_xml1 = xml1.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')

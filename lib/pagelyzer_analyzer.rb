@@ -54,36 +54,41 @@ require_relative '../lib/pagelyzer_separator.rb'
 require_relative '../lib/pagelyzer_convex_hull.rb'
 require_relative '../lib/pagelyzer_heuristic.rb'
 
-$window = Dimension.new
-$document = Dimension.new
-$screenshot = Dimension.new
-$max_weight = 0
-$heuristics = []
-$next_block_id = 10000
-$gid = 1
-$block_count = 0
-$job_id = 0
-$browser_id = 0
-$source_file = nil
-$output_file = nil
-$document_area = 0.0
-$debug = false
-$pdoc = 6
-$doc_proportion = 1
-$target_path = "./"
-$type = :file
-$color = ['#1E90FF','#90EE90','#0000FF','#FF0000','#FFA500','#8B6914','#EE1CA2','#77AF4F','#A020F0','#82B5D8','','','']
-
 
 class BlockOMatic
 
-	#global variables
+	attr_accessor :type,:document,:window,:source_file,:document_area, :error
+	attr_accessor :doc_rel,:doc_proportion, :pdoc,:target_path,:next_block_id,:debug
+	def initialize
+		@window = Dimension.new
+		@document = Dimension.new
+		@screenshot = Dimension.new
+		@max_weight = 0
+		@heuristics = []
+		@next_block_id = 10000
+		@gid = 1
+		@block_count = 0
+		@job_id = 0
+		@browser_id = 0
+		@source_file = nil
+		@output_file = nil
+		@document_area = 0.0
+		@debug = false
+		@pdoc = 6
+		@doc_proportion = 1
+		@target_path = "./"
+		@type = :file
+		@color = ['#1E90FF','#90EE90','#0000FF','#FF0000','#FFA500','#8B6914','#EE1CA2','#77AF4F','#A020F0','#82B5D8','','','']
+		@root = nil
+		@type = :file
+		@error = false
+	end
 	
 	def process_node(node)
 		rule_used = nil
 		if node['candidate'].nil?
 			unless malformed?(node) or text?(node) or !valid?(node)
-				$heuristics.each do |h|
+				@heuristics.each do |h|
 					if h.parse(node)
 						rule_used = h
 						#puts "#{node.name} #{node.attributes['top']} #{node.xpath}"
@@ -92,9 +97,9 @@ class BlockOMatic
 				end
 			end
 		else
-			ind=$heuristics.collect{|a| a.name}.index(node['rule']) 
-			$heuristics[ind].action = Action.new('extract',$heuristics[ind].weight)
-			rule_used = $heuristics[ind]
+			ind=@heuristics.collect{|a| a.name}.index(node['rule']) 
+			@heuristics[ind].action = Action.new('extract',@heuristics[ind].weight)
+			rule_used = @heuristics[ind]
 		end
 		rule_used 
 	end
@@ -106,12 +111,12 @@ class BlockOMatic
 			heuristic = process_node(node)
 			if !heuristic.nil? and heuristic.action.rec == 'extract'
 				current_block = Block.new 
-				current_block.id = $block_count
-				$block_count += 1
+				current_block.id = @block_count
+				@block_count += 1
 				current_block.add_candidate [node],heuristic
 				current_block.process_path
 				#TODO: verify if there are nodes that do not corresponds to a sub-block IMPLICIT BLOCKS
-				if current_block.doc < $pdoc	
+				if current_block.doc < @pdoc	
 					unless node.children.nil? 
 						node.children.each do |e|
 							sub_block_list.push detect_blocks(e)
@@ -217,8 +222,8 @@ class BlockOMatic
 	src += "<?xml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"yes\" ?>\n"
 	src += "<XML>\n"
 		
-		src += "<Document url=\"#{escape_html($document.url)}\" Title=\"#{escape_html($document.title)}\" Version=\"#{$version}\" Pos=\"WindowWidth||PageRectLeft:#{$document.width} WindowHeight||PageRectTop:#{$document.height} ObjectRectWith:0 ObjectRectHeight:0\">\n"
-			src += $root.to_xml
+		src += "<Document url=\"#{escape_html(@document.url)}\" Title=\"#{escape_html(@document.title)}\" Version=\"#{@version}\" Pos=\"WindowWidth||PageRectLeft:#{@document.width} WindowHeight||PageRectTop:#{@document.height} ObjectRectWith:0 ObjectRectHeight:0\">\n"
+			src += @root.to_xml
 		src += "</Document>\n"
 	src += "</XML>\n"
 	src 
@@ -234,49 +239,49 @@ class BlockOMatic
 	end
 
 def set_source_content(dhtml) 
-$source_file = dhtml
-$type = :content
+	@source_file = dhtml
+	@type = :content
 end
 def set_source_file(f) 
-$source_file = f
-$type=:file
+	@source_file = f
+	@type=:file
 end
 def set_output_file(f) 
-$output_file = f
+	@output_file = f
 end
 def set_pdoc(n) 
-$pdoc = n
+	@pdoc = n
 end
 
 def start
-	doc = load($source_file,:content)
-	doc = normalize_DOM(doc) 
-	$doc_proportion = $document_area / 10.0
-	$doc_rel = 10-$pdoc+1
+	doc = load(self,@source_file,:content)
+	doc = normalize_DOM(self,doc) 
+	@doc_proportion = @document_area / 10.0
+	@doc_rel = 10-@pdoc+1
 
-	$heuristics = []
-	$heuristics.push Body.new(4)	#only for body
-	$heuristics.push Invalids.new(3)	#skip
-	$heuristics.push OneChild.new(3)	#divide
-	$heuristics.push LayoutContainer.new(4)	#might extract
-	$heuristics.push IndirectContainer.new(6)	#might extract
-	$heuristics.push Container.new(4)	#might extract
-	$heuristics.push ContentContainer.new(9)	#might extract
-	$heuristics.push Content.new(9)	#might extract
-	$heuristics.push Image.new(9)	#extract
-	$heuristics.push DefaultDivide.new(8) #might extract
-	$heuristics.push DefaultExtract.new(10) #might extract
+	@heuristics = []
+	@heuristics.push Body.new(self,4)	#only for body
+	@heuristics.push Invalids.new(self,3)	#skip
+	@heuristics.push OneChild.new(self,3)	#divide
+	@heuristics.push LayoutContainer.new(self,4)	#might extract
+	@heuristics.push IndirectContainer.new(self,6)	#might extract
+	@heuristics.push Container.new(self,4)	#might extract
+	@heuristics.push ContentContainer.new(self,9)	#might extract
+	@heuristics.push Content.new(self,9)	#might extract
+	@heuristics.push Image.new(self,9)	#extract
+	@heuristics.push DefaultDivide.new(self,8) #might extract
+	@heuristics.push DefaultExtract.new(self,10) #might extract
 
 	#assign weights to nodes
-	$root = detect_blocks(doc.at('body'))
-	if $root.nil?
+	@root = detect_blocks(doc.at('body'))
+	if @root.nil?
 		puts "There was a problem segmenting the page. Sorry"
-		exit
+		@error = true
 	else
-		$root.process_path
+		@root.process_path
 	end
 
-	unless $root == []
+	unless @root == []
 		#~ detect_separators($root)
 		#~ $root.search_nearest_separators(:horizontal)
 		#~ $root.search_nearest_separators(:vertical)

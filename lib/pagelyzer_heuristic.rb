@@ -55,10 +55,11 @@ class Heuristic
 
 	attr_accessor :weight,:action
 
-	def initialize(weight,internal_debug=true)
+	def initialize(bom,weight,internal_debug=true)
 		@weight = weight
 		@action = Action.new
 		@internal_debug=internal_debug
+		@bom = bom
 	end
 
 	def debug(node)
@@ -144,7 +145,7 @@ class LayoutContainer < Heuristic
 			end
 			rd = cont.to_f/(valid).to_f
 			if rd > 0.6
-				if area(node) >= ($doc_rel * $doc_proportion)
+				if area(node) >= (@bom.doc_rel * @bom.doc_proportion)
 					@action = Action.new('extract',4)
 					used = true
 				end
@@ -200,8 +201,8 @@ class Container < Heuristic
 			rs = sub_tree.to_f/(node.children.size-excluded-invalids).to_f
 			ca = avg / area(node)
 			if (rd > 0.6 and rs > 0.6) or node.name.downcase == 'table'
-				if area(node) < ($doc_rel * $doc_proportion)
-					if relative_area(node)*100 > 0
+				if area(node) < (@bom.doc_rel * @bom.doc_proportion)
+					if relative_area(@bom,node)*100 > 0
 						if ca<0.55
 							@action = Action.new('extract',9)
 						else
@@ -233,8 +234,8 @@ class ContentContainer < Heuristic
 			if c==(node.children.size-inv-div) and rel<=0.5 
 				used = true
 				if contain_p?(node) or contain_image?(node) 
-					if relative_area(node) > 0.45 
-						if $pdoc > 6
+					if relative_area(@bom,node) > 0.45 
+						if @bom.pdoc > 6
 							@action = Action.new('extract',tag_based_weight(node))
 						else
 							@action = Action.new('extract',8)
@@ -281,7 +282,7 @@ class DefaultDivide < Heuristic
 	def parse(node)
 	debug(node)
 	used=false
-		if line_break?(node) and node.name.downcase != 'body' and relative_area(node) >= 0.10
+		if line_break?(node) and node.name.downcase != 'body' and relative_area(@bom,node) >= 0.10
 			@action = Action.new('divide',@weight)
 			used = true
 		end
@@ -293,7 +294,7 @@ class DefaultExtract < Heuristic
 	def parse(node)
 	debug(node)
 	used=false
-		if line_break?(node) and relative_area(node) > 0.1 and valid?(node)
+		if line_break?(node) and relative_area(@bom,node) > 0.1 and valid?(node)
 			@action = Action.new('extract',tag_based_weight(node)) 
 			used = true
 		end

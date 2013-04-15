@@ -7,36 +7,36 @@ class String
 	end
 end
 
-def load(source_file,type)
-	if $type==:file
-		if !File.exists? "#{source_file}"
-			puts "File '#{source_file}' not found"
+def load(bom,source_file,type=:file)
+	if bom.type==:file
+		if !File.exists? "#{bom.source_file}"
+			puts "File '#{bom.source_file}' not found"
 			exit
 		else
-			doc = Nokogiri::HTML(File.open(source_file))
+			doc = Nokogiri::HTML(File.open(bom.source_file))
 		end
 	else
-		doc = Nokogiri::HTML(source_file)
+		doc = Nokogiri::HTML(bom.source_file)
 	end
 	
 	unless doc.at("//comment()[1]").content.nil?
 		metadata = doc.at("//comment()[1]").content.gsub("}","").gsub("{","").split(",").collect {|x| x.split(":")}
-		$window.width = metadata[0][2].to_i
-		$window.height = metadata[1][1].to_i
-		$document.width = metadata[2][2].to_i
-		$document.height = metadata[3][1].to_i
-		$document.url = metadata[4][2..(metadata[4].size-1)].join.strip
-		$document.date = metadata[5][1..(metadata[5].size-1)].join.strip
+		bom.window.width = metadata[0][2].to_i
+		bom.window.height = metadata[1][1].to_i
+		bom.document.width = metadata[2][2].to_i
+		bom.document.height = metadata[3][1].to_i
+		bom.document.url = metadata[4][2..(metadata[4].size-1)].join.strip
+		bom.document.date = metadata[5][1..(metadata[5].size-1)].join.strip
 	else
-		$window.width = 0
-		$window.height = 0
-		$document.width = 0
-		$document.height = 0
-		$document.url = ""
-		$document.date = ""
+		bom.window.width = 0
+		bom.window.height = 0
+		bom.document.width = 0
+		bom.document.height = 0
+		bom.document.url = ""
+		bom.document.date = ""
 		puts "warning: empty metadata in input file"
 	end
-	$document.title  = doc.at('//title').inner_text.strip
+	bom.document.title  = doc.at('//title').inner_text.strip
 	
 	
 	#~ data = YAML.load(doc.at("//comment()[1]").content)
@@ -49,10 +49,10 @@ def load(source_file,type)
 	#~ $document.height = data['document']['height'].to_i
 	#~ 
 	#~ #it is givin problems with screenshot geometry and puts all left and top to 0
-	$document.width = doc.at("html")["elem_width"].to_i
-	$document.height = doc.at("html")["elem_height"].to_i 
+	bom.document.width = doc.at("html")["elem_width"].to_i
+	bom.document.height = doc.at("html")["elem_height"].to_i 
 	#~ 
-	$document_area = $document.width.to_f * $document.height.to_f
+	bom.document_area = bom.document.width.to_f * bom.document.height.to_f
 	
 	#~ data = YAML.load(doc.at("//comment()[3]").content) 
 	#~ $document.url = data['page']['url'].to_s
@@ -324,26 +324,20 @@ def classify(node)
 	end
 end
 
-def fix_children_dimension(element)
-	#puts "FIX: #{element.name} #{element.children.nil?} #{text?(element)} #{malformed?(element)}"
+def fix_children_dimension(bom,element)
 	unless element.children.nil? or text?(element) or malformed?(element)
 		element.children.each do |c|
-			#puts "#{c.name} #{text?(c)} #{malformed?(c)} #{!valid?(c)}"
 			unless text?(c) or malformed?(c) or !valid?(c)
-				fix_children_dimension(c)
-				#puts "verify element #{c.name} (#{c['id']})"
+				fix_children_dimension(bom,c)
 				if c['elem_left'].to_f<element['elem_left'].to_f or c['elem_left'].to_f<0
-					#puts "#{c.name}(#{c['id']}):#{c['left']} is far at left than #{element.name}(#{element['uid']}):#{element['left']}"
 					c['elem_left'] = element['elem_left']
 				end
 				if c['elem_top'].to_f<element['elem_top'].to_f or c['elem_top'].to_f<0
-					#puts "#{c.name}(#{c['id']}):#{c['top']} is far at right than #{element.name}(#{element['uid']}):#{element['top']}"
 					c['elem_top'] = element['elem_top']
 				end
 				if c['elem_width'].to_f>element['elem_width'].to_f
-					#puts "#{c.name}(#{c['id']}):#{c['width']} is wider than #{element.name}(#{element['uid']}):#{element['width']}"
-					if element['elem_width'].to_i > $document.width
-						c['elem_width'] = $document.width.to_s
+					if element['elem_width'].to_i > bom.document.width
+						c['elem_width'] = bom.document.width.to_s
 					else
 						unless element['elem_width'].nil?
 							c['elem_width'] = element['elem_width'] 
@@ -351,7 +345,6 @@ def fix_children_dimension(element)
 					end
 				end
 				if c['elem_height'].to_f>element['elem_height'].to_f or c['elem_height'].to_f<0
-					#puts "#{c.name}(#{c['id']}):#{c['height']} is higher than #{element.name}(#{element['uid']}):#{element['height']}"
 					unless element['elem_height'].nil?
 						c['elem_height'] = element['elem_height']
 					end
@@ -364,7 +357,6 @@ end
 #example: <div style='background-image: aaa.jpg'> becomes <div><img src='aaa.jpg'></div>
 def fix_no_explicit_nodes(element)
 	unless text?(element) or malformed?(element)
-		#puts "verificando #{element.name} #{element['style']}"
 		unless element['style'].nil?
 			if element['style'].strip[0..16]=='background-image:'
 				iu = element['style'].strip[17..element['style'].strip.size].gsub('url','').gsub('(','').gsub(')','')
@@ -379,38 +371,38 @@ def fix_no_explicit_nodes(element)
 	end
 end
 
-def change_relative_url(element)
+def change_relative_url(bom,element)
 	unless text?(element) or malformed?(element)
 		unless element[:href].nil?
 			if relative? element[:href]
-				element[:href] = make_absolute($document.url,element[:href])
+				element[:href] = make_absolute(bom.document.url,element[:href])
 			end
 		end
 		unless element[:src].nil?
 			if relative? element[:src]
-				element[:src] = make_absolute($document.url,element[:src])
+				element[:src] = make_absolute(bom.document.url,element[:src])
 			end
 		end
 		unless element.children.nil?
 			element.children.each do |child|
-				change_relative_url(child)
+				change_relative_url(bom,child)
 			end
 		end
 	end
 end
 
-def normalize_DOM(element)
+def normalize_DOM(bom,element)
 	element.search("//body").each do |e|
 		
 		if e.elem? or e.is_a? Nokogiri::HTML::Document
-			fix_children_dimension(e)
+			fix_children_dimension(bom,e)
 			
-			$document.width = element.at('//body')['elem_width'].to_f - element.at('//body')['elem_left'].to_f
-			$document.height = element.at('//body')['elem_height'].to_f - element.at('//body')['elem_top'].to_f
-			$document_area = $document.width * $document.height
+			bom.document.width = element.at('//body')['elem_width'].to_f - element.at('//body')['elem_left'].to_f
+			bom.document.height = element.at('//body')['elem_height'].to_f - element.at('//body')['elem_top'].to_f
+			bom.document_area = bom.document.width * bom.document.height
 			
 			fix_no_explicit_nodes(e)
-			change_relative_url(e)
+			change_relative_url(bom,e)
 		end
 	end
 	element
@@ -500,7 +492,6 @@ def parent_children_cleanup(children,new_parent)
 	to_del = []
 	children.each do |child|
 		parent_children_cleanup(child.children,child) unless child.children==[]
-		#puts "cleanup child_id:#{child.id} parent_id:#{child.parent.id} current_block_id:#{new_parent.id}"  if $debug
 		if child.parent.id != new_parent.id
 			to_del.push child
 		end
@@ -509,51 +500,18 @@ def parent_children_cleanup(children,new_parent)
 end
 
 
-def footer
-svg = ""
-svg += "<text x='0' y='#{$document.height+20}'>URL: #{$document.url}</text>"
-svg += "<text x='0' y='#{$document.height+50}'>COMMENTS:</text>"
-svg += "<line x1='#{0}' y1='#{$document.height+60}' x2='#{$document.width}' y2='#{$document.height+60}' style='stroke:rgb(0,0,0)'/>"
-svg += "<line x1='#{0}' y1='#{$document.height+80}' x2='#{$document.width}' y2='#{$document.height+80}' style='stroke:rgb(0,0,0)'/>"
-svg += "<line x1='#{0}' y1='#{$document.height+100}' x2='#{$document.width}' y2='#{$document.height+100}' style='stroke:rgb(0,0,0)'/>"
-
-
-svg += "<text x='0' y='#{$document.height+120}'>RATING:</text>"
-
-svg += "<text x='200' y='#{$document.height+130}' style='font-size:24'>1</text>"
-svg += "<circle cx='230' cy='#{$document.height+120}' r='10' style='fill:white;stroke:black'/>"
-
-svg += "<text x='250' y='#{$document.height+130}' style='font-size:24'>2</text>"
-svg += "<circle cx='280' cy='#{$document.height+120}' r='10' style='fill:white;stroke:black'/>"
-
-svg += "<text x='300' y='#{$document.height+130}' style='font-size:24'>3</text>"
-svg += "<circle cx='330' cy='#{$document.height+120}' r='10' style='fill:white;stroke:black'/>"
-
-svg += "<text x='350' y='#{$document.height+130}' style='font-size:24'>4</text>"
-svg += "<circle cx='380' cy='#{$document.height+120}' r='10' style='fill:white;stroke:black'/>"
-
-svg += "<text x='400' y='#{$document.height+130}' style='font-size:24'>5</text>"
-svg += "<circle cx='430' cy='#{$document.height+120}' r='10' style='fill:white;stroke:black'/>"
-
-svg += "<text x='0' y='#{$document.height+150}' style='font-size:24'>PDoC = #{$pdoc}</text>"
-
-svg += "<text x='0' y='#{$document.height+180}' style='font-size:24'>Internal Reference: #{$target_path.gsub('/var/www/vseg/pages/','').gsub('/',' ')} </text>"
-
-svg
-end
-
-def get_new_composite_block(parent)
+def get_new_composite_block(bom,parent)
 	nb = CompositeBlock.new
-	$next_block_id+=1
-	nb.id = $next_block_id
+	bom.next_block_id+=1
+	nb.id = bom.next_block_id
 	nb.parent = parent
-	if $debug
+	if bom.debug
 		puts "create new block #{nb.id}"
 	end
 end
 
-def relative_area(node)
-return (area(node)/$document_area)
+def relative_area(bom,node)
+return (area(node)/bom.document_area)
 end
 
 def tag_based_weight(node)
