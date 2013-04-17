@@ -131,7 +131,7 @@ class Block
 		@images = @images.uniq
 		@text = @text.uniq
 		
-		puts "#{sid} #{@images.size	}"
+		#puts "#{sid} #{@images.size	}"
 	end
 
 	#construct the block polygon
@@ -535,7 +535,6 @@ class Block
 				lim = []
 				si = ""
 				@images.each do |image|
-				puts "XML #{image['src']} #{sid} #{malformed?(image)}"
 					unless malformed?(image)
 						iid = crypt(escape_html(image['alt'])+escape_html(image['src']))
 						lim.push iid

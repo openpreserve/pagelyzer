@@ -91,7 +91,6 @@ class BlockOMatic
 				@heuristics.each do |h|
 					if h.parse(node)
 						rule_used = h
-						#puts "#{node.name} #{node.attributes['top']} #{node.xpath}"
 						break 
 					end
 				end
@@ -274,9 +273,10 @@ def start
 	@heuristics.push DefaultExtract.new(self,10) #might extract
 
 	#assign weights to nodes
-	@root = detect_blocks(doc.at('body'))
+	firstnode = doc.at('head').next_sibling
+	firstnode = doc.root if firstnode.nil?
+	@root = detect_blocks(firstnode)
 	if @root.nil?
-		puts "There was a problem segmenting the page. Sorry"
 		@error = true
 	else
 		@root.process_path

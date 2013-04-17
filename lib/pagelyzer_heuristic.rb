@@ -282,7 +282,7 @@ class DefaultDivide < Heuristic
 	def parse(node)
 	debug(node)
 	used=false
-		if line_break?(node) and node.name.downcase != 'body' and relative_area(@bom,node) >= 0.10
+		if line_break?(node) and node.name.downcase != 'body' and relative_area(@bom,node) >= 0.10 and has_children?(node)
 			@action = Action.new('divide',@weight)
 			used = true
 		end

@@ -142,7 +142,7 @@ def valid?(node)
 	else
 		vis = 0
 		if visible?(node)
-			vis=0
+			vis=1
 			node.children.each do |c|
 				vis+=1 if visible?(c)
 			end
@@ -155,10 +155,14 @@ def visible?(node)
 	ret = false
 	unless malformed?(node)
 		if !text?(node) and !node.is_a? Nokogiri::XML::DTD
-			if node['display']=="none" or node['visibility']!="visible"
+			if node['display']=="none" or (node['visibility']!="visible" and !node['visibility'].nil?)
 				ret = false
 			else
-				ret = (node.attributes['elem_width'].value.to_i > 0) or (node.attributes['elem_height'].value.to_i > 0)
+				if  node['elem_width'].nil? or node['elem_height'].nil?
+					ret = false
+				else
+					ret = (node['elem_width'].to_i > 0) or (node['elem_height'].to_i > 0)
+				end
 			end
 		else
 			ret = false
@@ -202,7 +206,7 @@ def container?(node) #the tag
 	elsif malformed?(node)
 		return false
 	else
-		return ['DIV','TABLE','TR','BODY','IFRAME'].include? node.name.upcase
+		return ['DIV','TABLE','TR','BODY','IFRAME','FRAMESET','FRAME'].include? node.name.upcase
 	end
 end
 

@@ -220,6 +220,8 @@ if param_init.empty?
 	param_init = "#{current_folder}/ext/ex_hybrid.xml" if type=="hybrid"
 end
 
+puts "Type: #{type}. Using: #{param_init} file"
+
 filename1 = url1.gsub('http://','').gsub('/','_').gsub('.','_')
 filename2 = url2.gsub('http://','').gsub('/','_').gsub('.','_')
 
@@ -269,8 +271,10 @@ collection.each do |op|
 	elsif type=='structure'		
 		bom1 =  BlockOMatic.new
 		bom1.set_source_content(data1[1])
+		File.open("ttt.dhtml",'w') {|x| x.puts data1[1]}
 		bom1.set_pdoc(doc)
 		xml1 = bom1.start
+		File.open("ttt.xml",'w') {|x| x.puts bom1.to_xml}
 		
 		if !bom1.error
 			bom2 =  BlockOMatic.new
