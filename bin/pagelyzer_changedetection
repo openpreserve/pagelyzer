@@ -271,10 +271,8 @@ collection.each do |op|
 	elsif type=='structure'		
 		bom1 =  BlockOMatic.new
 		bom1.set_source_content(data1[1])
-		File.open("ttt.dhtml",'w') {|x| x.puts data1[1]}
 		bom1.set_pdoc(doc)
 		xml1 = bom1.start
-		File.open("ttt.xml",'w') {|x| x.puts bom1.to_xml}
 		
 		if !bom1.error
 			bom2 =  BlockOMatic.new
