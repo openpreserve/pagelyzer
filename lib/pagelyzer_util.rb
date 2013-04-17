@@ -36,31 +36,12 @@ def load(bom,source_file,type=:file)
 		bom.document.date = ""
 		puts "warning: empty metadata in input file"
 	end
-	bom.document.title  = doc.at('//title').inner_text.strip
+	bom.document.title  = doc.at('//title').inner_text.strip unless doc.at('//title').nil?
 	
-	
-	#~ data = YAML.load(doc.at("//comment()[1]").content)
-	#~ $window.width = data['window']['width'].to_i
-	#~ $window.height = data['window']['height'].to_i
-	#~ 
-	#~ data = YAML.load(doc.at("//comment()[2]").content) 
-	#~ #it is giving problems with screenshot geometry and puts all left and top to 0
-	#~ $document.width = data['document']['width'].to_i
-	#~ $document.height = data['document']['height'].to_i
-	#~ 
-	#~ #it is givin problems with screenshot geometry and puts all left and top to 0
-	bom.document.width = doc.at("html")["elem_width"].to_i
-	bom.document.height = doc.at("html")["elem_height"].to_i 
-	#~ 
+	bom.document.width = doc.at("html")["elem_width"].to_i unless doc.at("html").nil?
+	bom.document.height = doc.at("html")["elem_height"].to_i  unless doc.at("html").nil?
 	bom.document_area = bom.document.width.to_f * bom.document.height.to_f
-	
-	#~ data = YAML.load(doc.at("//comment()[3]").content) 
-	#~ $document.url = data['page']['url'].to_s
-	#~ $document.date = data['page']['date'].to_s
-	#~ $document.title = doc.at('//title').inner_text.strip
-	
-	
-	
+		
 	#cleaning up whitespaces and useless tags
 	doc.search("//text()").each do |t|
 		begin
