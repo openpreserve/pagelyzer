@@ -41,7 +41,7 @@ require 'rjb'
 
 
 def usage
-	puts "USAGE: pagelyzer_changedetection [--url1=URL --url2=URL | urls=FILE] [conf=CONF_FILE] [--doc=(1..10)] [--output-folder=FOLDER] [--browser=BROWSER_CODE | --browser1=BROWSER_CODE --browser2=BROWSER_CODE] [--verbose] --type=[images|structure|hybrid] [--url-archive]"
+	puts "USAGE: pagelyzer_changedetection [--url1=URL --url2=URL | --urls=FILE --output-file=FILE] [conf=CONF_FILE] [--doc=(1..10)] [--output-folder=FOLDER] [--browser=BROWSER_CODE | --browser1=BROWSER_CODE --browser2=BROWSER_CODE] [--verbose] --type=[images|structure|hybrid] [--url-archive]"
 end
 
 def help
@@ -208,7 +208,7 @@ else
 	browser2 = browser # if browser2.empty?
 end
 
-unless urls.empty?
+unless urls.empty? or output_file.empty?
 	File.open(output_file,'w')
 	File.open(output_file,'a') {|f| f.puts "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n"}
 	File.open(output_file,'a') {|f| f.puts "<results>\n"}
@@ -251,7 +251,7 @@ collection.each do |op|
 		data1 = cdriver.start(url1,browser1,output_folder,no_screenshot,thumb,current_folder)
 		data2 = cdriver.start(url2,browser2,output_folder,no_screenshot,thumb,current_folder)
 	rescue
-		#there were a problem in the capture of pages
+		there were a problem in the capture of pages
 		puts "ERROR: can't process these urls:\n#{url1}\n#{url2}"
 		x = "#{url1} #{url2} ERROR\n"
 		File.open(output_file,'a') {|f| f.puts x}
@@ -336,7 +336,7 @@ collection.each do |op|
 	end
 	
 	ptime = Time.now-ti
-	unless score.nil? and urls.empty?
+	if !score.nil? and !urls.empty? and !output_file.empty?
 		x = "<test>\n"
 		x += "<url href=\"#{url1}\" browser=\"#{browser1}\"/>\n"
 		x += "<url href=\"#{url2}\" browser=\"#{browser2}\"/>\n"
