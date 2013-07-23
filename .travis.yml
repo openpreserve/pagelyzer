@@ -6,6 +6,7 @@ rvm:
 before_install:
   - sudo apt-get install libxslt-dev libxml2-dev imagemagick openjdk-7-jdk xvfb
 #  - sudo gem install bundler
-#  - bundle
+install:
+  - bundle
 # uncomment this line if your project needs to run something other than `rake`:
 # script: bundle exec rspec spec
