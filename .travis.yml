@@ -1,7 +1,13 @@
-# another comment to trigger a commit
-language: ruby
+anguage: ruby
 rvm:
-  - "1.9.3"
-  - rbx-19mode
+  - 1.9.3
+  - 1.9.2
+before_install:
+  - sudo apt-get install libxslt-dev libxml2-dev imagemagick openjdk-7-jdk xvfb
+#  - sudo gem install bundler
+install:
+  - bundle
+script:
+  - echo
 # uncomment this line if your project needs to run something other than `rake`:
 # script: bundle exec rspec spec
