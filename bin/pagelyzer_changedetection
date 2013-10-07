@@ -178,7 +178,13 @@ ARGV.each do |op|
 	end
 end
 
-output_file="#{current_folder}/out/#{type}_result.xml" if output_file.empty?
+if output_file.empty?
+	output_file="#{current_folder}/out/#{type}_result.xml" 
+else
+	unless File.exists?(File.dirname(output_file))
+		FileUtils.mkdir_p File.dirname(output_file)
+	end
+end
 
 if headless
 	require 'headless'
