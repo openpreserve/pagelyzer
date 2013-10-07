@@ -29,7 +29,7 @@
 #
 
 def usage
-	puts "USAGE: pagelyzer [--help|--version] [<command> <command_options>]"
+	puts "USAGE: pagelyzer [--help|--version|--server] [<command> <command_options>]"
 end
 
 def version
@@ -72,8 +72,7 @@ if showversion and (parameters.size==1)
 	version
 	exit
 end
-
-unless ["capture","analyzer","changedetection","test","view","train"].include? command
+unless File.exist? "#{app_folder}/bin/pagelyzer_#{command}"
 	puts "Command #{command} not recognized"
 	usage
 	exit
@@ -83,5 +82,4 @@ parameters.delete_at(0)
 command_options = parameters.join(" ")
 cmd = "#{app_folder}/bin/pagelyzer_#{command} #{command_options}"
 system(cmd)
-
 

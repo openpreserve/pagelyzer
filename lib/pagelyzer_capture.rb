@@ -45,8 +45,12 @@ def initialize
 	@browser_instances = {}
 end
 
-def save_image(filename,content)
-	f = open(filename,'wb')
+def self.parse_filename(url)
+	url.gsub('http://','').gsub('/','_').gsub('.','_').gsub("?","_").gsub("=","_")
+end
+
+def save_image(fn,content)
+	f = open(fn,'wb')
 	f.write(Base64.decode64(content))
 	f.close
 end
@@ -101,29 +105,38 @@ def open(browsers)
 			puts "Connection not possible with #{browser.to_sym}"
 			puts "WARNING: Is #{browser} installed in your system?"
 			puts "Try with the --browser=your_installed_browser"
-			help
+			puts $!
+			Capture.help
 			next
 		end
 	end
 end
 
 def close
+	puts "Closing browsers"
 	@browser_instances.each do |browser,instance|
 		begin
 			instance.close
 			instance.quit
-			puts "Browser closed"
+			puts "Browser #{browser} closed"
 		rescue
-			puts "Browser rest open"
+			puts "Browser #{browser} rest open"
 		end
 		@browser_instances[browser=nil]
 	end
-	@browser_instances = nil
+	@browser_instances = {}
 end
 
-def start(url,browser,output_folder,no_screenshot,thumb,current_folder,command=false)
-	#~ host = "#{URI.parse(url).scheme}://#{URI.parse(url).host}:#{URI.parse(url).port}"
-	#~ path = URI.parse(url).path
+def reset
+	puts "Reseting browsers"
+	browsers = @browser_instances.keys
+	browsers.each {|b| system "killall #{b}"}
+	close
+	open(browsers)
+end
+
+
+def start(url,browser,output_folder,no_screenshot,thumb,current_folder,command,timeout)
 	
 	if URI.parse(url).scheme.nil?
 		url = "http://#{url}"
@@ -134,6 +147,8 @@ def start(url,browser,output_folder,no_screenshot,thumb,current_folder,command=f
 		return nil
 	end
 
+	puts "Timeout: #{timeout}secs"
+	
 	base64 = nil
 	src = ""
 	
@@ -153,24 +168,41 @@ callback(func_dump());
 FIN
 
 		driver = @browser_instances[browser]
-		puts "Capturing #{url} with local #{browser}"
-		driver.manage.timeouts.implicit_wait = 20
-		driver.navigate.to url
+		begin
+			driver.manage.timeouts.implicit_wait = "60"
+		rescue
+			puts "WARNING: browser is not accepting time out"
+		end
+		
+		begin
+			Timeout.timeout(timeout) do 
+				puts "Loading #{url} in #{browser}"
+				driver.navigate.to url
+				puts "Page loaded"
+			end
+		rescue
+			puts "ERROR: Page load timeout #{$!}"
+			reset
+			raise "ERROR: Page load timeout #{$!}"
+			return nil #unless command
+		end
 		src =""
 		status="OK"
 		driver.manage.window.resize_to(970,728)
+		
+		filename = Capture.parse_filename(url)
+		
 		if command
-			filename = url.gsub('http://','').gsub('/','_').gsub('.','_')
 			File.open("#{output_folder}/#{browser}_#{filename}.html",'w') {|f| f.write driver.page_source}
 		end
 		
 		unless no_screenshot
-			#driver.save_screenshot("#{output_folder}/#{browser}_#{filename}.png")
+			puts "Getting screenshot"
 			if command
 				driver.save_screenshot("#{output_folder}/#{browser}_#{filename}.png")
 			else
 				base64 = driver.screenshot_as(:base64)
-				File.open("test",'wb') {|f| f.write base64}
+				#File.open("test",'wb') {|f| f.write base64}
 			end
 			if thumb
 				begin
@@ -193,6 +225,7 @@ FIN
 		end
 		
 		begin
+			puts "Getting rendered DOM"
 			driver.execute_async_script(load_dump)
 			#sleep 120000
 			loaded = false
@@ -204,18 +237,20 @@ FIN
 					puts "Waiting page to finish loading..."
 					sleep(0.5)
 				 rescue
-					 puts "Something maybe is wrong, but still waiting page to finish loading... (Timeout in #{10-k}sec)"
+					 puts "Something maybe is wrong, but still waiting page to finish loading... (attempt #{k}/10)"
 					 sleep(2)
 				 end
 				k+=1
 			end
 			src = driver.execute_script("return dump_start();")
+			puts "done"
 		rescue Exception=>e
 			puts "#{browser} failed!"
 			puts "The JavaScript could not be injected into page"
+			raise "The JavaScript could not be injected into page"
 			status="FAIL"
 			#puts e.backtrace
-			driver.close
+			#driver.close
 		end
 		
 		ret = [driver.page_source,src,base64]
@@ -223,8 +258,8 @@ FIN
 		if command
 			File.open("#{output_folder}/#{browser}_#{filename}.dhtml",'w') {|f| f.write src}
 		end
-		puts "done."
-		return ret unless command
+		puts "capture done."
+		return ret #unless command
 	end
 end
 

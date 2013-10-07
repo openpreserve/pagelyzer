@@ -25,6 +25,7 @@ def load(bom,source_file,type=:file)
 		bom.window.height = metadata[1][1].to_i
 		bom.document.width = metadata[2][2].to_i
 		bom.document.height = metadata[3][1].to_i
+		metadata[4] = metadata[4].insert(3,":")
 		bom.document.url = metadata[4][2..(metadata[4].size-1)].join.strip
 		bom.document.date = metadata[5][1..(metadata[5].size-1)].join.strip
 	else
@@ -187,7 +188,7 @@ def container?(node) #the tag
 	elsif malformed?(node)
 		return false
 	else
-		return ['DIV','TABLE','TR','BODY','IFRAME','FRAMESET','FRAME'].include? node.name.upcase
+		return ['DIV','TABLE','TR','BODY','IFRAME','FRAMESET','FRAME','SECTION','HEADER','FOOTER'].include? node.name.upcase
 	end
 end
 
@@ -358,14 +359,14 @@ end
 
 def change_relative_url(bom,element)
 	unless text?(element) or malformed?(element)
-		unless element[:href].nil?
-			if relative? element[:href]
-				element[:href] = make_absolute(bom.document.url,element[:href])
+		unless element['href'].nil?
+			if relative? element['href']
+				element['href'] = make_absolute(bom.document.url,element['href'])
 			end
 		end
-		unless element[:src].nil?
-			if relative? element[:src]
-				element[:src] = make_absolute(bom.document.url,element[:src])
+		unless element['src'].nil?
+			if relative? element['src']
+				element['src'] = make_absolute(bom.document.url,element['src'])
 			end
 		end
 		unless element.children.nil?

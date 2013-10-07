@@ -43,6 +43,7 @@ function walk(pNode,nLevel,pretext) {
 	attr += \" elem_top='\"+(new String(getElemTop(pNode)))+\"'\";
 	attr += \" elem_width='\"+(new String(getElemLeft(pNode)+getElemWidth(pNode)))+\"'\";
 	attr += \" elem_height='\"+(new String(getElemTop(pNode)+getElemHeight(pNode)))+\"'\";
+	attr += \" className='\"+(new String(pNode.className))+\"'\";
 	if (pNode.style) {
 		attr += \" margin_left='\"+(new String(css(pNode,'margin-left')))+\"'\";
 		attr += \" background_color='\"+(new String(css(pNode,'background-color')))+\"'\";

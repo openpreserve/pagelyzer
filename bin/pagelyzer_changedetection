@@ -36,7 +36,7 @@
 require 'open3'
 require 'fileutils'
 require_relative '../lib/pagelyzer_capture.rb'
-require_relative '../lib/pagelyzer_analyzer.rb'
+#require_relative '../lib/pagelyzer_analyzer.rb'
 require 'rjb'
 
 
@@ -79,7 +79,7 @@ end
 
 def verify_data_folder(path)
 	state = true
-	state = File.exists? path+"/js/decorate_mini.js"
+	state = state and File.exists? path+"/js/decorate_mini.js"
 	state
 end
 
@@ -133,6 +133,7 @@ url_archive = true
 headless = false
 urls =""
 param_init=""
+time_out = 30
 output_file="#{current_folder}/out/result.xml"
 
 ARGV.each do |op|
@@ -155,7 +156,6 @@ ARGV.each do |op|
 	end
 	output_file 	= sop[1] if sop[0] == "--output-file"
 	headless 		= true 	 if sop[0] == "--headless"
-	js_files_url 	= sop[1] if sop[0] == "--js-files-url"
 	doc 			= sop[1] if sop[0] == "--doc"
 	browser1 		= sop[1] if sop[0] == "--browser1"
 	browser2 		= sop[1] if sop[0] == "--browser2"
@@ -164,6 +164,7 @@ ARGV.each do |op|
 	verbose 		= true if sop[0] == "--verbose"
 	thumb 			= true if sop[0] == "--thumbnail"
 	no_screenshot	= true if sop[0] == "--no-screenshot"
+	time_out		= sop[1].to_i if sop[0] == "--timeout"
 
 	if op[0..6] == "--help"
 		help
@@ -222,8 +223,6 @@ end
 
 puts "Type: #{type}. Using: #{param_init} file"
 
-filename1 = url1.gsub('http://','').gsub('/','_').gsub('.','_')
-filename2 = url2.gsub('http://','').gsub('/','_').gsub('.','_')
 
 no_screenshot = true if type=="structure"
 
@@ -236,10 +235,13 @@ end
 cdriver = Capture.new
 cdriver.open([browser1,browser2])
 
+filename1 = Capture.parse_filename(url1)
+filename2 = Capture.parse_filename(url2)
+
 fileclass = get_java_class('java.io.File')
 exf = fileclass.new_with_sig('Ljava.lang.String;',param_init)
 marcalizer_obj._invoke('init','Ljava.io.File;',exf)
-
+kkk=0	
 collection.each do |op|  
 	ti = Time.now
 	url1,url2 = op.strip.split(" ")
@@ -248,17 +250,29 @@ collection.each do |op|
 	#label = ligne[0]
 	
 	begin
-		data1 = cdriver.start(url1,browser1,output_folder,no_screenshot,thumb,current_folder)
-		data2 = cdriver.start(url2,browser2,output_folder,no_screenshot,thumb,current_folder)
+		data1 = cdriver.start(url1,browser1,output_folder,no_screenshot,thumb,current_folder,false,time_out)
+		raise "Time out loading #{url1} #{$!}" if data1.nil?
+		data2 = cdriver.start(url2,browser2,output_folder,no_screenshot,thumb,current_folder,false,time_out)
+		raise "Time out loading #{url2} #{$!}" if data2.nil?
 	rescue
-		there were a problem in the capture of pages
+		puts "there were a problem in the capture of pages"
 		puts "ERROR: can't process these urls:\n#{url1}\n#{url2}"
-		x = "#{url1} #{url2} ERROR\n"
-		File.open(output_file,'a') {|f| f.puts x}
-		cdriver.close
-		cdriver = Capture.new
-		cdriver.open([browser1,browser2])
-		next
+		unless urls.empty?
+			x = "<test>\n"
+			x += "<url href=\"#{url1}\" browser=\"#{browser1}\"/>\n"
+			x += "<url href=\"#{url2}\" browser=\"#{browser2}\"/>\n"
+			x += "<score>ERROR #{$!}</score>\n"
+			x += "<time>0</time>\n"
+			x += "</test>\n"
+			File.open(output_file,'a') {|f| f.puts x}
+			cdriver.close
+			cdriver = Capture.new
+			cdriver.open([browser1,browser2])
+			next
+		else
+			cdriver.close
+			exit
+		end
 	end
 
 	score = nil
@@ -346,6 +360,7 @@ collection.each do |op|
 		File.open(output_file,'a') {|f| f.puts x}
 	end
 	puts "Processed in #{ptime}secs"
+	break if kkk>4
 end
 unless urls.empty?
 	File.open(output_file,'a') {|f| f.puts "</results>\n"}

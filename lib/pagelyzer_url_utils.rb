@@ -30,7 +30,7 @@
 #
 
   def relative?(url)
-    if url.match(/^http/)
+    if url.match(/^http/) or url.match(/^file/)
       return false
     end
     return true

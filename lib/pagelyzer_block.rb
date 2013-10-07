@@ -472,7 +472,7 @@ class Block
 			child = child.search_nearest_separators(mode)
 		end
 		self
-	end
+	end	
 
 	def to_s
 		pid=""
@@ -512,6 +512,10 @@ class Block
 	def to_xml
 		src = ""
 		src+= "<Block Ref=\"Block#{sid}\" internal_id='#{@id}' ID=\"$BLOCK_ID$\" Pos=\"WindowWidth||PageRectLeft:#{@min_x} WindowHeight||PageRectTop:#{@min_y} ObjectRectWidth:#{@max_x - @min_x} ObjectRectHeight:#{@max_y - @min_y}\" Doc=\"#{@doc}\">\n"
+			src += "<weight>\n"
+			src += "#{@doc}\n"
+			src += "</weight>\n"
+			
 			src += "<Paths>\n"
 			src += @candidates.collect {|c| "<path>#{c.path},#{c["elem_left"]},#{c["elem_top"]},#{c["elem_width"]},#{c["elem_height"]},#{c["id"]},#{c["uid"]}</path>\n"}.join("")
 			src += "</Paths>\n"

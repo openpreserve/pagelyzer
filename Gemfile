@@ -5,5 +5,6 @@ gem 'nokogiri',
 gem 'sanitize' 
 gem 'selenium-webdriver'
 gem 'headless'
-gem 'rjb' 
+gem 'rjb'
+gem 'mini_magick' 
 
