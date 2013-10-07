@@ -36,7 +36,8 @@
 require 'open3'
 require 'fileutils'
 require_relative '../lib/pagelyzer_capture.rb'
-#require_relative '../lib/pagelyzer_analyzer.rb'
+require_relative '../lib/pagelyzer_bom1.rb'
+#~ require_relative '../lib/bom2.rb'
 require 'rjb'
 
 
@@ -134,7 +135,7 @@ headless = false
 urls =""
 param_init=""
 time_out = 30
-output_file="#{current_folder}/out/result.xml"
+output_file=""
 
 ARGV.each do |op|
 	sop = op.strip.split("=")
@@ -177,6 +178,8 @@ ARGV.each do |op|
 	end
 end
 
+output_file="#{current_folder}/out/#{type}_result.xml" if output_file.empty?
+
 if headless
 	require 'headless'
 	hhdl = Headless.new
@@ -213,12 +216,13 @@ unless urls.empty? or output_file.empty?
 	File.open(output_file,'w')
 	File.open(output_file,'a') {|f| f.puts "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n"}
 	File.open(output_file,'a') {|f| f.puts "<results>\n"}
+	File.open(output_file,'a') {|f| f.puts "<type>#{type}</type>\n"}
 end
 
 if param_init.empty?
 	param_init = "#{current_folder}/ext/ex_images.xml" if type=="images"
 	param_init = "#{current_folder}/ext/ex_structure.xml" if type=="structure"
-	param_init = "#{current_folder}/ext/ex_hybrid.xml" if type=="hybrid"
+	param_init = "#{current_folder}/ext/ex_hybride.xml" if type=="hybrid"
 end
 
 puts "Type: #{type}. Using: #{param_init} file"
@@ -226,9 +230,13 @@ puts "Type: #{type}. Using: #{param_init} file"
 
 no_screenshot = true if type=="structure"
 
+total_items = 0
+
 if urls.empty?
 	collection = ["#{url1} #{url2}"]
+	total_items = collection.size
 else
+	total_items = File.open(urls,'r').readlines.size
 	collection = File.open(urls,'r')
 end
 
@@ -241,14 +249,15 @@ filename2 = Capture.parse_filename(url2)
 fileclass = get_java_class('java.io.File')
 exf = fileclass.new_with_sig('Ljava.lang.String;',param_init)
 marcalizer_obj._invoke('init','Ljava.io.File;',exf)
-kkk=0	
+#~ kkk=0	
+k=1
 collection.each do |op|  
 	ti = Time.now
 	url1,url2 = op.strip.split(" ")
 	#url1 = ligne[0]
 	#url2 = ligne[1]
 	#label = ligne[0]
-	
+	puts "Processing #{k} of #{total_items}"
 	begin
 		data1 = cdriver.start(url1,browser1,output_folder,no_screenshot,thumb,current_folder,false,time_out)
 		raise "Time out loading #{url1} #{$!}" if data1.nil?
@@ -285,13 +294,13 @@ collection.each do |op|
 	elsif type=='structure'		
 		bom1 =  BlockOMatic.new
 		bom1.set_source_content(data1[1])
-		bom1.set_pdoc(doc)
+		bom1.set_granularity(doc)
 		xml1 = bom1.start
 		
 		if !bom1.error
 			bom2 =  BlockOMatic.new
 			bom2.set_source_content(data2[1])
-			bom2.set_pdoc(doc)
+			bom2.set_granularity(doc)
 			xml2 = bom2.start
 			if bom2.error
 				puts "There was a problem segmenting the pages. Continue to next"
@@ -318,13 +327,13 @@ collection.each do |op|
 		
 		bom1 =  BlockOMatic.new
 		bom1.set_source_content(data1[1])
-		bom1.set_pdoc(doc)
+		bom1.set_granularity(doc)
 		xml1 = bom1.start
 		
 		if !bom1.error
 			bom2 =  BlockOMatic.new
 			bom2.set_source_content(data2[1])
-			bom2.set_pdoc(doc)
+			bom2.set_granularity(doc)
 			xml2 = bom2.start
 			if bom2.error
 				puts "There was a problem segmenting the pages. Continue to next"
@@ -360,7 +369,8 @@ collection.each do |op|
 		File.open(output_file,'a') {|f| f.puts x}
 	end
 	puts "Processed in #{ptime}secs"
-	break if kkk>4
+	k+=1
+	#~ break if kkk>4
 end
 unless urls.empty?
 	File.open(output_file,'a') {|f| f.puts "</results>\n"}

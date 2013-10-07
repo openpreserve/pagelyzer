@@ -388,7 +388,7 @@ def normalize_DOM(bom,element)
 			bom.document_area = bom.document.width * bom.document.height
 			
 			fix_no_explicit_nodes(e)
-			change_relative_url(bom,e)
+			#change_relative_url(bom,e)
 		end
 	end
 	element

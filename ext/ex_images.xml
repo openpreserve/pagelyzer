@@ -2,14 +2,14 @@
 <java version="1.6.0_27" class="java.beans.XMLDecoder">
  <object class="Taverna.FileConfig">
   <void property="binSVM">
-   <string>/home/scape/src/pagelyzer/standalone/pagelyzer-ruby-0.9.1-batch/ext/ex1/bin/svm_img</string>
+   <string>/home/sanojaa/src/pagelyzer/ext/ex1/bin/svm_img</string>
   </void>
   <void property="dicoHsv">
    <void method="add">
-    <string>/home/scape/src/pagelyzer/standalone/pagelyzer-ruby-0.9.1-batch/ext/ex1/dico/color/100/output.obj</string>
+    <string>/home/sanojaa/src/pagelyzer/ext/ex1/dico/color/100/output.obj</string>
    </void>
    <void method="add">
-    <string>/home/scape/src/pagelyzer/standalone/pagelyzer-ruby-0.9.1-batch/ext/ex1/dico/color/200/output.obj</string>
+    <string>/home/sanojaa/src/pagelyzer/ext/ex1/dico/color/200/output.obj</string>
    </void>
   </void>
  </object>

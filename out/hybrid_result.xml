@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<results>
+<type>hybrid</type>
+<test>
+<url href="http://yourfreedom.hmg.gov.uk/" browser="firefox"/>
+<url href="http://yourfreedom.hmg.gov.uk/" browser="firefox"/>
+<score>0.9999774792301377</score>
+<time>6.338688201</time>
+</test>
+<test>
+<url href="http://www.coi.gov.uk/" browser="firefox"/>
+<url href="http://www.coi.gov.uk/" browser="firefox"/>
+<score>0.6787403731210997</score>
+<time>7.061143397</time>
+</test>
+<test>
+<url href="http://nsonline.org.uk/site_intelligence/selectors/page?H" browser="firefox"/>
+<url href="http://nsonline.org.uk/site_intelligence/selectors/page?H" browser="firefox"/>
+<score>0.9999774792301377</score>
+<time>4.279226946</time>
+</test>
+<test>
+<url href="http://ofsted.gov.uk/ofsted-home/about-us/faqs" browser="firefox"/>
+<url href="http://ofsted.gov.uk/ofsted-home/about-us/faqs" browser="firefox"/>
+<score>0.9999774792301377</score>
+<time>4.853609825</time>
+</test>
+<test>
+<url href="http://www.abni.org.uk" browser="firefox"/>
+<url href="http://www.abni.org.uk" browser="firefox"/>
+<score>0.9999774792301377</score>
+<time>6.671327585</time>
+</test>
+</results>
