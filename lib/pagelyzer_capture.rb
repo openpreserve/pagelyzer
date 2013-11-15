@@ -1,4 +1,4 @@
-#! /usr/bin/ruby1.9.1
+#!/usr/bin/ruby1.9.1
 #-*- mode: ruby; encoding: utf-8 -*-
 # Andrés Sanoja
 # UPMC - LIP6
@@ -32,9 +32,8 @@
 # this thumbns area usefull for integrating with other tools and for future optimization
 # of change detection process ignoring parameter --thumb should do the trick
 #
-
 require 'selenium-webdriver'
-Selenium::WebDriver::Firefox::Binary.path='/usr/bin/firefox'
+#~ Selenium::WebDriver::Firefox::Binary.path='/usr/bin/firefox'
 #require 'selenium/client'
 require 'base64'
 require 'uri'

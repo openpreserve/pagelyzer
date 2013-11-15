@@ -1,4 +1,4 @@
-#! /usr/bin/ruby1.9.1
+#!/usr/bin/ruby1.9.1
 #-*- mode: ruby; encoding: utf-8 -*-
 # Andrés Sanoja
 # UPMC - LIP6
@@ -79,7 +79,19 @@ unless File.exist? "#{app_folder}/bin/pagelyzer_#{command}"
 end
 
 parameters.delete_at(0)
-command_options = parameters.join(" ")
-cmd = "#{app_folder}/bin/pagelyzer_#{command} #{command_options}"
-system(cmd)
+$command_options = parameters.join(" ")
+
+# removing these lines due to multiple ruby versions problems
+#~ cmd = "#{app_folder}/bin/pagelyzer_#{command} #{command_options}"
+# system(cmd) 
+
+puts eclass = "#{app_folder}/bin/pagelyzer_#{command}"
+begin
+	load eclass
+rescue Exception => msg
+	exit if $!.is_a? SystemExit
+	puts "The command #{command} could not be executed"
+	puts $!
+	puts msg.backtrace
+end
 

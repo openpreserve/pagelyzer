@@ -1,4 +1,4 @@
-#! /usr/bin/ruby1.9.1
+#!/usr/bin/ruby1.9.1
 #-*- mode: ruby; encoding: utf-8 -*-
 
 
@@ -10,10 +10,16 @@ end
 def usage
 	puts "USAGE: pagelyzer_analyzer --decorated-file=FILE [--output-file=FILE] [--granularity=(0..1) DEFAULT:0.3] [--version] [--help]"
 end
-#parsing command-line options (TODO: add option parser)
-if ARGV == []
+
+if defined?($command_options)
+	argv = $command_options.split(" ")
+else
+	argv = ARGV
+end
+
+if argv==[]
 	usage
-	exit
+	exit 
 end
 
 source_file=""
@@ -28,7 +34,7 @@ ti = Time.now
 granularity=6
 algorithm = "bom1"
 
-ARGV.each do |op|
+argv.each do |op|
 	sop = op.split("=")
 	folder 			= sop[1]		if sop[0] == "--input-folder"
 	algorithm 		= sop[1]		if sop[0] == "--algorithm"

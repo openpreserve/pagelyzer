@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/ruby1.9.1
 #-*- mode: ruby; encoding: utf-8 -*-
 # Andrés Sanoja
 # UPMC - LIP6

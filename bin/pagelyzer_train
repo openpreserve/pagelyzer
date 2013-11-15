@@ -1,4 +1,4 @@
-#! /usr/bin/ruby1.9.1
+#!/usr/bin/ruby1.9.1
 #-*- mode: ruby; encoding: utf-8 -*-
 # Alexis Lechervy
 # Andrés Sanoja
@@ -98,10 +98,17 @@ def get_java_class(class_name)
 	return Rjb::import(class_name)
 end
 
-if ARGV==[]
+if defined?($command_options)
+	argv = $command_options.split(" ")
+else
+	argv = ARGV
+end
+
+if argv==[]
 	usage
 	exit 
 end
+
 
 current_folder = File.expand_path(File.dirname(File.dirname(__FILE__)))
 output_folder = "#{current_folder}/out"
@@ -136,7 +143,7 @@ unless File.exists? output_folder
 	FileUtils.mkdir_p output_folder
 end
 
-ARGV.each do |op|
+argv.each do |op|
 	sop = op.strip.split("=")
 	urls 			= sop[1] if sop[0] == "--urls"
 	param_init		= sop[1] if sop[0] == "--param_init"

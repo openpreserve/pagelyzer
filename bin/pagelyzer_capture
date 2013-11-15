@@ -1,11 +1,11 @@
-#! /usr/bin/ruby1.9.1
+#!/usr/bin/ruby1.9.1
 #-*- mode: ruby; encoding: utf-8 -*-
-
 require_relative "../lib/pagelyzer_capture.rb"
 require_relative "../lib/pagelyzer_url_utils.rb"
 require 'uri'
 require "nokogiri"
 require 'base64'
+require 'selenium-webdriver'
 
 	current_folder = File.expand_path(File.dirname(File.dirname(__FILE__)))
 	url = ""
@@ -24,12 +24,18 @@ require 'base64'
 	exclude_list = ""
 	exclude_arr = []
 	
-	if ARGV==[]
+	if defined?($command_options)
+		argv = $command_options.split(" ")
+	else
+		argv = ARGV
+	end
+	
+	if argv==[]
 		Capture.usage
 		exit 
 	end
 	
-	ARGV.each do |op|
+	argv.each do |op|
 		sop = op.strip.split("=")
 		url 			= sop[1] if sop[0] == "--url"
 		urls 			= sop[1] if sop[0] == "--urls"

@@ -182,6 +182,7 @@ For command-line parameters is better to escape them, e.g:
 * The URL's should include the http schema
 `--url=http://www.host.com ---it is ok!
  --url=host.com ---won't work!`
+* IMPORTANT: remember to set the paths in configuration files located in ext/ folder.
 
 # External References:
 [1] http://answers.oreilly.com/topic/2845-installing-ruby-1-9-on-a-debian-or-ubuntu-system/
