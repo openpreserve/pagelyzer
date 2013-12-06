@@ -207,10 +207,10 @@ FIN
 			if thumb
 				begin
 					system("cp \"#{output_folder}/#{browser}_#{filename}.png\" \"#{output_folder}/#{browser}_#{filename}_thumb.png\"")
-					command1 = "convert \"#{output_folder}/#{browser}_#{filename}_thumb.png\""
-					command2 = "#{output_folder}/#{browser}_#{filename}_thumb.png\""
-					p1 = system(command1 +  " -crop 1024x768+0+0" +  command2)
-					p2 = system(command1 + " -filter Lanczos 300x225"  + command2)
+					command1 = "\"#{output_folder}/#{browser}_#{filename}_thumb.png\""
+					
+					p1 = system("convert " + command1 +  " -crop 1024x768+0+0" +  command1)
+					p2 = system("convert " + command1 +  " -filter Lanczos 300x225"  + command1)
 					if p1 and p2
 						puts "Thumbnail problem. Is ImageMagick 6+ installed in your system?"
 					end
