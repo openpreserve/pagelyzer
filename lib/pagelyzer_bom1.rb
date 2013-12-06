@@ -155,66 +155,6 @@ class BlockOMatic
 	block
 	end
 
-	def find_separators(block,mode)
-		if mode == :horizontal
-			block_sp = block.min_y
-			block_ep = block.max_y
-		else
-			block_sp = block.min_x
-			block_ep = block.max_x
-		end
-		sep = [Separator.new(block_sp,block_ep)] 
-		unless block.children.nil?
-			i=1
-			block.children.each do |child|
-				child.process_path unless child.path!=[]
-				if mode==:horizontal
-					child_sp = child.min_y
-					child_ep = child.max_y 
-				else
-					child_sp = child.min_x
-					child_ep = child.max_x 
-				end
-				to_add = []
-				to_del = []
-				ns=sep.size
-				k=0
-				while k<ns
-					if sep[k].contains? child,mode
-						aux =sep[k].ep
-						sep[k].ep = child_sp
-						sep.insert(k+1,Separator.new(child_ep,aux))
-						k=k+1
-						ns+=1
-					elsif sep[k].covered_by? child,mode
-						sep[k]=nil
-						sep.delete(nil)
-						k=k-1
-						ns-=1
-					else
-						if sep[k].top_crossed_by? child,mode
-							sep[k].sp = child_ep
-						elsif sep[k].bottom_crossed_by? child,mode
-							sep[k].ep = child_sp
-						end
-					end
-					k+=1
-				end
-
-			end
-			sep = sep[1..-2]
-			sep = [] if sep.nil?
-			if mode == :horizontal
-				block.hsep = sep
-			else
-				block.vsep = sep
-			end
-		end
-		block.vsep = sep if mode == :vertical
-		block.hsep = sep if mode == :horizontal
-	block
-	end
-
 
 	def to_xml
 	src = ""
