@@ -90,18 +90,47 @@ class Block
 			k+=1
 		end
 	end
+	
+	def process_extra_vixml2
+		@links = @links.uniq
+		@images = @images.uniq
+		@text = @text.uniq
+	end
+	
+	def process_extra_vixml(nodes)
+		nodes.each do |c|
+			c.search("*").each do |tag|
+				if ['a','img'].include? tag.name.downcase
+					@links.push tag 	if tag.name.downcase == 'a'
+					@images.push tag 	if tag.name.downcase == 'img'
+					@text.push Sanitize.clean(tag.inner_text)
+				else
+					@text.push Sanitize.clean(tag.inner_text) unless undesirable_node?(tag)
+				end
+			end
+		end
+		process_extra_vixml2
+	end
 
+	def get_proper_doc_with(nodes)
+		if nodes.collect {|x| x.name.upcase}.include? "BODY"
+			return 0
+		else
+			if rule.weight > @doc
+				return rule.weight 
+			else
+				return 0
+			end
+		end
+	end
+	
 	def add_candidate(nodes,rule)
 		nodes.each do |n|
 			@candidates << n
 		end
 		@rule = rule
 		if @rule.action.doc.nil?
-			if nodes.collect {|x| x.name.upcase}.include? "BODY"
-				@doc = 0
-			else
-				@doc = rule.weight if rule.weight > @doc
-			end
+			@doc = get_proper_doc_with nodes
 		else
 			@doc = @rule.action.doc
 		end
@@ -109,62 +138,62 @@ class Block
 		process_path
 		
 		#extracting links for ViXML generation
-		nodes.each do |c|
-			c.search("*").each do |tag|
-				if ['a','img'].include? tag.name.downcase
-				
-					if tag.name.downcase == 'a'
-						@links.push tag 
-					end
-					if tag.name.downcase == 'img'
-						@images.push tag 
-					end
-					@text.push Sanitize.clean(tag.inner_text)
-				else
-					unless undesirable_node?(tag)
-						@text.push Sanitize.clean(tag.inner_text)
-					end
-				end
-			end
-		end
-		@links = @links.uniq
-		@images = @images.uniq
-		@text = @text.uniq
+		process_extra_vixml nodes
+		
 		
 		#puts "#{sid} #{@images.size	}"
 	end
 
 	#construct the block polygon
+	
+	def iterate_candidates
+		x=[]
+		y=[]
+		@candidates.each do |n|
+			y.push [n['elem_top'].to_f,n['elem_height'].to_f]
+			x.push [n['elem_left'].to_f,n['elem_width'].to_f]
+		end
+		return x.flatten!,y.flatten!
+	end
+	
+	def get_actual_path
+		x=[]
+		y=[]
+		@path.each do |p|
+			x.push p.x
+			y.push p.y
+		end
+		return x,y
+	end
+	
+	def set_coord(x,y)
+		@min_x = x.min
+		@max_x = x.max
+		@min_y = y.min
+		@max_y = y.max
+	end
+	
+	def set_new_path_with(x,y)
+		@path.push Point.new(x.min,y.min)
+		@path.push Point.new(x.min,y.max)
+		@path.push Point.new(x.max,y.max)
+		@path.push Point.new(x.max,y.min)
+	end
+	
 	def process_path
 		unless @candidates == []
 			@path = []
-			x=[]
-			y=[]
-			@candidates.each do |n|
-				#p "#{n['elem_left']} #{n['elem_top']} #{n['elem_width']} #{n['elem_height']} #{n['background_color']} #{n.xpath}"
-				y.push [n['elem_top'].to_f,n['elem_height'].to_f]
-				x.push [n['elem_left'].to_f,n['elem_width'].to_f]
-			end
-			x.flatten!
-			y.flatten!
 			
-			
+			x,y = iterate_candidates
 			
 			unless x==[] or y==[]
-				@path.push Point.new(x.min,y.min)
-				@path.push Point.new(x.min,y.max)
-				@path.push Point.new(x.max,y.max)
-				@path.push Point.new(x.max,y.min)
+				set_new_path_with x,y
 			end
 		else
-			x = @path.collect {|p| p.x}
-			y = @path.collect {|p| p.y}
+			x,y = get_actual_path
 		end
 		
-		 @min_x = x.min
-		 @max_x = x.max
-		 @min_y = y.min
-		 @max_y = y.max
+		 set_coord x,y
 	end
 
 	def minimum_distance_to?(block)
@@ -213,46 +242,50 @@ class Block
 		@path.reduce(0) {|sum,p| sum+=p.y} / @path.size
 	end
 
-	def calculate_max_y
-		ch_max_y = 0
-		final_max_y = @path.collect {|p| p.y}.max.to_f
-		unless @children == []
-			ch_max_y = @children.collect {|child| child.max_y}.max.to_f
-		end
-		final_max_y = ch_max_y if ch_max_y > final_max_y
-		final_max_y
-	end
-
-	def calculate_max_x
-		ch_max_x = 0
-		final_max_x = @path.collect {|p| p.x}.max.to_f
-		unless @children == []
-			ch_max_x = @children.collect {|child| child.max_x}.max.to_f
-		end
-		final_max_x = ch_max_x if ch_max_x > final_max_x
-		final_max_x
-	end
-
-	def calculate_min_y
-		ch_min_y = 999999999999999999
-		final_min_y = @path.collect {|p| p.y}.min.to_f
-		unless @children == []
-			ch_min_y = @children.collect {|child| child.min_y}.min.to_f
-		end
-		final_min_y = ch_min_y if ch_min_y < final_min_y
-		final_min_y
-	end
-
-	def calculate_min_x
-		ch_min_x = 999999999999999999
-		final_min_x = @path.collect {|p| p.x}.min.to_f
-		unless @children == []
-			ch_min_x = @children.collect {|child| child.min_x}.min
-		end
-		final_min_x = ch_min_x if ch_min_x < final_min_x
-		final_min_x
-	end
-
+	# not used, next step delete it
+	
+	#=== begin commented/deleted code
+	
+	#~ def calculate_max_y
+		#~ ch_max_y = 0
+		#~ final_max_y = @path.collect {|p| p.y}.max.to_f
+		#~ unless @children == []
+			#~ ch_max_y = @children.collect {|child| child.max_y}.max.to_f
+		#~ end
+		#~ final_max_y = ch_max_y if ch_max_y > final_max_y
+		#~ final_max_y
+	#~ end
+#~ 
+	#~ def calculate_max_x
+		#~ ch_max_x = 0
+		#~ final_max_x = @path.collect {|p| p.x}.max.to_f
+		#~ unless @children == []
+			#~ ch_max_x = @children.collect {|child| child.max_x}.max.to_f
+		#~ end
+		#~ final_max_x = ch_max_x if ch_max_x > final_max_x
+		#~ final_max_x
+	#~ end
+#~ 
+	#~ def calculate_min_y
+		#~ ch_min_y = 999999999999999999
+		#~ final_min_y = @path.collect {|p| p.y}.min.to_f
+		#~ unless @children == []
+			#~ ch_min_y = @children.collect {|child| child.min_y}.min.to_f
+		#~ end
+		#~ final_min_y = ch_min_y if ch_min_y < final_min_y
+		#~ final_min_y
+	#~ end
+#~ 
+	#~ def calculate_min_x
+		#~ ch_min_x = 999999999999999999
+		#~ final_min_x = @path.collect {|p| p.x}.min.to_f
+		#~ unless @children == []
+			#~ ch_min_x = @children.collect {|child| child.min_x}.min
+		#~ end
+		#~ final_min_x = ch_min_x if ch_min_x < final_min_x
+		#~ final_min_x
+	#~ end
+    #=== end commented/deleted code
 
 	#detect overlapped siblings blocks
 	def detect_overlapping
