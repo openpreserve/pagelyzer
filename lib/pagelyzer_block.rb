@@ -97,17 +97,21 @@ class Block
 		@text = @text.uniq
 	end
 	
-	def process_extra_vixml(nodes)
-		nodes.each do |c|
-			c.search("*").each do |tag|
+	def process_extra_links(c)
+		c.search("*").each do |tag|
 				if ['a','img'].include? tag.name.downcase
-					@links.push tag 	if tag.name.downcase == 'a'
-					@images.push tag 	if tag.name.downcase == 'img'
+					@links.push tag	
+					@images.push tag
 					@text.push Sanitize.clean(tag.inner_text)
 				else
 					@text.push Sanitize.clean(tag.inner_text) unless undesirable_node?(tag)
 				end
 			end
+	end
+	
+	def process_extra_vixml(nodes)
+		nodes.each do |c|
+			process_extra_links c
 		end
 		process_extra_vixml2
 	end
