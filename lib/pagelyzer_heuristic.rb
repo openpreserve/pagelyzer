@@ -137,8 +137,8 @@ class LayoutContainer < Heuristic
 		unless text?(node) or !has_children?(node) or !line_break?(node)
 			cont = 0
 			valid = 0
-			sub_tree = 0
-			excluded = 0
+			#~ sub_tree = 0
+			#~ excluded = 0
 			node.children.each do |c| 
 				cont+=1 if container?(c)
 				valid += 1 if valid?(c) and !anchor?(c)

@@ -33,7 +33,7 @@
 # of change detection process ignoring parameter --thumb should do the trick
 #
 require 'selenium-webdriver'
-#~ Selenium::WebDriver::Firefox::Binary.path='/usr/bin/firefox'
+Selenium::WebDriver::Firefox::Binary.path='/usr/bin/firefox'
 #require 'selenium/client'
 require 'base64'
 require 'uri'

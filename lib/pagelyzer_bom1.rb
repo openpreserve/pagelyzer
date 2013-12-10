@@ -51,7 +51,7 @@ require_relative '../lib/pagelyzer_block.rb'
 require_relative '../lib/pagelyzer_util.rb'
 require_relative '../lib/pagelyzer_point.rb'
 require_relative '../lib/pagelyzer_separator.rb'
-require_relative '../lib/pagelyzer_convex_hull.rb'
+#~ require_relative '../lib/pagelyzer_convex_hull.rb'
 require_relative '../lib/pagelyzer_heuristic.rb'
 
 
@@ -82,61 +82,86 @@ class BlockOMatic
 		@root = nil
 		@type = :file
 		@error = false
+		@doc = nil
+	end
+	
+	def process_heuristics1(node)
+	ret=nil
+		@heuristics.each do |h|
+			if h.parse(node)
+				ret= h
+				break 
+			end
+		end
+	return ret
+	end
+	def process_heuristics2(node)
+		ind=@heuristics.collect{|a| a.name}.index(node['rule']) 
+		@heuristics[ind].action = Action.new('extract',@heuristics[ind].weight)
+		return @heuristics[ind]
 	end
 	
 	def process_node(node)
 		rule_used = nil
 		if node['candidate'].nil?
 			unless malformed?(node) or text?(node) or !valid?(node)
-				@heuristics.each do |h|
-					if h.parse(node)
-						rule_used = h
-						break 
-					end
-				end
+				rule_used = process_heuristics1(node)
 			end
+			
 		else
-			ind=@heuristics.collect{|a| a.name}.index(node['rule']) 
-			@heuristics[ind].action = Action.new('extract',@heuristics[ind].weight)
-			rule_used = @heuristics[ind]
+			rule_used = process_heuristics2(node)
 		end
+		
 		rule_used 
 	end
 
+	def process_current_node(node,heuristic)
+		current_block = Block.new 
+		current_block.id = @block_count
+		@block_count += 1
+		current_block.add_candidate [node],heuristic
+		current_block.process_path
+		return current_block
+	end
+	
+	def process_current_block(node,current_block)
+		sub_block_list = []
+		unless node.children.nil? 
+			node.children.each do |e|
+				sub_block_list.push detect_blocks(e)
+			end
+			sub_block_list.flatten!
+			sub_block_list.delete(nil)
+			sub_block_list.each {|b| current_block.add_child b}
+		end
+	end
+	
+	def divide_current_block(node)
+		sub_block_list = []
+		unless node.children.nil? 
+				node.children.each do |e|
+					sub_block_list.push detect_blocks(e)
+				end
+				sub_block_list.flatten!
+				sub_block_list.delete(nil)
+		end
+		return sub_block_list
+	end
+	
 	def detect_blocks(node)
-	current_block = nil
-	sub_block_list = []
+		current_block = nil
+		current_block = []
 		if node.elem? and !undesirable_node?(node) and visible?(node)
 			heuristic = process_node(node)
 			if !heuristic.nil? and heuristic.action.rec == 'extract'
-				current_block = Block.new 
-				current_block.id = @block_count
-				@block_count += 1
-				current_block.add_candidate [node],heuristic
-				current_block.process_path
+				current_block = process_current_node(node,heuristic)
 				#TODO: verify if there are nodes that do not corresponds to a sub-block IMPLICIT BLOCKS
 				if current_block.doc < @pdoc	
-					unless node.children.nil? 
-						node.children.each do |e|
-							sub_block_list.push detect_blocks(e)
-						end
-						sub_block_list.flatten!
-						sub_block_list.delete(nil)
-						sub_block_list.each {|b| current_block.add_child b}
-					end
+					process_current_block(node,current_block)
 				end
 			elsif !heuristic.nil? and heuristic.action.rec == 'divide'
 				#divide
-				unless node.children.nil? 
-						node.children.each do |e|
-							sub_block_list.push detect_blocks(e)
-						end
-						sub_block_list.flatten!
-						sub_block_list.delete(nil)
-					end
-				current_block = sub_block_list
-			else
-				current_block = sub_block_list
+				current_block = divide_current_block(node)
 			end
 		end
 	current_block
@@ -192,18 +217,7 @@ def set_granularity(n)
 	@pdoc = n
 end
 
-def start
-	begin
-		doc = load(self,@source_file,:content)
-	rescue
-		puts "ERROR: There was a problem loading the page"
-		@error=true
-		return self
-	end
-	doc = normalize_DOM(self,doc) 
-	@doc_proportion = @document_area / 10.0
-	@doc_rel = 10-@pdoc+1
-
+def initialize_heuristics
 	@heuristics = []
 	@heuristics.push Body.new(self,4)	#only for body
 	@heuristics.push Invalids.new(self,3)	#skip
@@ -216,18 +230,39 @@ def start
 	@heuristics.push Image.new(self,9)	#extract
 	@heuristics.push DefaultDivide.new(self,8) #might extract
 	@heuristics.push DefaultExtract.new(self,10) #might extract
+end
 
+def initialize_granularity
+	doc = normalize_DOM(self,doc) 
+	@doc_proportion = @document_area / 10.0
+	@doc_rel = 10-@pdoc+1
+end
+
+def load_document
+	begin
+		@doc = load(self,@source_file,:content)
+	rescue
+		puts "ERROR: There was a problem loading the page"
+		@error=true
+		return self
+	end
+end
+
+def get_first_node
 	#get first node to start validation
 	firstnode = nil
-	head = doc.at('head')
+	head = @doc.at('head')
 	if head.nil?
-		body = doc.at('body')
+		body = @doc.at('body')
 		firstnode = body unless body.nil?
 	else
 		firstnode = head.next_sibling
 	end
-	firstnode = doc.root if firstnode.nil?
-	@root = detect_blocks(firstnode)
+	firstnode = @doc.root if firstnode.nil?
+	return firstnode
+end
+
+def get_real_root
 	if @root.nil?
 		@error = true
 	else
@@ -241,14 +276,25 @@ def start
 				@root = Block.new
 				@root.add_candidate doc.root
 				@root.children = sub
-				@root.process_path
 			end
-		else
-			@root.process_path
 		end
 	end
+end
 
+def start
+	
+	load_document
+
+	initialize_heuristics
+
+	@root = detect_blocks(get_first_node)
+	
+	get_real_root
+	
+	@root.process_path
+	
 	return self
+	
 	end
 end
 
