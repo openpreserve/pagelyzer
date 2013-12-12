@@ -336,11 +336,15 @@ class Block
 	def paths
 		"<Paths>\n#{candidate_path}</Paths>\n"
 	end
-	def xlinks_det_proc
-		iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
+	def xlinks_det_proc_asg
 		unless lid.include? iid
 			s = "<link ID=\"#{iid}\" Name=\"#{escape_html(link.inner_text.strip)}\" Adr=\"#{escape_html(link[:href])}\"/>"
 		end
+		s
+	end
+	def xlinks_det_proc
+		iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
+		s = xlinks_det_proc_asg
 		return iid,ss
 	end
 	def xlinks_det
