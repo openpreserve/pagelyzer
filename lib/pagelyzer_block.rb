@@ -397,7 +397,8 @@ class Block
 	def fmtimage(iid,v1,v2)
 		"<img ID=\"#{iid}\" Name=\"#{escape_html(v1)}\" Src=\"#{escape_html(v2)}\"/>"
 	end
-	def fmtlink
+	def fmtlink(iid,v1,v2)
+		"<link ID=\"#{iid}\" Name=\"#{escape_html(v1)}\" Adr=\"#{escape_html(v2)}\"/>"
 	end
 	def xproc_det_proc_asg(list,item,iid,v1,v2,type)
 		s=""
