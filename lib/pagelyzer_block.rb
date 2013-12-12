@@ -394,18 +394,27 @@ class Block
 		#~ return lim,si
 	#~ end
 	#*******
-	def xproc_det_proc_asg(list,item,iid,v1,v2)
+	def fmtimage(iid,v1,v2)
+		"<img ID=\"#{iid}\" Name=\"#{escape_html(v1)}\" Src=\"#{escape_html(v2)}\"/>"
+	end
+	def fmtlink
+	end
+	def xproc_det_proc_asg(list,item,iid,v1,v2,type)
 		s=""
 		unless list.include? iid
 			list.push iid
-			s = "<img ID=\"#{iid}\" Name=\"#{escape_html(v1)}\" Src=\"#{escape_html(v2)}\"/>"
+			if type==1
+				s = fmtimage(iid,v1,v2)
+			else
+				s = fmtlink(iid,v1,v2)
+			end
 		end
 		s
 	end
-	def  xproc_det_proc(list,item,v1,v2)
+	def  xproc_det_proc(list,item,v1,v2,type)
 		iid = crypt(escape_html(v1)+escape_html(v2))
 		#~ iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
-		s = xproc_det_proc_asg(list,item,iid,v1,v2)
+		s = xproc_det_proc_asg(list,item,iid,v1,v2,type)
 		return iid,s
 	end
 	def xproc_det(collection,type)
@@ -414,9 +423,9 @@ class Block
 		collection.each do |item|
 			unless malformed?(item)
 				if type==1
-					iid,s = xproc_det_proc(list,item,item['alt'],item['src']) 
+					iid,s = xproc_det_proc(list,item,item['alt'],item['src'],type) 
 				else
-					iid,s = xproc_det_proc(list,item,item.inner_text.strip,item[:href])
+					iid,s = xproc_det_proc(list,item,item.inner_text.strip,item[:href],type)
 				end
 				list.push iid
 				text += s
