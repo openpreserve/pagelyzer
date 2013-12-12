@@ -336,16 +336,21 @@ class Block
 	def paths
 		"<Paths>\n#{candidate_path}</Paths>\n"
 	end
+	def xlinks_det_proc
+		iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
+		unless lid.include? iid
+			s = "<link ID=\"#{iid}\" Name=\"#{escape_html(link.inner_text.strip)}\" Adr=\"#{escape_html(link[:href])}\"/>"
+		end
+		return iid,ss
+	end
 	def xlinks_det
 		lid = []
 		sl = ""
 		@links.uniq.each do |link|
 			unless malformed?(link)
-				iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
-				unless lid.include? iid
-					lid.push iid
-					sl += "<link ID=\"#{iid}\" Name=\"#{escape_html(link.inner_text.strip)}\" Adr=\"#{escape_html(link[:href])}\"/>"
-				end
+				iid,s = xlinks_det_proc
+				lid.push iid
+				sl += s
 			end
 		end
 		return lid,sl
