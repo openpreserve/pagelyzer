@@ -446,14 +446,21 @@ class Block
 	end
 	
 	# get the ViXML format representation of the block
-	def to_xml
-		cnt =  weight + paths + xlinks + ximgs + xtext 
-		src = block_open.gsub('$BLOCK_ID$',crypt(cnt)) + cnt
+	
+	def process_children
+		src = ""
 		unless @children.empty?
 			@children.each do |child|
 				src += child.to_xml
 			end
 		end
+		return src
+	end
+	
+	def to_xml
+		cnt =  weight + paths + xlinks + ximgs + xtext 
+		src = block_open.gsub('$BLOCK_ID$',crypt(cnt)) + cnt
+		src += process_children
 		src += block_close
 		return src
 	end
