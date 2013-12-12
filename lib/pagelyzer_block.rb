@@ -75,7 +75,7 @@ class Block
 
 	def add_child(child)
 		child.parent = self
-		@weight = child.weight if child.weight > @weight
+		@weight = child.weight.to_i if child.weight.to_i > @weight.to_i
 		@children.push child
 	end
 
@@ -318,68 +318,90 @@ class Block
 		end
 		return false
 	end
-
-	# get the ViXML format representation of the block
-	def to_xml
-		src = ""
-		src+= "<Block Ref=\"Block#{sid}\" internal_id='#{@id}' ID=\"$BLOCK_ID$\" Pos=\"WindowWidth||PageRectLeft:#{@min_x} WindowHeight||PageRectTop:#{@min_y} ObjectRectWidth:#{@max_x - @min_x} ObjectRectHeight:#{@max_y - @min_y}\" Doc=\"#{@doc}\">\n"
-			src += "<weight>\n"
-			src += "#{@doc}\n"
-			src += "</weight>\n"
-			
-			src += "<Paths>\n"
-			src += @candidates.collect {|c| "<path>#{c.path},#{c["elem_left"]},#{c["elem_top"]},#{c["elem_width"]},#{c["elem_height"]},#{c["id"]},#{c["uid"]}</path>\n"}.join("")
-			src += "</Paths>\n"
-			
-				src += "<Links ID=\"$LINKS_ID$\" IDList=\"$ID_LIST_LINKS$\">\n"
-				lid = []
-				sl = ""
-				@links.each do |link|
-					unless malformed?(link)
-						iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
-						lid.push iid
-						sl += "<link ID=\"#{iid}\" Name=\"#{escape_html(link.inner_text.strip)}\" Adr=\"#{escape_html(link[:href])}\"/>"
-					end
-				end
-				src.gsub!('$ID_LIST_LINKS$',lid.join(','))
-				src.gsub!('$LINKS_ID$',crypt(sl))
-				src += sl
-				src += "</Links>\n"
-				
-				src += "<Imgs ID=\"$IMGS_ID$\" IDList=\"$ID_LIST_IMAGES$\">\n"
-				lim = []
-				si = ""
-				@images.each do |image|
-					unless malformed?(image)
-						iid = crypt(escape_html(image['alt'])+escape_html(image['src']))
-						lim.push iid
-						si += "<img ID=\"#{iid}\" Name=\"#{escape_html(image[:alt])}\" Src=\"#{escape_html(image[:src])}\"/>"
-					end
-				end
-				src.gsub!('$ID_LIST_IMAGES$',lim.join(','))
-				src.gsub!('$IMGS_ID$',crypt(si))
-				src += si
-				src += "</Imgs>\n"
-				
-				@text.delete(nil)
-				@text.delete('')
-				@text.collect! {|t| 
-					t.gsub(/(?<!\n)\n(?!\n)/,' ').gsub(/^$\n/,'').gsub(/\s+/,' ').strip
-				}
-				txt = escape_html(@text.join(","))
-				src += "<Txts ID=\"#{crypt(txt)}\" Txt=\"#{txt}\"/>\n"
-			unless @children.empty?
-				@children.each do |child|
-					src += child.to_xml
-				end
-			end
-		src += "</Block>\n"
-		src.gsub!('$BLOCK_ID$',crypt(src))
-		src
+	
+	
+	def weight
+		"<weight>\n#{@doc}\n</weight>\n"
 	end
 	
-	def entropy
-		
+	def block_open
+		"<Block Ref=\"Block#{sid}\" internal_id='#{@id}' ID=\"$BLOCK_ID$\" Pos=\"WindowWidth||PageRectLeft:#{@min_x} WindowHeight||PageRectTop:#{@min_y} ObjectRectWidth:#{@max_x - @min_x} ObjectRectHeight:#{@max_y - @min_y}\" Doc=\"#{@doc}\">\n"
+	end
+	def block_close
+		"</Block>"
+	end
+	def candidate_path
+		@candidates.collect {|c| "<path>#{c.path},#{c["elem_left"]},#{c["elem_top"]},#{c["elem_width"]},#{c["elem_height"]},#{c["id"]},#{c["uid"]}</path>\n"}.join("")
+	end
+	def paths
+		"<Paths>\n#{candidate_path}</Paths>\n"
+	end
+	def xlinks_det
+		lid = []
+		sl = ""
+		@links.uniq.each do |link|
+			unless malformed?(link)
+				iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
+				unless lid.include? iid
+					lid.push iid
+					sl += "<link ID=\"#{iid}\" Name=\"#{escape_html(link.inner_text.strip)}\" Adr=\"#{escape_html(link[:href])}\"/>"
+				end
+			end
+		end
+		return lid,sl
+	end
+	def xlinks
+		src="<Links ID=\"$LINKS_ID$\" IDList=\"$ID_LIST_LINKS$\">\n"
+		lid,sl = xlinks_det
+		src.gsub!('$ID_LIST_LINKS$',lid.join(','))
+		src.gsub!('$LINKS_ID$',crypt(sl))
+		src += "</Links>\n"
+		return src
+	end
+	def ximgs_det
+		lim = []
+		si = ""
+		@images.uniq.each do |image|
+			unless malformed?(image) 
+				iid = crypt(escape_html(image['alt'])+escape_html(image['src']))
+				unless lim.include? iid
+					lim.push iid
+					si += "<img ID=\"#{iid}\" Name=\"#{escape_html(image[:alt])}\" Src=\"#{escape_html(image[:src])}\"/>"
+				end
+			end
+		end
+		return lim,si
+	end
+	def ximgs
+		src = "<Imgs ID=\"$IMGS_ID$\" IDList=\"$ID_LIST_IMAGES$\">\n"
+		lim,si = ximgs_det
+		src.gsub!('$ID_LIST_IMAGES$',lim.join(','))
+		src.gsub!('$IMGS_ID$',crypt(si))
+		src += si
+		src += "</Imgs>\n"
+		return src
+	end
+	def xtext
+		@text.delete(nil)
+		@text.delete('')
+		@text.collect! {|t| 
+			t.gsub(/(?<!\n)\n(?!\n)/,' ').gsub(/^$\n/,'').gsub(/\s+/,' ').strip
+		}
+		txt = escape_html(@text.join(","))
+		return "<Txts ID=\"#{crypt(txt)}\" Txt=\"#{txt}\"/>\n"
+	end
+	
+	# get the ViXML format representation of the block
+	def to_xml
+		cnt =  weight + paths + xlinks + ximgs + xtext 
+		src = block_open.gsub('$BLOCK_ID$',crypt(cnt)) + cnt
+		unless @children.empty?
+			@children.each do |child|
+				src += child.to_xml
+			end
+		end
+		src += block_close
+		return src
 	end
 
 end
