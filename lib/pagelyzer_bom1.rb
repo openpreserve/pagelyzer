@@ -50,7 +50,7 @@ require_relative '../lib/pagelyzer_dimension.rb'
 require_relative '../lib/pagelyzer_block.rb'
 require_relative '../lib/pagelyzer_util.rb'
 require_relative '../lib/pagelyzer_point.rb'
-require_relative '../lib/pagelyzer_separator.rb'
+#~ require_relative '../lib/pagelyzer_separator.rb'
 #~ require_relative '../lib/pagelyzer_convex_hull.rb'
 require_relative '../lib/pagelyzer_heuristic.rb'
 

@@ -336,23 +336,24 @@ class Block
 	def paths
 		"<Paths>\n#{candidate_path}</Paths>\n"
 	end
-	def xlinks_det_proc_asg
+	def xlinks_det_proc_asg(lid,link,iid)
+		s=""
 		unless lid.include? iid
 			s = "<link ID=\"#{iid}\" Name=\"#{escape_html(link.inner_text.strip)}\" Adr=\"#{escape_html(link[:href])}\"/>"
 		end
 		s
 	end
-	def xlinks_det_proc
+	def xlinks_det_proc(lid,link)
 		iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
-		s = xlinks_det_proc_asg
-		return iid,ss
+		s = xlinks_det_proc_asg(lid,link,iid)
+		return iid,s
 	end
 	def xlinks_det
 		lid = []
 		sl = ""
 		@links.uniq.each do |link|
 			unless malformed?(link)
-				iid,s = xlinks_det_proc
+				iid,s = xlinks_det_proc(lid,link)
 				lid.push iid
 				sl += s
 			end
@@ -367,16 +368,27 @@ class Block
 		src += "</Links>\n"
 		return src
 	end
+	def ximgs_det_proc_asg(lim,image,iid)
+		s=""
+		unless lim.include? iid
+			lim.push iid
+			s = "<img ID=\"#{iid}\" Name=\"#{escape_html(image[:alt])}\" Src=\"#{escape_html(image[:src])}\"/>"
+		end
+		s
+	end
+	def ximgs_det_proc(lim,image)
+		iid = crypt(escape_html(image['alt'])+escape_html(image['src']))
+		s = ximgs_det_proc_asg(lim,image,iid)
+		return iid,s
+	end
 	def ximgs_det
 		lim = []
 		si = ""
 		@images.uniq.each do |image|
 			unless malformed?(image) 
-				iid = crypt(escape_html(image['alt'])+escape_html(image['src']))
-				unless lim.include? iid
-					lim.push iid
-					si += "<img ID=\"#{iid}\" Name=\"#{escape_html(image[:alt])}\" Src=\"#{escape_html(image[:src])}\"/>"
-				end
+				iid,s = ximgs_det_proc(lim,image)
+				lim.push iid
+				si += s
 			end
 		end
 		return lim,si
