@@ -336,66 +336,99 @@ class Block
 	def paths
 		"<Paths>\n#{candidate_path}</Paths>\n"
 	end
-	def xlinks_det_proc_asg(lid,link,iid)
-		s=""
-		unless lid.include? iid
-			s = "<link ID=\"#{iid}\" Name=\"#{escape_html(link.inner_text.strip)}\" Adr=\"#{escape_html(link[:href])}\"/>"
-		end
-		s
-	end
-	def xlinks_det_proc(lid,link)
-		iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
-		s = xlinks_det_proc_asg(lid,link,iid)
-		return iid,s
-	end
-	def xlinks_det
-		lid = []
-		sl = ""
-		@links.uniq.each do |link|
-			unless malformed?(link)
-				iid,s = xlinks_det_proc(lid,link)
-				lid.push iid
-				sl += s
-			end
-		end
-		return lid,sl
-	end
+	#~ def xlinks_det_proc_asg(lid,link,iid)
+		#~ s=""
+		#~ unless lid.include? iid
+			#~ s = "<link ID=\"#{iid}\" Name=\"#{escape_html(link.inner_text.strip)}\" Adr=\"#{escape_html(link[:href])}\"/>"
+		#~ end
+		#~ s
+	#~ end
+	#~ def xlinks_det_proc(lid,link)
+		#~ iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
+		#~ s = xlinks_det_proc_asg(lid,link,iid)
+		#~ return iid,s
+	#~ end
+	#~ def xlinks_det
+		#~ lid = []
+		#~ sl = ""
+		#~ @links.uniq.each do |link|
+			#~ unless malformed?(link)
+				#~ iid,s = xlinks_det_proc(lid,link)
+				#~ lid.push iid
+				#~ sl += s
+			#~ end
+		#~ end
+		#~ return lid,sl
+	#~ end
 	def xlinks
 		src="<Links ID=\"$LINKS_ID$\" IDList=\"$ID_LIST_LINKS$\">\n"
-		lid,sl = xlinks_det
+		lid,sl = xproc_det(@links,2)
 		src.gsub!('$ID_LIST_LINKS$',lid.join(','))
 		src.gsub!('$LINKS_ID$',crypt(sl))
 		src += "</Links>\n"
 		return src
 	end
-	def ximgs_det_proc_asg(lim,image,iid)
+	#~ def ximgs_det_proc_asg(lim,image,iid)
+		#~ s=""
+		#~ unless lim.include? iid
+			#~ lim.push iid
+			#~ s = "<img ID=\"#{iid}\" Name=\"#{escape_html(image[:alt])}\" Src=\"#{escape_html(image[:src])}\"/>"
+		#~ end
+		#~ s
+	#~ end
+	#~ def ximgs_det_proc(lim,image)
+		#~ iid = crypt(escape_html(image['alt'])+escape_html(image['src']))
+		#~ s = ximgs_det_proc_asg(lim,image,iid)
+		#~ return iid,s
+	#~ end
+	#~ def ximgs_det
+		#~ lim = []
+		#~ si = ""
+		#~ @images.uniq.each do |image|
+			#~ unless malformed?(image) 
+				#~ iid,s = ximgs_det_proc(lim,image)
+				#~ lim.push iid
+				#~ si += s
+			#~ end
+		#~ end
+		#~ return lim,si
+	#~ end
+	#*******
+	def xproc_det_proc_asg(list,item,iid,v1,v2)
 		s=""
-		unless lim.include? iid
-			lim.push iid
-			s = "<img ID=\"#{iid}\" Name=\"#{escape_html(image[:alt])}\" Src=\"#{escape_html(image[:src])}\"/>"
+		unless list.include? iid
+			list.push iid
+			s = "<img ID=\"#{iid}\" Name=\"#{escape_html(v1)}\" Src=\"#{escape_html(v2)}\"/>"
 		end
 		s
 	end
-	def ximgs_det_proc(lim,image)
-		iid = crypt(escape_html(image['alt'])+escape_html(image['src']))
-		s = ximgs_det_proc_asg(lim,image,iid)
+	def  xproc_det_proc(list,item,v1,v2)
+		iid = crypt(escape_html(v1)+escape_html(v2))
+		#~ iid = crypt(escape_html(link.inner_text.strip) + escape_html(link[:href]))
+		s = xproc_det_proc_asg(list,item,iid,v1,v2)
 		return iid,s
 	end
-	def ximgs_det
-		lim = []
-		si = ""
-		@images.uniq.each do |image|
-			unless malformed?(image) 
-				iid,s = ximgs_det_proc(lim,image)
-				lim.push iid
-				si += s
+	def xproc_det(collection,type)
+		list = []
+		text = ""
+		collection.each do |item|
+			unless malformed?(item)
+				if type==1
+					iid,s = xproc_det_proc(list,item,item['alt'],item['src']) 
+				else
+					iid,s = xproc_det_proc(list,item,item.inner_text.strip,item[:href])
+				end
+				list.push iid
+				text += s
 			end
 		end
-		return lim,si
+		return list,text
 	end
+	# *******
 	def ximgs
 		src = "<Imgs ID=\"$IMGS_ID$\" IDList=\"$ID_LIST_IMAGES$\">\n"
-		lim,si = ximgs_det
+		lim,si = xproc_det(@images,1)
+		#~ lim,si = ximgs_det
 		src.gsub!('$ID_LIST_IMAGES$',lim.join(','))
 		src.gsub!('$IMGS_ID$',crypt(si))
 		src += si
