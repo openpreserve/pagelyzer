@@ -137,6 +137,7 @@ e.g. to run pagelyzer on your chrome/chromium instance, you should install the C
 * IMPORTANT: remember to set the paths in configuration files located in ext/ folder.
 
 # External References:
+
 [1] http://docs.seleniumhq.org/about/platforms.jsp#browsers  
 
 [2] http://code.google.com/p/selenium/wiki/FrequentlyAskedQuestions#Q:_Which_browsers_does_WebDriver_support?  
