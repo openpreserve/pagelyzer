@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.6.0_27" class="java.beans.XMLDecoder">
+ <object class="Taverna.FileConfig">
+  <void property="binSVM">
+   <string>/home/sanojaa/src/pagelyzer/ext/ex1/bin/svm_struct</string>
+  </void>
+ </object>
+</java>

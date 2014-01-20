@@ -1,0 +1,97 @@
+#!/usr/bin/ruby1.9.1
+#-*- mode: ruby; encoding: utf-8 -*-
+# Andrés Sanoja
+# UPMC - LIP6
+#
+#
+#
+# pagelyzer 
+#
+# Requires: Ruby 1.9.1+ (1.8.x versions won't work), rubygems 1.3.7+ and Hpricot gem v=0.8.6
+#
+# Copyright (C) 2011, 2012 Andrés Sanoja, Université Pierre et Marie Curie -
+# Laboratoire d'informatique de Paris 6 (LIP6)
+#
+# Contributors: Stephane Gançarski - LIP6
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+def usage
+	puts "USAGE: pagelyzer [--help|--version|--server] [<command> <command_options>]"
+end
+
+def version
+	puts "Pagelyzer. Version 0.9"
+end
+
+def help
+	version
+	usage
+	puts "This tool aims to be an interface to pagelyzer suite"
+	puts "Help:"
+	puts "Available commands are:"
+	puts " - capture"
+	puts " - analyzer"
+	puts " - change_detection"
+	puts " - train"
+	puts ""
+	puts "To have information on the usage of each command use: ./pagelyzer <command> --help "
+	puts
+end
+
+app_folder = File.expand_path(File.dirname(__FILE__))
+parameters = ARGV.to_a
+command = parameters[0]
+
+if parameters.empty?
+	usage
+	exit
+end
+
+showhelp = (parameters.collect {|x| x=='--help'}.include? true)
+showversion = (parameters.collect {|x| x=='--version'}.include? true)
+
+if showhelp and (parameters.size==1)
+	help
+	exit
+end
+
+if showversion and (parameters.size==1)
+	version
+	exit
+end
+unless File.exist? "#{app_folder}/bin/pagelyzer_#{command}"
+	puts "Command #{command} not recognized"
+	usage
+	exit
+end
+
+parameters.delete_at(0)
+$command_options = parameters.join(" ")
+
+# removing these lines due to multiple ruby versions problems
+#~ cmd = "#{app_folder}/bin/pagelyzer_#{command} #{command_options}"
+# system(cmd) 
+
+puts eclass = "#{app_folder}/bin/pagelyzer_#{command}"
+begin
+	load eclass
+rescue Exception => msg
+	exit if $!.is_a? SystemExit
+	puts "The command #{command} could not be executed"
+	puts $!
+	puts msg.backtrace
+end
+

@@ -1,0 +1,114 @@
+#!/usr/bin/ruby1.9.1
+#-*- mode: ruby; encoding: utf-8 -*-
+
+
+def help
+	usage
+	puts "This tool is oriented to separate web pages into segments called blocks, based on the structural and visual properties"
+end
+
+def usage
+	puts "USAGE: pagelyzer_analyzer --decorated-file=FILE [--output-file=FILE] [--granularity=(0..1) DEFAULT:0.3] [--version] [--help]"
+end
+
+if defined?($command_options)
+	argv = $command_options.split(" ")
+else
+	argv = ARGV
+end
+
+if argv==[]
+	usage
+	exit 
+end
+
+source_file=""
+output_file=""
+target_path=""
+folder = ""
+force = false
+output_folder = ""
+ti = Time.now
+#granularity=0.4
+#algorithm = "bom2"
+granularity=6
+algorithm = "bom1"
+
+argv.each do |op|
+	sop = op.split("=")
+	folder 			= sop[1]		if sop[0] == "--input-folder"
+	algorithm 		= sop[1]		if sop[0] == "--algorithm"
+	output_folder	= sop[1]		if sop[0] == "--output-folder"
+	source_file 	= sop[1] 		if sop[0] == "--decorated-file"
+	output_file 	= sop[1] 		if sop[0] == "--output-file"
+	granularity		= sop[1].to_f 	if sop[0] == "--granularity"
+	interactive 	= sop[1]=='yes' if sop[0] == "--interactive"
+	use_database 	= sop[1]=='yes' if sop[0] == "--use-database"
+	job_id 		= sop[1].to_i 	if sop[0] == "--db-job-id"
+	browser_id 	= sop[1].to_i 	if sop[0] == "--db-browser-id"
+	debug 			= sop[1]=='yes' if sop[0] == "--debug"
+	force 			= sop[1]=='yes' if sop[0] == "--force"
+	if sop[0] == "--help"
+		help
+		exit
+	end
+	if sop[0] == "--version"
+		puts "SCAPE Webpage Analyzer. Version 0.9"
+		puts "UPMC - LIP6"
+		exit
+	end
+end
+
+unless output_file.nil? or output_file.empty?
+	target_path = source_file.split("/")
+	target_path.delete_at(target_path.size-1)
+	target_path = target_path.join("/")+"/"
+end
+
+if folder.empty? and source_file.empty?
+	puts "ERROR: no input source"
+end
+
+if !folder.empty? and !source_file.empty?
+	puts "ERROR: --folder and --decorated-file parameteres can not be at the same time"
+end
+
+if !folder.empty?
+	collection = Dir.glob("#{folder}/*.dhtml")
+else
+	collection = [source_file]
+end
+
+output_folder = folder if output_folder.empty?
+
+k=0
+collection.each do |dhtml|
+	#~ if File.exists?(dhtml) and !force
+		#~ puts "File #{dhtml} already exists. use force option to overwrite"
+		#~ next
+	#~ end
+	puts "Using #{algorithm} algorithm"
+	require_relative "../lib/pagelyzer_#{algorithm}.rb"
+	
+	bom = BlockOMatic.new
+	bom.set_source_file(dhtml)
+	bom.set_granularity(granularity)
+	bom.start
+	k+=1
+	if bom.error
+		puts "ERROR: There was a problem segmenting the page: #{dhtml}\n #{$!}"
+	else
+		
+		if folder.empty?
+			if output_file.empty?
+				puts bom.to_xml
+			else
+				File.open("#{output_file}",'w') {|x| x.puts bom.to_xml }
+			end
+		else
+			ofile = dhtml.gsub(".dhtml",".xml")
+			puts "INFO: (#{k}/#{collection.size}) page #{ofile.split("/").last} created (#{Time.now-ti}ms)"
+			File.open("#{ofile}",'w') {|x| x.puts bom.to_xml }
+		end
+	end
+end

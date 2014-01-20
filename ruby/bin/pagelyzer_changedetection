@@ -1,0 +1,391 @@
+#!/usr/bin/ruby1.9.1
+#-*- mode: ruby; encoding: utf-8 -*-
+# Andrés Sanoja
+# UPMC - LIP6
+#
+#
+#
+# pagelyzer_changedetection
+#
+# Requires: Ruby 1.9.1+ (1.8.x versions won't work), rubygems 1.3.7+
+#
+# Copyright (C) 2011, 2012 Andrés Sanoja, Université Pierre et Marie Curie -
+# Laboratoire d'informatique de Paris 6 (LIP6)
+#
+# Contributors: Stephane Gançarski - LIP6
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# This script covers all the change detection process. It is integrated with
+# the pageanalyzer, marcalizer and VIDIFF tools.
+#
+# Default Degree of Coherence (DOC=6)
+#
+
+require 'open3'
+require 'fileutils'
+require_relative '../lib/pagelyzer_capture.rb'
+require_relative '../lib/pagelyzer_bom1.rb'
+#~ require_relative '../lib/bom2.rb'
+require 'rjb'
+
+
+def usage
+	puts "USAGE: pagelyzer_changedetection [--url1=URL --url2=URL | --urls=FILE --output-file=FILE] [conf=CONF_FILE] [--doc=(1..10)] [--output-folder=FOLDER] [--browser=BROWSER_CODE | --browser1=BROWSER_CODE --browser2=BROWSER_CODE] [--verbose] --type=[images|structure|hybrid] [--url-archive]"
+end
+
+def help
+	usage
+	puts "This tool aims integrates all the change detection and segmentation tools"
+	puts "Help:"
+	puts " type = hybrid | webshot\n"
+	puts "Browsers code are the same as defined in selenium. For instance:"
+	puts " - firefox"
+	puts " - chrome"
+	puts " - iexploreproxy"
+	puts " - safariproxy"
+	puts " - opera"
+	puts
+	puts "For the input URL file it expects the following syntax of each line:"
+	puts " - URL1 URL2"
+end
+
+def config(key,current_folder)
+	conf = File.open("#{current_folder}/conf/pagelyzer.conf",'r')
+	value = ""
+	conf.each_line do |line|
+		pair = line.split(":")
+		if pair[0].strip == key
+			value = pair[1].strip
+			break
+		end
+	end
+	return value
+end
+
+def remove_slash(path)
+	path.sub(/(\/)+$/,'')
+end
+
+def verify_data_folder(path)
+	state = true
+	state = state and File.exists? path+"/js/decorate_mini.js"
+	state
+end
+
+def get_java_instance
+	libpath = "#{Dir.pwd}/lib"
+	#classpath = ENV['CLASSPATH'] ||= ''
+	classpath = [File.join(libpath,'MarcAlizer.jar'),File.join(libpath,'pagelyzerjavalib.jar')].join(":")
+	Rjb::load(classpath, ['-Xms128m','-Xmx1024m'])
+	mainclass = Rjb::import('Taverna.ScapeTest')
+	libclass = Rjb::import('pagelyzerjavalib.Pagelyzerjavalib')
+	return [mainclass.new,libclass.new]
+end
+
+def get_java_class(class_name)
+	return Rjb::import(class_name)
+end
+
+if defined?($command_options)
+	argv = $command_options.split(" ")
+else
+	argv = ARGV
+end
+
+if argv==[]
+	usage
+	exit 
+end
+
+current_folder = File.expand_path(File.dirname(File.dirname(__FILE__)))
+output_folder = "#{current_folder}/out"
+marcalizer_obj,javalib_obj = get_java_instance
+
+#~ config not needed in standalone configuration
+#~ marcalizer_folder = config('marcalizer',current_folder) #get marcalizer custom folder
+#~ marcalizer_folder = remove_slash(marcalizer_folder)
+#~ data_folder = config('data-folder',current_folder) #get the data folder usually /usr/share/pagelyzer-ruby
+#~ data_folder = remove_slash(data_folder)
+
+#~ unless verify_data_folder(data_folder)
+	#~ puts "ERROR: necessary files are not found in #{data_folder}. Please edit #{current_folder}/conf/pagelyzer.conf file and point it to the folder where data files are"
+	#~ exit
+#~ end
+
+url1 =""
+url2=""
+browser = ""
+js_files_url =""
+thumb=false
+no_screenshot = false
+type = 'images'
+doc=6
+browser1 = ""
+browser2 = ""
+verbose = false
+general_browser = false
+url_archive = true
+headless = false
+urls =""
+param_init=""
+time_out = 30
+output_file=""
+
+argv.each do |op|
+	sop = op.strip.split("=")
+	urls 			= sop[1] if sop[0] == "--urls"
+	param_init		= sop[1] if sop[0] == "--conf"
+	url_archive 	= true if sop[0] == "--url-archive"
+	
+	if sop[0] == "--url1"
+		sop.delete_at(0)
+		url1 			= sop.join("=")
+	end
+	if sop[0] == "--url2"
+		sop.delete_at(0)
+		url2 			= sop.join("=")
+	end
+	if sop[0] == "--browser"
+		browser 		= sop[1] 
+		general_browser = true
+	end
+	output_file 	= sop[1] if sop[0] == "--output-file"
+	headless 		= true 	 if sop[0] == "--headless"
+	doc 			= sop[1] if sop[0] == "--doc"
+	browser1 		= sop[1] if sop[0] == "--browser1"
+	browser2 		= sop[1] if sop[0] == "--browser2"
+	browser 		= sop[1] if sop[0] == "--browser"
+	type 			= sop[1] if sop[0] == "--type"
+	verbose 		= true if sop[0] == "--verbose"
+	thumb 			= true if sop[0] == "--thumbnail"
+	no_screenshot	= true if sop[0] == "--no-screenshot"
+	time_out		= sop[1].to_i if sop[0] == "--timeout"
+
+	if op[0..6] == "--help"
+		help
+		exit
+	end
+	if op[0..9] == "--version"
+		puts "SCAPE Change Detection. Version 0.9"
+		puts "UPMC - LIP6"
+		exit
+	end
+end
+
+if output_file.empty?
+	output_file="#{current_folder}/out/#{type}_result.xml" 
+else
+	unless File.exists?(File.dirname(output_file))
+		FileUtils.mkdir_p File.dirname(output_file)
+	end
+end
+
+if headless
+	require 'headless'
+	hhdl = Headless.new
+	hhdl.start
+	puts "Headless mode"
+end
+
+if !urls.empty? and !url1.empty? and !url2.empty?
+	puts "ERROR: urls files and url parameters can be given at the same time"
+	exit
+end
+
+if urls.empty? and (url1.nil? or url2.nil? or url1.empty? or url2.empty?)
+	puts "ERROR: there were problems with url1 or url2. Verify that they are included as parameters and has the http:// before"
+	exit
+end
+
+if browser.empty? 
+	if browser1.empty? and browser2.empty?
+		puts "Notice: using 'firefox' as default browser"
+		browser1="firefox"
+		browser2="firefox"
+	else
+		browser1 = "firefox" if browser1.empty?
+		browser2 = "firefox" if browser2.empty?
+	end
+else
+	puts "Notice: using '#{browser}' as default browser"
+	browser1 = browser # if browser1.empty?
+	browser2 = browser # if browser2.empty?
+end
+
+unless urls.empty? or output_file.empty?
+	File.open(output_file,'w')
+	File.open(output_file,'a') {|f| f.puts "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n"}
+	File.open(output_file,'a') {|f| f.puts "<results>\n"}
+	File.open(output_file,'a') {|f| f.puts "<type>#{type}</type>\n"}
+end
+
+if param_init.empty?
+	param_init = "#{current_folder}/ext/ex_images.xml" if type=="images"
+	param_init = "#{current_folder}/ext/ex_structure.xml" if type=="structure"
+	param_init = "#{current_folder}/ext/ex_hybride.xml" if type=="hybrid"
+end
+
+puts "Type: #{type}. Using: #{param_init} file"
+
+
+no_screenshot = true if type=="structure"
+
+total_items = 0
+
+if urls.empty?
+	collection = ["#{url1} #{url2}"]
+	total_items = collection.size
+else
+	total_items = File.open(urls,'r').readlines.size
+	collection = File.open(urls,'r')
+end
+
+cdriver = Capture.new
+cdriver.open([browser1,browser2])
+
+filename1 = Capture.parse_filename(url1)
+filename2 = Capture.parse_filename(url2)
+
+fileclass = get_java_class('java.io.File')
+exf = fileclass.new_with_sig('Ljava.lang.String;',param_init)
+marcalizer_obj._invoke('init','Ljava.io.File;',exf)
+#~ kkk=0	
+k=1
+collection.each do |op|  
+	ti = Time.now
+	url1,url2 = op.strip.split(" ")
+	#url1 = ligne[0]
+	#url2 = ligne[1]
+	#label = ligne[0]
+	puts "Processing #{k} of #{total_items}"
+	begin
+		data1 = cdriver.start(url1,browser1,output_folder,no_screenshot,thumb,current_folder,false,time_out)
+		raise "Time out loading #{url1} #{$!}" if data1.nil?
+		data2 = cdriver.start(url2,browser2,output_folder,no_screenshot,thumb,current_folder,false,time_out)
+		raise "Time out loading #{url2} #{$!}" if data2.nil?
+	rescue
+		puts "there were a problem in the capture of pages"
+		puts "ERROR: can't process these urls:\n#{url1}\n#{url2}"
+		unless urls.empty?
+			x = "<test>\n"
+			x += "<url href=\"#{url1}\" browser=\"#{browser1}\"/>\n"
+			x += "<url href=\"#{url2}\" browser=\"#{browser2}\"/>\n"
+			x += "<score>ERROR #{$!}</score>\n"
+			x += "<time>0</time>\n"
+			x += "</test>\n"
+			File.open(output_file,'a') {|f| f.puts x}
+			cdriver.close
+			cdriver = Capture.new
+			cdriver.open([browser1,browser2])
+			next
+		else
+			cdriver.close
+			exit
+		end
+	end
+
+	score = nil
+
+	if type=='images'
+		bufferedimage = get_java_class("java.awt.image.BufferedImage")
+		bi1 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data1[2])
+		bi2 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data2[2])
+		score = marcalizer_obj._invoke('run','Ljava.awt.image.BufferedImage;Ljava.awt.image.BufferedImage;',bi1,bi2)
+	elsif type=='structure'		
+		bom1 =  BlockOMatic.new
+		bom1.set_source_content(data1[1])
+		bom1.set_granularity(doc)
+		xml1 = bom1.start
+		
+		if !bom1.error
+			bom2 =  BlockOMatic.new
+			bom2.set_source_content(data2[1])
+			bom2.set_granularity(doc)
+			xml2 = bom2.start
+			if bom2.error
+				puts "There was a problem segmenting the pages. Continue to next"
+				next 
+			end
+		else
+			puts "There was a problem segmenting the pages. Continue to next"
+			next
+		end
+	
+		if url_archive
+			string_xml1 = xml1.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
+			string_xml2 = xml2.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
+		else
+			string_xml1 = xml1.to_xml
+			string_xml2 = xml2.to_xml
+		end
+	
+		score = marcalizer_obj._invoke('run','Ljava.lang.String;Ljava.lang.String;',string_xml1,string_xml2)
+	elsif type=='hybrid'
+		bufferedimage = get_java_class("java.awt.image.BufferedImage")
+		bi1 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data1[2])
+		bi2 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data2[2])
+		
+		bom1 =  BlockOMatic.new
+		bom1.set_source_content(data1[1])
+		bom1.set_granularity(doc)
+		xml1 = bom1.start
+		
+		if !bom1.error
+			bom2 =  BlockOMatic.new
+			bom2.set_source_content(data2[1])
+			bom2.set_granularity(doc)
+			xml2 = bom2.start
+			if bom2.error
+				puts "There was a problem segmenting the pages. Continue to next"
+				next 
+			end
+		else
+			puts "There was a problem segmenting the pages. Continue to next"
+			next
+		end
+		
+
+		if url_archive
+			string_xml1 = xml1.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
+			string_xml2 = xml2.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
+		else
+			string_xml1 = xml1.to_xml
+			string_xml2 = xml2.to_xml
+		end
+
+		score = marcalizer_obj._invoke('run','Ljava.lang.String;Ljava.lang.String;Ljava.awt.image.BufferedImage;Ljava.awt.image.BufferedImage;',string_xml1,string_xml2,bi1,bi2)
+	else
+		puts "ERROR: Type '#{type}' not recognized"
+	end
+	
+	ptime = Time.now-ti
+	if !score.nil? and !urls.empty? and !output_file.empty?
+		x = "<test>\n"
+		x += "<url href=\"#{url1}\" browser=\"#{browser1}\"/>\n"
+		x += "<url href=\"#{url2}\" browser=\"#{browser2}\"/>\n"
+		x += "<score>#{score}</score>\n"
+		x += "<time>#{ptime}</time>\n"
+		x += "</test>\n"
+		File.open(output_file,'a') {|f| f.puts x}
+	end
+	puts "Processed in #{ptime}secs"
+	k+=1
+	#~ break if kkk>4
+end
+unless urls.empty?
+	File.open(output_file,'a') {|f| f.puts "</results>\n"}
+end
+cdriver.close
+hhdl.destroy if headless

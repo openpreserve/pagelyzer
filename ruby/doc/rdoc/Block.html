@@ -1,0 +1,2075 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: Block</title>
+
+	<link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="./lib/pagelyzer_block_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/pagelyzer_block.rb">lib/pagelyzer_block.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link"><a href="Object.html">Object</a></p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-c-new">::new</a></li>
+					
+					<li><a href="#method-i-add_candidate">#add_candidate</a></li>
+					
+					<li><a href="#method-i-add_child">#add_child</a></li>
+					
+					<li><a href="#method-i-calculate_max_x">#calculate_max_x</a></li>
+					
+					<li><a href="#method-i-calculate_max_y">#calculate_max_y</a></li>
+					
+					<li><a href="#method-i-calculate_min_x">#calculate_min_x</a></li>
+					
+					<li><a href="#method-i-calculate_min_y">#calculate_min_y</a></li>
+					
+					<li><a href="#method-i-candidates_background_color_list">#candidates_background_color_list</a></li>
+					
+					<li><a href="#method-i-candidates_font_size_list">#candidates_font_size_list</a></li>
+					
+					<li><a href="#method-i-candidates_id_list">#candidates_id_list</a></li>
+					
+					<li><a href="#method-i-candidates_name_list">#candidates_name_list</a></li>
+					
+					<li><a href="#method-i-candidates_structure">#candidates_structure</a></li>
+					
+					<li><a href="#method-i-candidates_text_based%3F">#candidates_text_based?</a></li>
+					
+					<li><a href="#method-i-centroid_x">#centroid_x</a></li>
+					
+					<li><a href="#method-i-centroid_y">#centroid_y</a></li>
+					
+					<li><a href="#method-i-delete_child">#delete_child</a></li>
+					
+					<li><a href="#method-i-detect_overlapping">#detect_overlapping</a></li>
+					
+					<li><a href="#method-i-entropy">#entropy</a></li>
+					
+					<li><a href="#method-i-merge_separators">#merge_separators</a></li>
+					
+					<li><a href="#method-i-minimum_distance_to%3F">#minimum_distance_to?</a></li>
+					
+					<li><a href="#method-i-overlaps%3F">#overlaps?</a></li>
+					
+					<li><a href="#method-i-points">#points</a></li>
+					
+					<li><a href="#method-i-polygon">#polygon</a></li>
+					
+					<li><a href="#method-i-process_path">#process_path</a></li>
+					
+					<li><a href="#method-i-search_nearest_separators">#search_nearest_separators</a></li>
+					
+					<li><a href="#method-i-sid">#sid</a></li>
+					
+					<li><a href="#method-i-to_s">#to_s</a></li>
+					
+					<li><a href="#method-i-to_xml">#to_xml</a></li>
+					
+					<li><a href="#method-i-weight_separators">#weight_separators</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./Action.html">Action</a></li>
+				
+					<li><a href="./Block.html">Block</a></li>
+				
+					<li><a href="./Body.html">Body</a></li>
+				
+					<li><a href="./CompositeBlock.html">CompositeBlock</a></li>
+				
+					<li><a href="./Container.html">Container</a></li>
+				
+					<li><a href="./Content.html">Content</a></li>
+				
+					<li><a href="./ContentContainer.html">ContentContainer</a></li>
+				
+					<li><a href="./ConvexHull.html">ConvexHull</a></li>
+				
+					<li><a href="./DefaultDivide.html">DefaultDivide</a></li>
+				
+					<li><a href="./DefaultExtract.html">DefaultExtract</a></li>
+				
+					<li><a href="./Dimension.html">Dimension</a></li>
+				
+					<li><a href="./Driver.html">Driver</a></li>
+				
+					<li><a href="./Heuristic.html">Heuristic</a></li>
+				
+					<li><a href="./Image.html">Image</a></li>
+				
+					<li><a href="./IndirectContainer.html">IndirectContainer</a></li>
+				
+					<li><a href="./Invalids.html">Invalids</a></li>
+				
+					<li><a href="./LayoutContainer.html">LayoutContainer</a></li>
+				
+					<li><a href="./Object.html">Object</a></li>
+				
+					<li><a href="./OneChild.html">OneChild</a></li>
+				
+					<li><a href="./Point.html">Point</a></li>
+				
+					<li><a href="./Separator.html">Separator</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">Block</h1>
+
+		<div id="description">
+			<p>
+Andrés Sanoja UPMC - LIP6
+</p>
+<p>
+heuristic.rb
+</p>
+<p>
+Requires: Ruby 1.9.1+ (1.8.x versions won&#8217;t work) and rubygems 1.3.7+
+</p>
+<p>
+Copyright (C) 2011, 2012 Andrés Sanoja, Université Pierre et Marie Curie -
+Laboratoire d&#8217;informatique de Paris 6 (LIP6)
+</p>
+<p>
+Contributors: Stephane Gançarski - LIP6
+</p>
+<p>
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+</p>
+<p>
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+for more details.
+</p>
+<p>
+You should have received a copy of the GNU Lesser General Public License
+along with this program. If not, see <<a
+href="http://www.gnu.org/licenses/">www.gnu.org/licenses/</a>>.
+</p>
+<p>
+classes intended to represent a block 
+</p>
+<ul>
+<li><p>
+block: general block methods and data
+</p>
+</li>
+<li><p>
+CompositeBlock: blocks that area formed when merging separators but that
+doesn&#8217;t  correspond to a HTML node
+</p>
+</li>
+</ul>
+
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="id-attribute-method" class="method-detail">
+				<a name="id"></a>
+				
+				<a name="id="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">id</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="parent-attribute-method" class="method-detail">
+				<a name="parent"></a>
+				
+				<a name="parent="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">parent</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="text-attribute-method" class="method-detail">
+				<a name="text"></a>
+				
+				<a name="text="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">text</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="host-attribute-method" class="method-detail">
+				<a name="host"></a>
+				
+				<a name="host="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">host</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="user-id-attribute-method" class="method-detail">
+				<a name="user_id"></a>
+				
+				<a name="user_id="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">user_id</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="browser-id-attribute-method" class="method-detail">
+				<a name="browser_id"></a>
+				
+				<a name="browser_id="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">browser_id</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="job-id-attribute-method" class="method-detail">
+				<a name="job_id"></a>
+				
+				<a name="job_id="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">job_id</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="gid-attribute-method" class="method-detail">
+				<a name="gid"></a>
+				
+				<a name="gid="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">gid</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="parent-gid-attribute-method" class="method-detail">
+				<a name="parent_gid"></a>
+				
+				<a name="parent_gid="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">parent_gid</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="candidates-attribute-method" class="method-detail">
+				<a name="candidates"></a>
+				
+				<a name="candidates="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">candidates</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="path-attribute-method" class="method-detail">
+				<a name="path"></a>
+				
+				<a name="path="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">path</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="children-attribute-method" class="method-detail">
+				<a name="children"></a>
+				
+				<a name="children="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">children</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="parent-attribute-method" class="method-detail">
+				<a name="parent"></a>
+				
+				<a name="parent="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">parent</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="weight-attribute-method" class="method-detail">
+				<a name="weight"></a>
+				
+				<a name="weight="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">weight</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="rule-attribute-method" class="method-detail">
+				<a name="rule"></a>
+				
+				<a name="rule="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">rule</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="hsep-attribute-method" class="method-detail">
+				<a name="hsep"></a>
+				
+				<a name="hsep="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">hsep</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="vsep-attribute-method" class="method-detail">
+				<a name="vsep"></a>
+				
+				<a name="vsep="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">vsep</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="doc-attribute-method" class="method-detail">
+				<a name="doc"></a>
+				
+				<a name="doc="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">doc</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="min-x-attribute-method" class="method-detail">
+				<a name="min_x"></a>
+				
+				<a name="min_x="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">min_x</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="min-y-attribute-method" class="method-detail">
+				<a name="min_y"></a>
+				
+				<a name="min_y="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">min_y</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="max-x-attribute-method" class="method-detail">
+				<a name="max_x"></a>
+				
+				<a name="max_x="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">max_x</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="max-y-attribute-method" class="method-detail">
+				<a name="max_y"></a>
+				
+				<a name="max_y="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">max_y</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="method-c-new"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 39</span>
+39:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>()
+40:                 <span class="ruby-ivar">@id</span> = <span class="ruby-value">0</span>
+41:                 <span class="ruby-ivar">@text</span> = <span class="ruby-value str">&quot;&quot;</span>
+42:                 <span class="ruby-ivar">@children</span> = []
+43:                 <span class="ruby-ivar">@candidates</span> = []
+44:                 <span class="ruby-ivar">@path</span> = []
+45:                 <span class="ruby-ivar">@weight</span>=<span class="ruby-value">0</span>
+46:                 <span class="ruby-ivar">@parent</span>=<span class="ruby-keyword kw">nil</span>
+47:                 <span class="ruby-ivar">@rule</span> = <span class="ruby-keyword kw">nil</span>
+48:                 <span class="ruby-ivar">@hsep</span> = []
+49:                 <span class="ruby-ivar">@vsep</span> = []
+50:                 <span class="ruby-ivar">@doc</span> = <span class="ruby-value">0</span>
+51:                 <span class="ruby-ivar">@links</span> = []
+52:                 <span class="ruby-ivar">@images</span> = []
+53:                 <span class="ruby-ivar">@text</span> = []
+54:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="add-candidate-method" class="method-detail ">
+				<a name="method-i-add_candidate"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add_candidate</span><span
+						class="method-args">(nodes,rule)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="add-candidate-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 94</span>
+ 94:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_candidate</span>(<span class="ruby-identifier">nodes</span>,<span class="ruby-identifier">rule</span>)
+ 95:                 <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+ 96:                         <span class="ruby-ivar">@candidates</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">n</span>
+ 97:                 <span class="ruby-keyword kw">end</span>
+ 98:                 <span class="ruby-ivar">@rule</span> = <span class="ruby-identifier">rule</span>
+ 99:                 <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@rule</span>.<span class="ruby-identifier">action</span>.<span class="ruby-identifier">doc</span>.<span class="ruby-identifier">nil?</span>
+100:                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">upcase</span>}.<span class="ruby-identifier">include?</span> <span class="ruby-value str">&quot;BODY&quot;</span>
+101:                                 <span class="ruby-ivar">@doc</span> = <span class="ruby-value">0</span>
+102:                         <span class="ruby-keyword kw">else</span>
+103:                                 <span class="ruby-ivar">@doc</span> = <span class="ruby-identifier">rule</span>.<span class="ruby-identifier">weight</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rule</span>.<span class="ruby-identifier">weight</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@doc</span>
+104:                         <span class="ruby-keyword kw">end</span>
+105:                 <span class="ruby-keyword kw">else</span>
+106:                         <span class="ruby-ivar">@doc</span> = <span class="ruby-ivar">@rule</span>.<span class="ruby-identifier">action</span>.<span class="ruby-identifier">doc</span>
+107:                 <span class="ruby-keyword kw">end</span>
+108:                 
+109:                 <span class="ruby-identifier">process_path</span>
+110:                 
+111:                 <span class="ruby-comment cmt">#extracting links for ViXML generation</span>
+112:                 <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+113:                         <span class="ruby-identifier">c</span>.<span class="ruby-identifier">search</span>(<span class="ruby-value str">&quot;*&quot;</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tag</span><span class="ruby-operator">|</span>
+114:                                 <span class="ruby-keyword kw">if</span> [<span class="ruby-value str">'a'</span>,<span class="ruby-value str">'img'</span>].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">tag</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">downcase</span>
+115:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">tag</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'a'</span>
+116:                                                 <span class="ruby-ivar">@links</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">tag</span> 
+117:                                         <span class="ruby-keyword kw">end</span>
+118:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">tag</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'img'</span>
+119:                                                 <span class="ruby-ivar">@images</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">tag</span> 
+120:                                         <span class="ruby-keyword kw">end</span>
+121:                                         <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">push</span> <span class="ruby-constant">Sanitize</span>.<span class="ruby-identifier">clean</span>(<span class="ruby-identifier">tag</span>.<span class="ruby-identifier">inner_text</span>)
+122:                                 <span class="ruby-keyword kw">else</span>
+123:                                         <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">undesirable_node?</span>(<span class="ruby-identifier">tag</span>)
+124:                                                 <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">push</span> <span class="ruby-constant">Sanitize</span>.<span class="ruby-identifier">clean</span>(<span class="ruby-identifier">tag</span>.<span class="ruby-identifier">inner_text</span>)
+125:                                         <span class="ruby-keyword kw">end</span>
+126:                                 <span class="ruby-keyword kw">end</span>
+127:                         <span class="ruby-keyword kw">end</span>
+128:                 <span class="ruby-keyword kw">end</span>
+129:                 <span class="ruby-ivar">@links</span> = <span class="ruby-ivar">@links</span>.<span class="ruby-identifier">uniq</span>
+130:                 <span class="ruby-ivar">@images</span> = <span class="ruby-ivar">@images</span>.<span class="ruby-identifier">uniq</span>
+131:                 <span class="ruby-ivar">@text</span> = <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">uniq</span>
+132:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="add-child-method" class="method-detail ">
+				<a name="method-i-add_child"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add_child</span><span
+						class="method-args">(child)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="add-child-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 76</span>
+76:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_child</span>(<span class="ruby-identifier">child</span>)
+77:                 <span class="ruby-identifier">child</span>.<span class="ruby-identifier">parent</span> = <span class="ruby-keyword kw">self</span>
+78:                 <span class="ruby-ivar">@weight</span> = <span class="ruby-identifier">child</span>.<span class="ruby-identifier">weight</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">weight</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@weight</span>
+79:                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">child</span>
+80:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="calculate-max-x-method" class="method-detail ">
+				<a name="method-i-calculate_max_x"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">calculate_max_x</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="calculate-max-x-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 219</span>
+219:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">calculate_max_x</span>
+220:                 <span class="ruby-identifier">ch_max_x</span> = <span class="ruby-value">0</span>
+221:                 <span class="ruby-identifier">final_max_x</span> = <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">x</span>}.<span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_f</span>
+222:                 <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@children</span> <span class="ruby-operator">==</span> []
+223:                         <span class="ruby-identifier">ch_max_x</span> = <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">max_x</span>}.<span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_f</span>
+224:                 <span class="ruby-keyword kw">end</span>
+225:                 <span class="ruby-identifier">final_max_x</span> = <span class="ruby-identifier">ch_max_x</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ch_max_x</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">final_max_x</span>
+226:                 <span class="ruby-identifier">final_max_x</span>
+227:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="calculate-max-y-method" class="method-detail ">
+				<a name="method-i-calculate_max_y"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">calculate_max_y</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="calculate-max-y-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 209</span>
+209:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">calculate_max_y</span>
+210:                 <span class="ruby-identifier">ch_max_y</span> = <span class="ruby-value">0</span>
+211:                 <span class="ruby-identifier">final_max_y</span> = <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">y</span>}.<span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_f</span>
+212:                 <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@children</span> <span class="ruby-operator">==</span> []
+213:                         <span class="ruby-identifier">ch_max_y</span> = <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">max_y</span>}.<span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_f</span>
+214:                 <span class="ruby-keyword kw">end</span>
+215:                 <span class="ruby-identifier">final_max_y</span> = <span class="ruby-identifier">ch_max_y</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ch_max_y</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">final_max_y</span>
+216:                 <span class="ruby-identifier">final_max_y</span>
+217:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="calculate-min-x-method" class="method-detail ">
+				<a name="method-i-calculate_min_x"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">calculate_min_x</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="calculate-min-x-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 239</span>
+239:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">calculate_min_x</span>
+240:                 <span class="ruby-identifier">ch_min_x</span> = <span class="ruby-value">999999999999999999</span>
+241:                 <span class="ruby-identifier">final_min_x</span> = <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">x</span>}.<span class="ruby-identifier">min</span>.<span class="ruby-identifier">to_f</span>
+242:                 <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@children</span> <span class="ruby-operator">==</span> []
+243:                         <span class="ruby-identifier">ch_min_x</span> = <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">min_x</span>}.<span class="ruby-identifier">min</span>
+244:                 <span class="ruby-keyword kw">end</span>
+245:                 <span class="ruby-identifier">final_min_x</span> = <span class="ruby-identifier">ch_min_x</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ch_min_x</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">final_min_x</span>
+246:                 <span class="ruby-identifier">final_min_x</span>
+247:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="calculate-min-y-method" class="method-detail ">
+				<a name="method-i-calculate_min_y"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">calculate_min_y</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="calculate-min-y-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 229</span>
+229:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">calculate_min_y</span>
+230:                 <span class="ruby-identifier">ch_min_y</span> = <span class="ruby-value">999999999999999999</span>
+231:                 <span class="ruby-identifier">final_min_y</span> = <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">y</span>}.<span class="ruby-identifier">min</span>.<span class="ruby-identifier">to_f</span>
+232:                 <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@children</span> <span class="ruby-operator">==</span> []
+233:                         <span class="ruby-identifier">ch_min_y</span> = <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">min_y</span>}.<span class="ruby-identifier">min</span>.<span class="ruby-identifier">to_f</span>
+234:                 <span class="ruby-keyword kw">end</span>
+235:                 <span class="ruby-identifier">final_min_y</span> = <span class="ruby-identifier">ch_min_y</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ch_min_y</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">final_min_y</span>
+236:                 <span class="ruby-identifier">final_min_y</span>
+237:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="candidates-background-color-list-method" class="method-detail ">
+				<a name="method-i-candidates_background_color_list"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">candidates_background_color_list</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="candidates-background-color-list-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 193</span>
+193:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">candidates_background_color_list</span>
+194:                 <span class="ruby-ivar">@candidates</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">rgb2hex</span>(<span class="ruby-identifier">node</span>[<span class="ruby-value str">'background_color'</span>])}.<span class="ruby-identifier">uniq</span>
+195:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="candidates-font-size-list-method" class="method-detail ">
+				<a name="method-i-candidates_font_size_list"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">candidates_font_size_list</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="candidates-font-size-list-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 197</span>
+197:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">candidates_font_size_list</span>
+198:                 <span class="ruby-ivar">@candidates</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">node</span>[<span class="ruby-value str">'font_size'</span>].<span class="ruby-identifier">to_i</span>}.<span class="ruby-identifier">uniq</span>
+199:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="candidates-id-list-method" class="method-detail ">
+				<a name="method-i-candidates_id_list"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">candidates_id_list</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="candidates-id-list-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 178</span>
+178:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">candidates_id_list</span>
+179:                 <span class="ruby-ivar">@candidates</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>[<span class="ruby-value str">'uid'</span>]}
+180:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="candidates-name-list-method" class="method-detail ">
+				<a name="method-i-candidates_name_list"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">candidates_name_list</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="candidates-name-list-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 174</span>
+174:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">candidates_name_list</span>
+175:                 <span class="ruby-ivar">@candidates</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">name</span>}
+176:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="candidates-structure-method" class="method-detail ">
+				<a name="method-i-candidates_structure"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">candidates_structure</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="candidates-structure-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 189</span>
+189:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">candidates_structure</span>
+190:                 <span class="ruby-ivar">@candidates</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">search</span>(<span class="ruby-value str">&quot;*&quot;</span>).<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span> <span class="ruby-identifier">classify</span>(<span class="ruby-identifier">y</span>)}}.<span class="ruby-identifier">flatten</span>
+191:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="candidates-text-based--method" class="method-detail ">
+				<a name="method-i-candidates_text_based%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">candidates_text_based?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="candidates-text-based--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 182</span>
+182:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">candidates_text_based?</span>
+183:                 <span class="ruby-ivar">@candidates</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> (<span class="ruby-identifier">virtual_text?</span>(<span class="ruby-identifier">node</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">text?</span>(<span class="ruby-identifier">node</span>)) <span class="ruby-operator">?</span> <span class="ruby-keyword kw">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">false</span>}
+184:                 <span class="ruby-identifier">ret</span>=<span class="ruby-keyword kw">true</span>
+185:                 <span class="ruby-ivar">@candidates</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">ret</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">n</span>}
+186:                 <span class="ruby-identifier">ret</span>
+187:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="centroid-x-method" class="method-detail ">
+				<a name="method-i-centroid_x"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">centroid_x</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="centroid-x-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 201</span>
+201:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">centroid_x</span>
+202:                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">reduce</span>(<span class="ruby-value">0</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">sum</span>,<span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span><span class="ruby-operator">+=</span><span class="ruby-identifier">p</span>.<span class="ruby-identifier">x</span>} <span class="ruby-operator">/</span> <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">size</span>
+203:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="centroid-y-method" class="method-detail ">
+				<a name="method-i-centroid_y"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">centroid_y</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="centroid-y-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 205</span>
+205:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">centroid_y</span>
+206:                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">reduce</span>(<span class="ruby-value">0</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">sum</span>,<span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span><span class="ruby-operator">+=</span><span class="ruby-identifier">p</span>.<span class="ruby-identifier">y</span>} <span class="ruby-operator">/</span> <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">size</span>
+207:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="delete-child-method" class="method-detail ">
+				<a name="method-i-delete_child"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">delete_child</span><span
+						class="method-args">(child)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="delete-child-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 82</span>
+82:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete_child</span>(<span class="ruby-identifier">child</span>)
+83:                 <span class="ruby-identifier">k</span>=<span class="ruby-value">0</span>
+84:                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span>
+85:                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">id</span>
+86:                                 <span class="ruby-ivar">@children</span>[<span class="ruby-identifier">k</span>]=<span class="ruby-keyword kw">nil</span>
+87:                                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">nil</span>)
+88:                                 <span class="ruby-keyword kw">break</span>
+89:                         <span class="ruby-keyword kw">end</span>
+90:                         <span class="ruby-identifier">k</span><span class="ruby-operator">+=</span><span class="ruby-value">1</span>
+91:                 <span class="ruby-keyword kw">end</span>
+92:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="detect-overlapping-method" class="method-detail ">
+				<a name="method-i-detect_overlapping"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">detect_overlapping</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+detect overlapped siblings blocks
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="detect-overlapping-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 477</span>
+477:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">detect_overlapping</span>
+478:                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child1</span><span class="ruby-operator">|</span>
+479:                         <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child2</span><span class="ruby-operator">|</span>
+480:                                 <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">child1</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">child2</span>.<span class="ruby-identifier">id</span>
+481:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">child1</span>.<span class="ruby-identifier">overlaps?</span>(<span class="ruby-identifier">child2</span>)
+482:                                                 <span class="ruby-comment cmt">#not functional yet</span>
+483:                                         <span class="ruby-keyword kw">end</span>
+484:                                 <span class="ruby-keyword kw">end</span>
+485:                         <span class="ruby-keyword kw">end</span>
+486:                 <span class="ruby-keyword kw">end</span>
+487:                 <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">nil?</span>
+488:                         <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+489:                                 <span class="ruby-identifier">c</span>.<span class="ruby-identifier">detect_overlapping</span>
+490:                         <span class="ruby-keyword kw">end</span>
+491:                 <span class="ruby-keyword kw">end</span>
+492:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="entropy-method" class="method-detail ">
+				<a name="method-i-entropy"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">entropy</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="entropy-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 556</span>
+556:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">entropy</span>
+557:                 
+558:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="merge-separators-method" class="method-detail ">
+				<a name="method-i-merge_separators"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">merge_separators</span><span
+						class="method-args">(mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="merge-separators-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 273</span>
+273:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">merge_separators</span>(<span class="ruby-identifier">mode</span>)
+274:                 <span class="ruby-identifier">nb</span> = <span class="ruby-keyword kw">nil</span>
+275:                 <span class="ruby-identifier">sep_col</span> = <span class="ruby-ivar">@hsep</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span><span class="ruby-operator">==</span><span class="ruby-value">:horizontal</span>
+276:                 <span class="ruby-identifier">sep_col</span> = <span class="ruby-ivar">@vsep</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span><span class="ruby-operator">==</span><span class="ruby-value">:vertical</span>
+277:                 <span class="ruby-identifier">sep_col</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">weight</span>}.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span>
+278:                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">k</span><span class="ruby-operator">&lt;</span><span class="ruby-value">10</span>
+279:                                 <span class="ruby-value">0</span>.<span class="ruby-identifier">upto</span>(<span class="ruby-identifier">sep_col</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+280:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">weight</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">k</span>
+281:                                                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">bright_side!</span>=[] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">dark_side!</span>=[]
+282:                                                         <span class="ruby-identifier">xa</span>=<span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">bright_side</span>.<span class="ruby-identifier">last</span>
+283:                                                         <span class="ruby-identifier">xb</span>=<span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">dark_side</span>.<span class="ruby-identifier">first</span>
+284:                                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">xa</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">xb</span>.<span class="ruby-identifier">nil?</span>
+285:                                                                 <span class="ruby-identifier">nb</span> = <span class="ruby-identifier">get_new_composite_block</span>
+286:                                                         <span class="ruby-keyword kw">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">xa</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">xb</span>.<span class="ruby-identifier">nil?</span>
+287:                                                                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">xa</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">CompositeBlock</span>
+288:                                                                         <span class="ruby-identifier">nb</span> = <span class="ruby-identifier">xa</span>
+289:                                                                 <span class="ruby-keyword kw">else</span>
+290:                                                                         <span class="ruby-identifier">nb</span> = <span class="ruby-identifier">get_new_composite_block</span>
+291:                                                                 <span class="ruby-keyword kw">end</span>
+292:                                                         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">xa</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-operator">!</span><span class="ruby-identifier">xb</span>.<span class="ruby-identifier">nil?</span>
+293:                                                                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">xb</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">CompositeBlock</span>
+294:                                                                         <span class="ruby-identifier">nb</span> = <span class="ruby-identifier">xb</span>
+295:                                                                 <span class="ruby-keyword kw">else</span>
+296:                                                                         <span class="ruby-identifier">nb</span> = <span class="ruby-identifier">get_new_composite_block</span>
+297:                                                                 <span class="ruby-keyword kw">end</span>
+298:                                                         <span class="ruby-keyword kw">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">xa</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-operator">!</span><span class="ruby-identifier">xb</span>.<span class="ruby-identifier">nil?</span>
+299:                                                                 <span class="ruby-identifier">nb</span> = <span class="ruby-identifier">xa</span>
+300:                                                         <span class="ruby-keyword kw">end</span>
+301:                                                         
+302:                                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">nb</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">CompositeBlock</span>
+303:                                                                 <span class="ruby-identifier">ins_p</span> = <span class="ruby-value">1</span>
+304:                                                                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span>
+305:                                                                         <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">xa</span>.<span class="ruby-identifier">nil?</span>
+306:                                                                                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">xa</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@children</span>[<span class="ruby-identifier">k</span>].<span class="ruby-identifier">id</span>
+307:                                                                                         <span class="ruby-identifier">ins_p</span>=<span class="ruby-identifier">k</span>
+308:                                                                                 <span class="ruby-keyword kw">end</span>
+309:                                                                         <span class="ruby-keyword kw">end</span>
+310:                                                                         <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">xb</span>.<span class="ruby-identifier">nil?</span>
+311:                                                                                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">xb</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@children</span>[<span class="ruby-identifier">k</span>].<span class="ruby-identifier">id</span>
+312:                                                                                         <span class="ruby-identifier">ins_p</span>=<span class="ruby-identifier">k</span>
+313:                                                                                 <span class="ruby-keyword kw">end</span>
+314:                                                                         <span class="ruby-keyword kw">end</span>
+315:                                                                 <span class="ruby-keyword kw">end</span>
+316:                                                         <span class="ruby-keyword kw">else</span>
+317:                                                                 <span class="ruby-identifier">ins_p</span> = <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">nb</span>)
+318:                                                         <span class="ruby-keyword kw">end</span>                                              
+319:                                                         
+320:                                                         <span class="ruby-identifier">y</span> = []
+321:                                                         <span class="ruby-identifier">x</span> = []
+322:                                                         <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">bright_side</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span>
+323:                                                                 <span class="ruby-identifier">old_dad</span> = <span class="ruby-identifier">b</span>.<span class="ruby-identifier">parent</span>
+324:                                                                 <span class="ruby-identifier">index_in_old_dad</span> = <span class="ruby-identifier">b</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">b</span>)
+325:                                                                 <span class="ruby-identifier">b</span>.<span class="ruby-identifier">parent</span> = <span class="ruby-identifier">nb</span>
+326:                                                                 <span class="ruby-identifier">old_dad</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">delete_at</span>(<span class="ruby-identifier">index_in_old_dad</span>)  <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">index_in_old_dad</span>.<span class="ruby-identifier">nil?</span>
+327:                                                                 <span class="ruby-identifier">y</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">b</span>.<span class="ruby-identifier">min_y</span>,<span class="ruby-identifier">b</span>.<span class="ruby-identifier">max_y</span>]
+328:                                                                 <span class="ruby-identifier">x</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">b</span>.<span class="ruby-identifier">min_x</span>,<span class="ruby-identifier">b</span>.<span class="ruby-identifier">max_x</span>]
+329:                                                                 <span class="ruby-identifier">nb</span>.<span class="ruby-identifier">add_child</span> <span class="ruby-identifier">b</span> 
+330:                                                         <span class="ruby-keyword kw">end</span>
+331: 
+332:                                                         <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">dark_side</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span>
+333:                                                                 <span class="ruby-identifier">old_dad</span> = <span class="ruby-identifier">b</span>.<span class="ruby-identifier">parent</span>
+334:                                                                 <span class="ruby-identifier">index_in_old_dad</span> = <span class="ruby-identifier">b</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">b</span>)
+335:                                                                 <span class="ruby-identifier">b</span>.<span class="ruby-identifier">parent</span> = <span class="ruby-identifier">nb</span>
+336:                                                                 <span class="ruby-identifier">old_dad</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">delete_at</span>(<span class="ruby-identifier">index_in_old_dad</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">index_in_old_dad</span>.<span class="ruby-identifier">nil?</span>
+337:                                                                 <span class="ruby-identifier">y</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">b</span>.<span class="ruby-identifier">min_y</span>,<span class="ruby-identifier">b</span>.<span class="ruby-identifier">max_y</span>]
+338:                                                                 <span class="ruby-identifier">x</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">b</span>.<span class="ruby-identifier">min_x</span>,<span class="ruby-identifier">b</span>.<span class="ruby-identifier">max_x</span>]
+339:                                                                 <span class="ruby-identifier">nb</span>.<span class="ruby-identifier">add_child</span> <span class="ruby-identifier">b</span> 
+340:                                                         <span class="ruby-keyword kw">end</span>
+341:                                                         
+342:                                                         <span class="ruby-identifier">x</span>.<span class="ruby-identifier">flatten!</span>
+343:                                                         <span class="ruby-identifier">y</span>.<span class="ruby-identifier">flatten!</span>
+344:                                                         
+345:                                                         <span class="ruby-identifier">nb</span>.<span class="ruby-identifier">path</span> = [<span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">x</span>.<span class="ruby-identifier">min</span>,<span class="ruby-identifier">y</span>.<span class="ruby-identifier">min</span>),<span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">x</span>.<span class="ruby-identifier">min</span>,<span class="ruby-identifier">y</span>.<span class="ruby-identifier">max</span>),<span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">x</span>.<span class="ruby-identifier">max</span>,<span class="ruby-identifier">y</span>.<span class="ruby-identifier">max</span>),<span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">x</span>.<span class="ruby-identifier">max</span>,<span class="ruby-identifier">y</span>.<span class="ruby-identifier">min</span>)]
+346:                                                         
+347:                                                         <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">ins_p</span>, <span class="ruby-identifier">nb</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">nb</span>)
+348:                                                         
+349:                                                         <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">nil</span>)
+350:                                                         <span class="ruby-comment cmt">#children list cleanup</span>
+351:                                                          <span class="ruby-identifier">to_del</span> = []
+352:                                                          <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span>
+353:                                                                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">!=</span> <span class="ruby-ivar">@id</span>
+354:                                                                         <span class="ruby-identifier">to_del</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">child</span>
+355:                                                                 <span class="ruby-keyword kw">end</span>
+356:                                                          <span class="ruby-keyword kw">end</span>
+357:                                                          
+358:                                                         <span class="ruby-identifier">to_del</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">delete_child</span>(<span class="ruby-identifier">b</span>)}
+359:                                                         
+360:                                                 
+361:                                                         <span class="ruby-comment cmt">#TODO: if a block has only one child sustitute it by child</span>
+362:                                                         <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>].<span class="ruby-identifier">dark_side</span> = <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>].<span class="ruby-identifier">dark_side</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">bright_side</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span>
+363:                                                         <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>].<span class="ruby-identifier">bright_side</span> = <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>].<span class="ruby-identifier">bright_side</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">dark_side</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span><span class="ruby-operator">&lt;</span>(<span class="ruby-identifier">sep_col</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>)
+364:                                                         
+365:                                                         <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">bright_side</span> = []
+366:                                                         <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">dark_side</span> = []
+367:                                                          
+368:                                                         
+369:                                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span>
+370:                                                                 <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>].<span class="ruby-identifier">nil?</span>
+371:                                                                         <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>].<span class="ruby-identifier">dark_side</span> <span class="ruby-operator">+=</span> [<span class="ruby-identifier">nb</span>]
+372:                                                                 <span class="ruby-keyword kw">end</span>
+373:                                                         <span class="ruby-keyword kw">end</span>
+374:                                                         
+375:                                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span><span class="ruby-operator">&lt;</span>(<span class="ruby-identifier">sep_col</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>)
+376:                                                                 <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>].<span class="ruby-identifier">nil?</span>
+377:                                                                         <span class="ruby-identifier">sep_col</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>].<span class="ruby-identifier">bright_side</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-value">0</span>,<span class="ruby-identifier">nb</span>)
+378:                                                                 <span class="ruby-keyword kw">end</span>
+379:                                                         <span class="ruby-keyword kw">end</span>
+380: 
+381:                                                         <span class="ruby-identifier">nb</span>.<span class="ruby-identifier">doc</span> = (<span class="ruby-identifier">nb</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span><span class="ruby-identifier">c</span>.<span class="ruby-identifier">doc</span>}<span class="ruby-operator">+</span>[<span class="ruby-identifier">k</span>]).<span class="ruby-identifier">max</span>
+382:                                                         
+383:                                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">nb</span>.<span class="ruby-identifier">doc</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">$pdoc</span>
+384:                                                                 <span class="ruby-comment cmt">#rien pour cette instante</span>
+385:                                                         <span class="ruby-keyword kw">end</span>
+386:                                                         
+387:                                                         <span class="ruby-comment cmt">#nb.path = ConvexHull.new(nb.path).calculate</span>
+388:                                                         <span class="ruby-identifier">nb</span>.<span class="ruby-identifier">process_path</span>
+389:                                                 <span class="ruby-keyword kw">end</span>
+390:                                         <span class="ruby-keyword kw">end</span>
+391:                                 <span class="ruby-keyword kw">end</span>
+392:                         <span class="ruby-keyword kw">end</span>
+393:                 <span class="ruby-keyword kw">end</span>
+394:                 
+395:                 <span class="ruby-ivar">@hsep</span> = <span class="ruby-identifier">sep_col</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-value">:horizontal</span>                
+396:                 <span class="ruby-ivar">@vsep</span> = <span class="ruby-identifier">sep_col</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-value">:vertical</span>
+397:                 
+398:                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span>
+399:                         <span class="ruby-identifier">child</span>.<span class="ruby-identifier">merge_separators</span>(<span class="ruby-value">:horizontal</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-value">:horizontal</span>
+400:                         <span class="ruby-identifier">child</span>.<span class="ruby-identifier">merge_separators</span>(<span class="ruby-value">:vertical</span>)  <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-value">:vertical</span>
+401:                 <span class="ruby-keyword kw">end</span>
+402:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="minimum-distance-to--method" class="method-detail ">
+				<a name="method-i-minimum_distance_to%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">minimum_distance_to?</span><span
+						class="method-args">(block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="minimum-distance-to--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 163</span>
+163:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">minimum_distance_to?</span>(<span class="ruby-identifier">block</span>)
+164:                 <span class="ruby-identifier">min</span> = <span class="ruby-value">10000000</span>
+165:                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">p1</span><span class="ruby-operator">|</span>
+166:                         <span class="ruby-identifier">block</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">p2</span><span class="ruby-operator">|</span>
+167:                                 <span class="ruby-identifier">d</span> = <span class="ruby-identifier">p1</span>.<span class="ruby-identifier">distance_to?</span> <span class="ruby-identifier">p2</span>
+168:                                 <span class="ruby-identifier">min</span> = <span class="ruby-identifier">d</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">d</span><span class="ruby-operator">&lt;</span><span class="ruby-identifier">min</span> 
+169:                         <span class="ruby-keyword kw">end</span>
+170:                 <span class="ruby-keyword kw">end</span>
+171:         <span class="ruby-identifier">min</span>
+172:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="overlaps--method" class="method-detail ">
+				<a name="method-i-overlaps%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">overlaps?</span><span
+						class="method-args">(block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="overlaps--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 494</span>
+494:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">overlaps?</span>(<span class="ruby-identifier">block</span>)
+495:                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span>
+496:                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">into?</span>(<span class="ruby-identifier">block</span>.<span class="ruby-identifier">path</span>,<span class="ruby-identifier">max_y</span>)
+497:                                 <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+498:                                 <span class="ruby-keyword kw">break</span>
+499:                         <span class="ruby-keyword kw">end</span>
+500:                 <span class="ruby-keyword kw">end</span>
+501:                 <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+502:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="points-method" class="method-detail ">
+				<a name="method-i-points"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">points</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+get the list of points in the block polygon
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="points-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 72</span>
+72:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">points</span>
+73:                 <span class="ruby-identifier">polygon</span>.<span class="ruby-identifier">flatten</span>
+74:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="polygon-method" class="method-detail ">
+				<a name="method-i-polygon"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">polygon</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+get the polygon representation of the block
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="polygon-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 67</span>
+67:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">polygon</span>
+68:                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">p</span>.<span class="ruby-identifier">x</span>,<span class="ruby-identifier">p</span>.<span class="ruby-identifier">y</span>]}
+69:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="process-path-method" class="method-detail ">
+				<a name="method-i-process_path"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">process_path</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+construct the block polygon
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="process-path-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 135</span>
+135:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_path</span>
+136:                 <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@candidates</span> <span class="ruby-operator">==</span> []
+137:                         <span class="ruby-ivar">@path</span> = []
+138:                         <span class="ruby-identifier">x</span>=[]
+139:                         <span class="ruby-identifier">y</span>=[]
+140:                         <span class="ruby-ivar">@candidates</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+141:                                 <span class="ruby-identifier">y</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">n</span>[<span class="ruby-value str">'top'</span>].<span class="ruby-identifier">to_f</span>,<span class="ruby-identifier">n</span>[<span class="ruby-value str">'height'</span>].<span class="ruby-identifier">to_f</span>]
+142:                                 <span class="ruby-identifier">x</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">n</span>[<span class="ruby-value str">'left'</span>].<span class="ruby-identifier">to_f</span>,<span class="ruby-identifier">n</span>[<span class="ruby-value str">'width'</span>].<span class="ruby-identifier">to_f</span>]
+143:                         <span class="ruby-keyword kw">end</span>
+144:                         <span class="ruby-identifier">x</span>.<span class="ruby-identifier">flatten!</span>
+145:                         <span class="ruby-identifier">y</span>.<span class="ruby-identifier">flatten!</span>
+146:                         <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">x</span><span class="ruby-operator">==</span>[] <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">y</span><span class="ruby-operator">==</span>[]
+147:                                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">push</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">x</span>.<span class="ruby-identifier">min</span>,<span class="ruby-identifier">y</span>.<span class="ruby-identifier">min</span>)
+148:                                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">push</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">x</span>.<span class="ruby-identifier">min</span>,<span class="ruby-identifier">y</span>.<span class="ruby-identifier">max</span>)
+149:                                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">push</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">x</span>.<span class="ruby-identifier">max</span>,<span class="ruby-identifier">y</span>.<span class="ruby-identifier">max</span>)
+150:                                 <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">push</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">x</span>.<span class="ruby-identifier">max</span>,<span class="ruby-identifier">y</span>.<span class="ruby-identifier">min</span>)
+151:                         <span class="ruby-keyword kw">end</span>
+152:                 <span class="ruby-keyword kw">else</span>
+153:                         <span class="ruby-identifier">x</span> = <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">x</span>}
+154:                         <span class="ruby-identifier">y</span> = <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">y</span>}
+155:                 <span class="ruby-keyword kw">end</span>
+156:                 
+157:                 <span class="ruby-ivar">@min_x</span> = <span class="ruby-identifier">x</span>.<span class="ruby-identifier">min</span>
+158:                 <span class="ruby-ivar">@max_x</span> = <span class="ruby-identifier">x</span>.<span class="ruby-identifier">max</span>
+159:                 <span class="ruby-ivar">@min_y</span> = <span class="ruby-identifier">y</span>.<span class="ruby-identifier">min</span>
+160:                 <span class="ruby-ivar">@max_y</span> = <span class="ruby-identifier">y</span>.<span class="ruby-identifier">max</span>
+161:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="search-nearest-separators-method" class="method-detail ">
+				<a name="method-i-search_nearest_separators"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">search_nearest_separators</span><span
+						class="method-args">(mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="search-nearest-separators-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 404</span>
+404:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">search_nearest_separators</span>(<span class="ruby-identifier">mode</span>)
+405:                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-value">:horizontal</span>
+406:                         <span class="ruby-ivar">@hsep</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+407:                                 <span class="ruby-identifier">sep_open</span> = []
+408:                                 <span class="ruby-identifier">sep_close</span> = []
+409:                                 <span class="ruby-identifier">min_dist_bs</span> = <span class="ruby-value">999999999999</span>
+410:                                 <span class="ruby-identifier">min_dist_ds</span> = <span class="ruby-value">999999999999</span>
+411:                                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span>
+412:                                         <span class="ruby-identifier">d</span> = <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>,<span class="ruby-identifier">s</span>.<span class="ruby-identifier">sp</span>).<span class="ruby-identifier">distance_to?</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>,<span class="ruby-identifier">child</span>.<span class="ruby-identifier">min_y</span>)
+413:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">sp</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">max_y</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">min_dist_bs</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">d</span>
+414:                                                 <span class="ruby-identifier">sep_open</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">d</span>,<span class="ruby-identifier">child</span>]
+415:                                                 <span class="ruby-identifier">min_dist_bs</span> = <span class="ruby-identifier">d</span>
+416:                                         <span class="ruby-keyword kw">end</span>
+417:                                         <span class="ruby-identifier">d</span> = <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>,<span class="ruby-identifier">s</span>.<span class="ruby-identifier">ep</span>).<span class="ruby-identifier">distance_to?</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>,<span class="ruby-identifier">child</span>.<span class="ruby-identifier">max_y</span>)
+418:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">ep</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">min_y</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">min_dist_ds</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">d</span>
+419:                                                 <span class="ruby-identifier">sep_close</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">d</span>,<span class="ruby-identifier">child</span>]
+420:                                                 <span class="ruby-identifier">min_dist_ds</span> = <span class="ruby-identifier">d</span>
+421:                                         <span class="ruby-keyword kw">end</span>
+422:                                 <span class="ruby-keyword kw">end</span>
+423:                                 <span class="ruby-identifier">min_d</span> = <span class="ruby-identifier">sep_open</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>[<span class="ruby-value">0</span>]}.<span class="ruby-identifier">min</span>
+424:                                 <span class="ruby-identifier">sep_open</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+425:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">sep_open</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">c</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">min_d</span>
+426:                                                 <span class="ruby-identifier">s</span>.<span class="ruby-identifier">bright_side</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">c</span>[<span class="ruby-value">1</span>] 
+427:                                         <span class="ruby-keyword kw">end</span>
+428:                                 <span class="ruby-keyword kw">end</span>
+429:                                 <span class="ruby-identifier">min_d</span> = <span class="ruby-identifier">sep_close</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>[<span class="ruby-value">0</span>]}.<span class="ruby-identifier">min</span>
+430:                                 <span class="ruby-identifier">sep_close</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+431:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">sep_close</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">c</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">min_d</span>
+432:                                                 <span class="ruby-identifier">s</span>.<span class="ruby-identifier">dark_side</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">c</span>[<span class="ruby-value">1</span>] 
+433:                                         <span class="ruby-keyword kw">end</span>
+434:                                 <span class="ruby-keyword kw">end</span>
+435:                         <span class="ruby-keyword kw">end</span>
+436:                 <span class="ruby-keyword kw">else</span>
+437:                         <span class="ruby-ivar">@vsep</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+438:                                 <span class="ruby-identifier">sep_open</span> = []
+439:                                 <span class="ruby-identifier">sep_close</span> = []
+440:                                 <span class="ruby-identifier">min_dist_bs</span> = <span class="ruby-value">999999999999</span>
+441:                                 <span class="ruby-identifier">min_dist_ds</span> = <span class="ruby-value">999999999999</span>
+442:                                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span>
+443:                                         <span class="ruby-identifier">d</span> = <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">s</span>.<span class="ruby-identifier">sp</span>,<span class="ruby-value">0</span>).<span class="ruby-identifier">distance_to?</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child</span>.<span class="ruby-identifier">min_x</span>,<span class="ruby-value">0</span>)
+444:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">ep</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">min_x</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">min_dist_bs</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">d</span>
+445:                                                 <span class="ruby-identifier">sep_open</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">d</span>,<span class="ruby-identifier">child</span>]
+446:                                                 <span class="ruby-identifier">min_dist_bs</span> = <span class="ruby-identifier">d</span>
+447:                                         <span class="ruby-keyword kw">end</span>
+448:                                         <span class="ruby-identifier">d</span> = <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">s</span>.<span class="ruby-identifier">ep</span>,<span class="ruby-value">0</span>).<span class="ruby-identifier">distance_to?</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child</span>.<span class="ruby-identifier">max_y</span>,<span class="ruby-value">0</span>)
+449:                                         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">ep</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">max_x</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">min_dist_ds</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">d</span>
+450:                                                 <span class="ruby-identifier">sep_close</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">d</span>,<span class="ruby-identifier">child</span>]
+451:                                                 <span class="ruby-identifier">min_dist_ds</span> = <span class="ruby-identifier">d</span>
+452:                                         <span class="ruby-keyword kw">end</span>
+453:                                 <span class="ruby-keyword kw">end</span>
+454:                                 <span class="ruby-identifier">min_d</span> = <span class="ruby-identifier">sep_open</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>[<span class="ruby-value">0</span>]}.<span class="ruby-identifier">min</span>
+455:                                 <span class="ruby-identifier">sep_open</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+456:                                         <span class="ruby-identifier">s</span>.<span class="ruby-identifier">bright_side</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">c</span>[<span class="ruby-value">1</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">sep_open</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">c</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">min_d</span>
+457:                                 <span class="ruby-keyword kw">end</span>
+458:                                 <span class="ruby-identifier">min_d</span> = <span class="ruby-identifier">sep_close</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>[<span class="ruby-value">0</span>]}.<span class="ruby-identifier">min</span>
+459:                                 <span class="ruby-identifier">sep_close</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+460:                                         <span class="ruby-identifier">s</span>.<span class="ruby-identifier">dark_side</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">c</span>[<span class="ruby-value">1</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">sep_close</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">c</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">min_d</span>
+461:                                 <span class="ruby-keyword kw">end</span>
+462:                         <span class="ruby-keyword kw">end</span>
+463:                 <span class="ruby-keyword kw">end</span>
+464:                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span>
+465:                         <span class="ruby-identifier">child</span> = <span class="ruby-identifier">child</span>.<span class="ruby-identifier">search_nearest_separators</span>(<span class="ruby-identifier">mode</span>)
+466:                 <span class="ruby-keyword kw">end</span>
+467:                 <span class="ruby-keyword kw">self</span>
+468:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="sid-method" class="method-detail ">
+				<a name="method-i-sid"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">sid</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+SID is the segment hierarchical ID, for example the first <a
+href="Block.html">Block</a> would be 1,  his first child would be 1-1, and
+so on
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="sid-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 58</span>
+58:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sid</span>
+59:                 <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">nil?</span>
+60:                         <span class="ruby-keyword kw">return</span> <span class="ruby-node">&quot;#{@parent.sid}-#{@parent.children.index(self)+1}&quot;</span>
+61:                 <span class="ruby-keyword kw">else</span>
+62:                         <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;1&quot;</span>
+63:                 <span class="ruby-keyword kw">end</span>
+64:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="to-s-method" class="method-detail ">
+				<a name="method-i-to_s"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">to_s</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="to-s-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 470</span>
+470:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>
+471:                 <span class="ruby-identifier">pid</span>=<span class="ruby-value str">&quot;&quot;</span>
+472:                 <span class="ruby-identifier">pid</span>=<span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">id</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">nil?</span>
+473:                 <span class="ruby-node">&quot;{id:#{@id} pid:#{pid} cand:#{candidates_name_list}} chl:[#{@children.collect{|x|x.id}.join(&quot;,&quot;)}]&quot;</span>
+474:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="to-xml-method" class="method-detail ">
+				<a name="method-i-to_xml"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">to_xml</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+get the ViXML format representation of the block
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="to-xml-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 505</span>
+505:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_xml</span>
+506:                 <span class="ruby-identifier">src</span> = <span class="ruby-value str">&quot;&quot;</span>
+507:                 <span class="ruby-identifier">src</span><span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;Block Ref=\&quot;Block#{sid}\&quot; internal_id='#{@id}' ID=\&quot;$BLOCK_ID$\&quot; Pos=\&quot;WindowWidth||PageRectLeft:#{@min_x} WindowHeight||PageRectTop:#{@min_y} ObjectRectWidth:#{@max_x - @min_x} ObjectRectHeight:#{@max_y - @min_y}\&quot; Doc=\&quot;#{@doc}\&quot;&gt;\n&quot;</span>
+508:                         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">empty?</span>
+509:                                 <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;&lt;Links ID=\&quot;$LINKS_ID$\&quot; IDList=\&quot;$ID_LIST_LINKS$\&quot;&gt;\n&quot;</span>
+510:                                 <span class="ruby-identifier">lid</span> = []
+511:                                 <span class="ruby-identifier">sl</span> = <span class="ruby-value str">&quot;&quot;</span>
+512:                                 <span class="ruby-ivar">@links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">link</span><span class="ruby-operator">|</span>
+513:                                         <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">malformed?</span>(<span class="ruby-identifier">link</span>)
+514:                                                 <span class="ruby-identifier">iid</span> = <span class="ruby-identifier">crypt</span>(<span class="ruby-identifier">escape_html</span>(<span class="ruby-identifier">link</span>.<span class="ruby-identifier">inner_text</span>.<span class="ruby-identifier">strip</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">escape_html</span>(<span class="ruby-identifier">link</span>[<span class="ruby-value">:href</span>]))
+515:                                                 <span class="ruby-identifier">lid</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">iid</span>
+516:                                                 <span class="ruby-identifier">sl</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;link ID=\&quot;#{iid}\&quot; Name=\&quot;#{escape_html(link.inner_text.strip)}\&quot; Adr=\&quot;#{escape_html(link[:href])}\&quot;/&gt;&quot;</span>
+517:                                         <span class="ruby-keyword kw">end</span>
+518:                                 <span class="ruby-keyword kw">end</span>
+519:                                 <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-value str">'$ID_LIST_LINKS$'</span>,<span class="ruby-identifier">lid</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>))
+520:                                 <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-value str">'$LINKS_ID$'</span>,<span class="ruby-identifier">crypt</span>(<span class="ruby-identifier">sl</span>))
+521:                                 <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">sl</span>
+522:                                 <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;&lt;/Links&gt;\n&quot;</span>
+523:                                 
+524:                                 <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;&lt;Imgs ID=\&quot;$IMGS_ID$\&quot; IDList=\&quot;$ID_LIST_IMAGES$\&quot;&gt;\n&quot;</span>
+525:                                 <span class="ruby-identifier">lim</span> = []
+526:                                 <span class="ruby-identifier">si</span> = <span class="ruby-value str">&quot;&quot;</span>
+527:                                 <span class="ruby-ivar">@images</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">image</span><span class="ruby-operator">|</span>
+528:                                         <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">malformed?</span>(<span class="ruby-identifier">image</span>)
+529:                                                 <span class="ruby-identifier">iid</span> = <span class="ruby-identifier">crypt</span>(<span class="ruby-identifier">escape_html</span>(<span class="ruby-identifier">image</span>[<span class="ruby-value">:alt</span>])<span class="ruby-operator">+</span><span class="ruby-identifier">escape_html</span>(<span class="ruby-identifier">image</span>[<span class="ruby-value">:src</span>]))
+530:                                                 <span class="ruby-identifier">lim</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">iid</span>
+531:                                                 <span class="ruby-identifier">si</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;img ID=\&quot;#{iid}\&quot; Name=\&quot;#{escape_html(image[:alt])}\&quot; Src=\&quot;#{escape_html(image[:src])}\&quot;/&gt;&quot;</span>
+532:                                         <span class="ruby-keyword kw">end</span>
+533:                                 <span class="ruby-keyword kw">end</span>
+534:                                 <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-value str">'$ID_LIST_IMAGES$'</span>,<span class="ruby-identifier">lim</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>))
+535:                                 <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-value str">'$IMGS_ID$'</span>,<span class="ruby-identifier">crypt</span>(<span class="ruby-identifier">si</span>))
+536:                                 <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">si</span>
+537:                                 <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;&lt;/Imgs&gt;\n&quot;</span>
+538:                                 
+539:                                 <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">nil</span>)
+540:                                 <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value str">''</span>)
+541:                                 <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">collect!</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> 
+542:                                         <span class="ruby-identifier">t</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/(?&lt;!\n)\n(?!\n)/</span>,<span class="ruby-value str">' '</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/^$\n/</span>,<span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\s+/</span>,<span class="ruby-value str">' '</span>).<span class="ruby-identifier">strip</span>
+543:                                 }
+544:                                 <span class="ruby-identifier">txt</span> = <span class="ruby-identifier">escape_html</span>(<span class="ruby-ivar">@text</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;,&quot;</span>))
+545:                                 <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;Txts ID=\&quot;#{crypt(txt)}\&quot; Txt=\&quot;#{txt}\&quot;/&gt;\n&quot;</span>
+546:                         <span class="ruby-keyword kw">else</span>
+547:                                 <span class="ruby-ivar">@children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span>
+548:                                         <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">child</span>.<span class="ruby-identifier">to_xml</span>
+549:                                 <span class="ruby-keyword kw">end</span>
+550:                         <span class="ruby-keyword kw">end</span>
+551:                 <span class="ruby-identifier">src</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;&lt;/Block&gt;\n&quot;</span>
+552:                 <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-value str">'$BLOCK_ID$'</span>,<span class="ruby-identifier">crypt</span>(<span class="ruby-identifier">src</span>))
+553:                 <span class="ruby-identifier">src</span>
+554:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="weight-separators-method" class="method-detail ">
+				<a name="method-i-weight_separators"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">weight_separators</span><span
+						class="method-args">(mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="weight-separators-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_block.rb, line 249</span>
+249:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">weight_separators</span>(<span class="ruby-identifier">mode</span>)
+250:                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span><span class="ruby-operator">==</span><span class="ruby-value">:horizontal</span>
+251:                         <span class="ruby-ivar">@hsep</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+252:                                 <span class="ruby-identifier">s</span>.<span class="ruby-identifier">process_weight</span>(<span class="ruby-identifier">mode</span>)
+253:                         <span class="ruby-keyword kw">end</span>
+254:                         <span class="ruby-identifier">mmax</span> = <span class="ruby-ivar">@hsep</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">weight</span>}.<span class="ruby-identifier">max</span>
+255:                         <span class="ruby-ivar">@hsep</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+256:                                 <span class="ruby-identifier">s</span>.<span class="ruby-identifier">weight</span> = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">weight</span>.<span class="ruby-identifier">round</span> * <span class="ruby-value">10</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">mmax</span>.<span class="ruby-identifier">round</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">mmax</span>.<span class="ruby-identifier">round</span><span class="ruby-operator">==</span><span class="ruby-value">0</span>
+257:                                 <span class="ruby-identifier">s</span>.<span class="ruby-identifier">weight</span> = <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mmax</span><span class="ruby-operator">==</span><span class="ruby-value">0</span>
+258:                         <span class="ruby-keyword kw">end</span>
+259:                 <span class="ruby-keyword kw">else</span>
+260:                         <span class="ruby-ivar">@vsep</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+261:                                 <span class="ruby-identifier">s</span>.<span class="ruby-identifier">process_weight</span>(<span class="ruby-identifier">mode</span>)
+262:                         <span class="ruby-keyword kw">end</span>
+263:                         <span class="ruby-identifier">mmax</span> = <span class="ruby-ivar">@vsep</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">weight</span>}.<span class="ruby-identifier">max</span>
+264:                         <span class="ruby-ivar">@vsep</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+265:                                 <span class="ruby-identifier">s</span>.<span class="ruby-identifier">weight</span> = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">weight</span>.<span class="ruby-identifier">round</span> * <span class="ruby-value">10</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">mmax</span>.<span class="ruby-identifier">round</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">mmax</span><span class="ruby-operator">==</span><span class="ruby-value">0</span>
+266:                                 <span class="ruby-identifier">s</span>.<span class="ruby-identifier">weight</span> = <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mmax</span><span class="ruby-operator">==</span><span class="ruby-value">0</span>
+267:                         <span class="ruby-keyword kw">end</span>
+268:                 <span class="ruby-keyword kw">end</span>
+269:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

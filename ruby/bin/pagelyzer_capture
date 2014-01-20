@@ -1,0 +1,241 @@
+#!/usr/bin/ruby1.9.1
+#-*- mode: ruby; encoding: utf-8 -*-
+require_relative "../lib/pagelyzer_capture.rb"
+require_relative "../lib/pagelyzer_url_utils.rb"
+require 'uri'
+require "nokogiri"
+require 'base64'
+require 'selenium-webdriver'
+
+	current_folder = File.expand_path(File.dirname(File.dirname(__FILE__)))
+	url = ""
+	browser = "firefox"
+	output_folder = "#{current_folder}/out"
+	no_screenshot = false
+	remote = false
+	thumb = false
+	headless = false
+	force_option = false
+	dependencies	= false
+	time_out = 60
+	urls = ""
+	csv = ""
+	cat=""
+	exclude_list = ""
+	exclude_arr = []
+	
+	if defined?($command_options)
+		argv = $command_options.split(" ")
+	else
+		argv = ARGV
+	end
+	
+	if argv==[]
+		Capture.usage
+		exit 
+	end
+	
+	argv.each do |op|
+		sop = op.strip.split("=")
+		url 			= sop[1] if sop[0] == "--url"
+		urls 			= sop[1] if sop[0] == "--urls"
+		csv 			= sop[1] if sop[0] == "--csv"
+		browser 		= sop[1] if sop[0] == "--browser"
+		exclude_list	= sop[1] if sop[0] == "--exclude-list"
+		force_option	= true 	 if sop[0] == "--force"
+		headless 		= true 	 if sop[0] == "--headless"
+		output_folder 	= sop[1] if sop[0] == "--output-folder"
+		time_out 		= sop[1].to_i if sop[0] == "--timeout"
+		no_screenshot 	= true 	 if sop[0] == "--no-screenshot"
+		thumb 			= true 	 if sop[0] == "--thumbnail"
+		dependencies	= true   if sop[0] == "--include-dependencies"
+		
+		if op[0..6] == "--help"
+			Capture.help
+			exit
+		end
+		if op[0..9] == "--version"
+			puts "SCAPE WebPage Capture. Version 0.9"
+			puts "UPMC - LIP6"
+			exit
+		end
+	end
+
+	if headless
+		require 'headless'
+		hhdl = Headless.new
+		hhdl.start
+		puts "Headless mode"
+	end
+	
+	unless File.exists? output_folder
+		FileUtils.mkdir_p output_folder
+	end
+
+	if browser.nil? or browser.strip == "" 
+		puts "ERROR: browser not specified"
+		exit
+	end
+
+	if !urls.empty? and !url.empty?
+		puts "ERROR: urls file and url parameters can be given at the same time"
+		exit
+	end
+
+	if urls.empty? and (url.nil? or url.empty?) and csv.empty?
+		puts "ERROR: there were problems with url. Verify that they are included as parameters and has the http:// before"
+		exit
+	end
+
+	if urls.empty?
+		if csv.empty?
+			collection = ["#{url}"]
+			collection_size = 1
+		else
+			collection = File.open(csv,'r')
+			collection_size = File.readlines(csv).size
+		end
+	else
+		if csv.empty?
+			collection = File.open(urls,'r')
+			collection_size = File.readlines(urls).size
+		else
+			collection = File.open(csv,'r')
+			collection_size = File.readlines(csv).size
+		end
+	end
+
+	unless exclude_list.empty?
+		exclude_arr = File.readlines(exclude_list).collect {|x| x.strip}
+	end
+
+	cdriver = Capture.new
+	cdriver.open([browser])
+
+	k=1
+	category = ""
+	collection.each do |page|
+		if csv.empty?
+			page = page.strip
+		else
+			category,title,page = page.split('","')
+		
+			category = category.gsub('"',"").gsub('\"',"").gsub("/","_").strip # = category.chomp('"').reverse.chomp('"').reverse.gsub("/","_")
+			title = title.gsub('"',"").gsub('\"',"").gsub("/","_").strip # = title.chomp('"').reverse.chomp('"').reverse.gsub("/","_")
+			page = page.gsub('"',"").gsub('\"',"").strip # = page.chomp('"').reverse.chomp('"').reverse
+		end
+		
+		unless category.empty?
+			cat = "/#{category}" 
+			FileUtils.mkdir "#{output_folder}#{cat}" unless File.exists? "#{output_folder}#{cat}"
+		end
+		
+		filename = Capture.parse_filename(page)
+		
+		puts "-"*80
+		puts "page #{k} of #{collection_size} #{category}"
+		k+=1
+	
+		excluded=exclude_arr.include?(page)
+		
+		if (!File.exists?("#{output_folder}#{cat}/#{browser}_#{filename}.dhtml") and !excluded)	or force_option
+			if page.nil? or page.strip  == ""
+				puts "ERROR: url not given"
+				next
+			end
+			
+			if !(page =~ URI::regexp)
+				puts "ERROR: invalid URL"
+				next
+			end
+			begin
+				host = URI.parse(page).host
+			rescue
+				next
+			end
+			domain = host.downcase.start_with?("www") ? host[4..-1] : host
+			data = nil
+			begin
+				data = cdriver.start(page,browser,output_folder,no_screenshot,thumb,current_folder,false,time_out)
+			rescue
+				puts "ERROR: url #{page} could not be captured"
+				File.open("excluded_list.txt","a") {|f| f.puts page}
+				puts $!
+				cdriver.reset
+				next
+			end
+			
+			next if data.nil?
+			
+		
+			File.open("#{output_folder}#{cat}/#{browser}_#{filename}.dhtml",'w') {|f| f.write data[1]}
+			File.open("#{output_folder}#{cat}/#{browser}_#{filename}.png",'wb') {|f| f.write Base64.decode64(data[2])}
+			File.open("#{output_folder}#{cat}/#{browser}_#{filename}.html",'w') {|f| f.puts data[0]}
+
+			begin
+				if dependencies and !data.nil? and !data[1].strip.empty?
+					#cmd = "wget -P #{output_folder} --quiet --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=unix --no-parent --domains #{domain} #{page}"
+					
+					cmd = "wget -P #{output_folder}#{cat} -N -p -nv --progress=dot --domains #{domain} #{page}" #--quiet
+					puts "INFO: get dependencies"
+					system cmd
+					tdoc = Nokogiri::HTML(data[0])
+					unless tdoc.nil?
+						tdoc.css('link').each do |tag|
+							unless tag.nil?
+								if relative?(tag['href'])
+									unless tag['href'].nil?
+										if ['/'].include? tag['href'].to_s[0]
+											href = "#{host}#{tag['href']}"
+										elsif ["."].include? tag['href'].to_s[0]
+											href = "#{host}#{tag['href'].reverse.chop.reverse}"
+										else
+											href = "#{host}/#{tag['href']}"
+										end
+										#puts "#{tag['href']} => #{href}"
+										tag['href'] = href
+									end
+								end
+							end
+						end
+
+						tdoc.css('img').each do |img|
+							unless img.nil?
+								unless img['src'].nil?
+									if relative?(img['src'])
+										if ["/"].include? img['src'].to_s[0]
+											href = "#{host}#{img['src']}"
+										elsif ["."].include? img['src'].to_s[0]
+											aux = img['src']
+											aux[0]=''
+											href = "#{host}#{aux}"
+										else
+											href = "#{host}/#{img['src']}"
+										end
+										#puts "#{img['src']} => #{href}"
+										img['src'] = href
+									end
+								end
+							end
+						end
+						cat = "/#{category}" unless category.empty?
+						File.open("#{output_folder}#{cat}/#{browser}_#{filename}.html",'w') {|f| f.puts tdoc}
+						puts "WARNING: original source code modified"
+					end
+				end
+			rescue
+				puts "ERROR getting dependencies #{$!}"
+			end
+		else
+			if excluded
+				puts "WARNING: page #{page} was excluded. Use --force option to override"
+			else
+				puts "INFO: page #{page} already capture. Use --force option to override"
+			end
+		end
+	end
+	cdriver.close
+	puts "Process ended"
+	
+
+hhdl.destroy if headless

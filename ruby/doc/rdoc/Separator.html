@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: Separator</title>
+
+	<link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="./lib/pagelyzer_separator_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/pagelyzer_separator.rb">lib/pagelyzer_separator.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link"><a href="Object.html">Object</a></p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-c-new">::new</a></li>
+					
+					<li><a href="#method-i-%3C%3D%3E">#<=></a></li>
+					
+					<li><a href="#method-i-bottom_crossed_by%3F">#bottom_crossed_by?</a></li>
+					
+					<li><a href="#method-i-contains%3F">#contains?</a></li>
+					
+					<li><a href="#method-i-covered_by%3F">#covered_by?</a></li>
+					
+					<li><a href="#method-i-points">#points</a></li>
+					
+					<li><a href="#method-i-polygon">#polygon</a></li>
+					
+					<li><a href="#method-i-process_weight">#process_weight</a></li>
+					
+					<li><a href="#method-i-to_s">#to_s</a></li>
+					
+					<li><a href="#method-i-top_crossed_by%3F">#top_crossed_by?</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./Action.html">Action</a></li>
+				
+					<li><a href="./Block.html">Block</a></li>
+				
+					<li><a href="./Body.html">Body</a></li>
+				
+					<li><a href="./CompositeBlock.html">CompositeBlock</a></li>
+				
+					<li><a href="./Container.html">Container</a></li>
+				
+					<li><a href="./Content.html">Content</a></li>
+				
+					<li><a href="./ContentContainer.html">ContentContainer</a></li>
+				
+					<li><a href="./ConvexHull.html">ConvexHull</a></li>
+				
+					<li><a href="./DefaultDivide.html">DefaultDivide</a></li>
+				
+					<li><a href="./DefaultExtract.html">DefaultExtract</a></li>
+				
+					<li><a href="./Dimension.html">Dimension</a></li>
+				
+					<li><a href="./Driver.html">Driver</a></li>
+				
+					<li><a href="./Heuristic.html">Heuristic</a></li>
+				
+					<li><a href="./Image.html">Image</a></li>
+				
+					<li><a href="./IndirectContainer.html">IndirectContainer</a></li>
+				
+					<li><a href="./Invalids.html">Invalids</a></li>
+				
+					<li><a href="./LayoutContainer.html">LayoutContainer</a></li>
+				
+					<li><a href="./Object.html">Object</a></li>
+				
+					<li><a href="./OneChild.html">OneChild</a></li>
+				
+					<li><a href="./Point.html">Point</a></li>
+				
+					<li><a href="./Separator.html">Separator</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">Separator</h1>
+
+		<div id="description">
+			<p>
+Andrés Sanoja UPMC - LIP6
+</p>
+<p>
+separator.rb
+</p>
+<p>
+Requires: Ruby 1.9.1+ (1.8.x versions won&#8217;t work) and rubygems 1.3.7+
+</p>
+<p>
+Copyright (C) 2011, 2012 Andrés Sanoja, Université Pierre et Marie Curie -
+Laboratoire d&#8217;informatique de Paris 6 (LIP6)
+</p>
+<p>
+Contributors: Stephane Gançarski - LIP6
+</p>
+<p>
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+</p>
+<p>
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+for more details.
+</p>
+<p>
+You should have received a copy of the GNU Lesser General Public License
+along with this program. If not, see <<a
+href="http://www.gnu.org/licenses/">www.gnu.org/licenses/</a>>.
+</p>
+<p>
+class for detect gaps between blocks and determine the kind of separation 
+(horizontal and vertical)
+</p>
+
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="sp-attribute-method" class="method-detail">
+				<a name="sp"></a>
+				
+				<a name="sp="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">sp</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="ep-attribute-method" class="method-detail">
+				<a name="ep"></a>
+				
+				<a name="ep="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">ep</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="bright-side-attribute-method" class="method-detail">
+				<a name="bright_side"></a>
+				
+				<a name="bright_side="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">bright_side</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="dark-side-attribute-method" class="method-detail">
+				<a name="dark_side"></a>
+				
+				<a name="dark_side="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">dark_side</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="weight-attribute-method" class="method-detail">
+				<a name="weight"></a>
+				
+				<a name="weight="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">weight</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="method-c-new"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">(sp,ep)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 34</span>
+34:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">sp</span>,<span class="ruby-identifier">ep</span>)
+35:                 <span class="ruby-ivar">@sp</span> = <span class="ruby-identifier">sp</span>.<span class="ruby-identifier">to_f</span>
+36:                 <span class="ruby-ivar">@ep</span> = <span class="ruby-identifier">ep</span>.<span class="ruby-identifier">to_f</span>
+37:                 <span class="ruby-ivar">@bright_side</span> = []
+38:                 <span class="ruby-ivar">@dark_side</span> = []
+39:                 <span class="ruby-ivar">@weight</span>=<span class="ruby-value">0</span>
+40:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="method-i-%3C%3D%3E"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">&lt;=&gt;</span><span
+						class="method-args">(obj)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 74</span>
+74:         <span class="ruby-keyword kw">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">obj</span>)
+75:                 <span class="ruby-comment cmt">#define comparison type</span>
+76:                 <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">weight</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">weight</span>
+77:                         <span class="ruby-value">1</span>
+78:                 <span class="ruby-keyword kw">elsif</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">weight</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">weight</span>
+79:                         <span class="ruby-value">1</span>
+80:                 <span class="ruby-keyword kw">else</span>
+81:                         <span class="ruby-value">0</span>
+82:                 <span class="ruby-keyword kw">end</span>
+83:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="bottom-crossed-by--method" class="method-detail ">
+				<a name="method-i-bottom_crossed_by%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">bottom_crossed_by?</span><span
+						class="method-args">(block,mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="bottom-crossed-by--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 112</span>
+112:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">bottom_crossed_by?</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">mode</span>)
+113:                 <span class="ruby-comment cmt"># permits to detect if a block is pass below a separator</span>
+114:                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span><span class="ruby-operator">==</span><span class="ruby-value">:horizontal</span>
+115:                         <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_y</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@sp</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_y</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@ep</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_y</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@ep</span> )
+116:                 <span class="ruby-keyword kw">else</span>
+117:                         <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_x</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@sp</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_x</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@ep</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_x</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@ep</span> )
+118:                 <span class="ruby-keyword kw">end</span>
+119:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="contains--method" class="method-detail ">
+				<a name="method-i-contains%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">contains?</span><span
+						class="method-args">(block,mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="contains--source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 85</span>
+85:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">contains?</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">mode</span>)
+86:                 <span class="ruby-comment cmt"># permits to detect if a block is inside a separator</span>
+87:                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-value">:horizontal</span>
+88:                         <span class="ruby-keyword kw">return</span> ((<span class="ruby-ivar">@sp</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_y</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_y</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-ivar">@ep</span>))
+89:                 <span class="ruby-keyword kw">else</span>
+90:                         <span class="ruby-keyword kw">return</span> ((<span class="ruby-ivar">@sp</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_x</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_x</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-ivar">@ep</span>))
+91:                 <span class="ruby-keyword kw">end</span>
+92:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="covered-by--method" class="method-detail ">
+				<a name="method-i-covered_by%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">covered_by?</span><span
+						class="method-args">(block,mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="covered-by--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 94</span>
+ 94:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">covered_by?</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">mode</span>)
+ 95:                 <span class="ruby-comment cmt"># permits to detect if a separator is covered by a block</span>
+ 96:                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span><span class="ruby-operator">==</span><span class="ruby-value">:horizontal</span>
+ 97:                         <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_y</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-ivar">@sp</span> <span class="ruby-keyword kw">and</span> <span class="ruby-ivar">@ep</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_y</span>)
+ 98:                 <span class="ruby-keyword kw">else</span>
+ 99:                         <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_x</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-ivar">@sp</span> <span class="ruby-keyword kw">and</span> <span class="ruby-ivar">@ep</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_x</span>)
+100:                 <span class="ruby-keyword kw">end</span>
+101:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="points-method" class="method-detail ">
+				<a name="method-i-points"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">points</span><span
+						class="method-args">(block,mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="points-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 58</span>
+58:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">points</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">mode</span>)
+59:                 <span class="ruby-comment cmt">#get the list of points in the separator polygon</span>
+60:                 <span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">mode</span>).<span class="ruby-identifier">flatten</span>
+61:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="polygon-method" class="method-detail ">
+				<a name="method-i-polygon"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">polygon</span><span
+						class="method-args">(block,mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="polygon-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 41</span>
+41:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">mode</span>)
+42:                 <span class="ruby-comment cmt">#get the polygon representation of the separator</span>
+43:                 <span class="ruby-identifier">poly</span> = []
+44:                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-value">:horizontal</span>
+45:                         <span class="ruby-identifier">poly</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_x</span>,<span class="ruby-ivar">@sp</span>]
+46:                         <span class="ruby-identifier">poly</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_x</span>,<span class="ruby-ivar">@sp</span>]
+47:                         <span class="ruby-identifier">poly</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_x</span>,<span class="ruby-ivar">@ep</span>]
+48:                         <span class="ruby-identifier">poly</span>.<span class="ruby-identifier">push</span> [<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_x</span>,<span class="ruby-ivar">@ep</span>]
+49:                 <span class="ruby-keyword kw">else</span>
+50:                         <span class="ruby-identifier">poly</span>.<span class="ruby-identifier">push</span> [<span class="ruby-ivar">@sp</span>,<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_y</span>]
+51:                         <span class="ruby-identifier">poly</span>.<span class="ruby-identifier">push</span> [<span class="ruby-ivar">@sp</span>,<span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_y</span>]
+52:                         <span class="ruby-identifier">poly</span>.<span class="ruby-identifier">push</span> [<span class="ruby-ivar">@ep</span>,<span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_y</span>]
+53:                         <span class="ruby-identifier">poly</span>.<span class="ruby-identifier">push</span> [<span class="ruby-ivar">@ep</span>,<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_y</span>]
+54:                 <span class="ruby-keyword kw">end</span>
+55:                 <span class="ruby-identifier">poly</span>
+56:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="process-weight-method" class="method-detail ">
+				<a name="method-i-process_weight"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">process_weight</span><span
+						class="method-args">(mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="process-weight-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 121</span>
+121:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_weight</span>(<span class="ruby-identifier">mode</span>)
+122:                 <span class="ruby-comment cmt">#* assign a weight to a separator</span>
+123:                 <span class="ruby-comment cmt">#* greater distance greater weight</span>
+124:                 <span class="ruby-comment cmt">#* different types, font, background of content in both sides of separator higher weight</span>
+125:                 <span class="ruby-identifier">max_set</span> = []
+126:                 <span class="ruby-ivar">@bright_side</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span>
+127:                         <span class="ruby-identifier">max_dist</span> = <span class="ruby-value">0</span>
+128:                         <span class="ruby-ivar">@dark_side</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span>
+129:                                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span><span class="ruby-operator">==</span><span class="ruby-value">:horizontal</span>
+130:                                         <span class="ruby-identifier">dist</span> = <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>,<span class="ruby-identifier">b</span>.<span class="ruby-identifier">max_y</span>).<span class="ruby-identifier">distance_to?</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>,<span class="ruby-identifier">d</span>.<span class="ruby-identifier">min_y</span>)
+131:                                 <span class="ruby-keyword kw">else</span>
+132:                                         <span class="ruby-identifier">dist</span> = <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">b</span>.<span class="ruby-identifier">max_x</span>,<span class="ruby-value">0</span>).<span class="ruby-identifier">distance_to?</span> <span class="ruby-constant">Point</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">d</span>.<span class="ruby-identifier">min_x</span>,<span class="ruby-value">0</span>)
+133:                                 <span class="ruby-keyword kw">end</span>
+134:                                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">dist</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max_dist</span>
+135:                                         <span class="ruby-identifier">max_dist</span> = <span class="ruby-identifier">dist</span>
+136:                                 <span class="ruby-keyword kw">end</span>
+137:                         <span class="ruby-keyword kw">end</span>
+138:                         <span class="ruby-identifier">max_set</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">max_dist</span>
+139:                 <span class="ruby-keyword kw">end</span>
+140:                 <span class="ruby-ivar">@weight</span> = <span class="ruby-identifier">max_set</span>.<span class="ruby-identifier">max</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">max_set</span>.<span class="ruby-identifier">empty?</span>
+141:                 
+142:                 <span class="ruby-comment cmt"># backgrounds differents</span>
+143:                 <span class="ruby-identifier">bg</span> = <span class="ruby-ivar">@bright_side</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">candidates_background_color_list</span>}.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">uniq</span> &amp; <span class="ruby-ivar">@dark_side</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">candidates_background_color_list</span>}.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">uniq</span>
+144:                 <span class="ruby-ivar">@weight</span> <span class="ruby-operator">+=</span> <span class="ruby-value">10</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">bg</span><span class="ruby-operator">==</span>[]
+145:                 
+146:                 <span class="ruby-comment cmt">#structures of blocks of two sides are are very similar (text, images, etc) decrease weight</span>
+147:                 <span class="ruby-identifier">a</span>=<span class="ruby-ivar">@bright_side</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">candidates_structure</span>}.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">first</span>
+148:                 <span class="ruby-identifier">b</span>=<span class="ruby-ivar">@dark_side</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">candidates_structure</span>}.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">first</span>
+149:                 <span class="ruby-ivar">@weight</span> <span class="ruby-operator">-=</span><span class="ruby-value">10</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">a</span><span class="ruby-operator">==</span><span class="ruby-value str">'TITLE'</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">b!</span>=<span class="ruby-value str">'TITLE'</span>
+150:                 <span class="ruby-ivar">@weight</span> <span class="ruby-operator">-=</span><span class="ruby-value">10</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">a</span><span class="ruby-operator">==</span><span class="ruby-identifier">b</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">a!</span>=<span class="ruby-value str">'COMBINED'</span>
+151:                 
+152:                 <span class="ruby-comment cmt">#fontsizes if different increase weight</span>
+153:                 <span class="ruby-identifier">a</span>=<span class="ruby-ivar">@bright_side</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">candidates_font_size_list</span>}.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">max</span>
+154:                 <span class="ruby-identifier">b</span>=<span class="ruby-ivar">@dark_side</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">candidates_font_size_list</span>}.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">min</span>
+155:                 <span class="ruby-identifier">a</span>=<span class="ruby-value">0</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">nil?</span>
+156:                 <span class="ruby-identifier">b</span>=<span class="ruby-value">0</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">nil?</span>
+157:                 <span class="ruby-ivar">@weight</span> <span class="ruby-operator">+=</span><span class="ruby-value">10</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">a</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b</span>
+158:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="to-s-method" class="method-detail ">
+				<a name="method-i-to_s"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">to_s</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="to-s-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 63</span>
+63:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>
+64:                 <span class="ruby-comment cmt">#string representation</span>
+65:                 <span class="ruby-identifier">sa</span> = []
+66:                 <span class="ruby-identifier">sb</span> = []
+67:                 
+68:                 <span class="ruby-identifier">sa</span> = <span class="ruby-ivar">@bright_side</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">id</span>}.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@bright_side</span>.<span class="ruby-identifier">nil?</span>
+69:                 <span class="ruby-identifier">sb</span> = <span class="ruby-ivar">@dark_side</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">id</span>}.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@dark_side</span>.<span class="ruby-identifier">nil?</span>
+70:                 
+71:                 <span class="ruby-node">&quot;{(#{cformat(@sp)},#{cformat(@ep)}) W:#{@weight} A:[#{sa}] B:[#{sb}]} &quot;</span>
+72:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="top-crossed-by--method" class="method-detail ">
+				<a name="method-i-top_crossed_by%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">top_crossed_by?</span><span
+						class="method-args">(block,mode)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="top-crossed-by--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/pagelyzer_separator.rb, line 103</span>
+103:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">top_crossed_by?</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">mode</span>)
+104:                 <span class="ruby-comment cmt"># permits to detect if a block is pass over a separator</span>
+105:                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mode</span><span class="ruby-operator">==</span><span class="ruby-value">:horizontal</span>
+106:                         <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_y</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@sp</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_y</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@ep</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_y</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@sp</span> )
+107:                 <span class="ruby-keyword kw">else</span>
+108:                         <span class="ruby-keyword kw">return</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">min_x</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@sp</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_x</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@ep</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">max_x</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@sp</span> ) 
+109:                 <span class="ruby-keyword kw">end</span>
+110:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

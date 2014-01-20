@@ -1,0 +1,230 @@
+#!/usr/bin/ruby1.9.1
+#-*- mode: ruby; encoding: utf-8 -*-
+
+require "nokogiri"
+require_relative "../lib/pagelyzer_item.rb"
+require 'image_size'
+
+def help
+	usage
+	puts "This tool is oriented to view a ViXML file"
+end
+
+def usage
+	puts "USAGE: pagelyzer_view [--vixml-file=XML_FILE --snapshot-file=IMAGE_FILE | --input_folder=FOLDER --output_folder=FOLDER] [--output-file=FILE] [--version] [--help]"
+end
+
+def svg_header(width,height)
+<<EOS
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"> 
+     <!--xml:space="preserve"
+     width="#{width}px" height="#{height}px"
+     viewBox="0 0 #{width} #{height}"
+     zoomAndPan="disable" -->
+EOS
+end
+
+def svg_footer
+	"</svg>"
+end
+
+def svg_image(left,top,width,height,href)
+	#href = "file://"+File.expand_path(File.join(File.dirname(".."), href))
+	"<image x=\"#{left}\" y=\"#{top}\" width=\"#{width}\" height=\"#{height}\" xlink:href=\"#{href}\" preserveAspectRatio='none'/>\n"
+end
+
+def parse_geometry(node)
+	ret={}
+	ref = "#{node["ref"]}#{node["Ref"]}"
+	pos = "#{node["pos"]}#{node["Pos"]}"
+	if pos.strip == "" #es vips
+		ret['left'] = 0
+		ret['top'] = 0
+		png = ImageSize.new(File.open($snapshot_file,'rb').read)
+		ret['width'] = png.width
+		ret['height'] = png.height
+		return ret
+	end
+	a=pos.split(" ").collect{|e| e.split(":")[1]}
+	if node.name == "Document"
+		ret['left'] = 0
+		ret['top'] = 0
+		ret['width'] = a[0].to_i
+		ret['height'] = a[1].to_i
+	else
+		ret['left'] = a[0].to_i
+		ret['top'] = a[1].to_i
+		ret['width'] = a[2].to_i
+		ret['height'] = a[3].to_i
+	end
+	ret
+end
+
+def svg_text(x,y,s)
+x=x.to_i
+y=y.to_i
+	unless s.nil?
+s = <<EOF
+<text x=\"#{x+1}\" y=\"#{y+1}\" style=\"fill:white;fill-opacity:1;stroke:white;stroke-width:2;stroke-opacity:1\">#{s}</text>
+<text x=\"#{x}\" y=\"#{y}\" style=\"stroke:blue;stroke-width:1;stroke-opacity:1\">#{s}</text>
+EOF
+	return s
+	end
+end
+
+def svg_polygon(node)
+	c = parse_geometry(node)
+	ref = node["ref"]
+	path = node.at("path").inner_text
+	weight = node.at("weight").inner_text.to_f
+	basecolor = (255*weight).to_i.to_s(16)
+	fillcolor = "##{basecolor}#{basecolor}#{basecolor}"
+	#puts "#{c["left"]} #{c["top"]} #{c["width"]} #{c["height"]} #{path}"
+	s="<g>"
+	s+="<rect x=\"#{c['left']}\" y=\"#{c['top']}\" width=\"#{c['width']}\" height=\"#{c['height']}\" style=\"fill:#{fillcolor};stroke:red;stroke-width:4;fill-opacity:0.3;stroke-opacity:0.9\"/>\n"
+	s+=svg_text c['left'],c['top'].to_i+10,ref unless ref.nil?
+	s+=svg_text c['left'],c['top'].to_i+20,weight unless weight.nil?
+	s+=svg_text c['left'],c['top'].to_i+30,path unless path.nil?
+	s+="</g>"
+	s
+end
+
+def traverse(node,parent,level)
+	node.inner_html = node.inner_html.gsub(/\n/,'').strip
+	$cont+=1
+	current = Item.new(node,level,$cont,parent,false)
+	$struc.push current
+	unless node.children.empty? 
+		node.children.each do |child|
+			if child.text?
+				if child.content.strip != ""
+					$cont+=1
+					$struc.push Item.new(child,level,$cont,current,false)
+				end
+			else
+				traverse(child,current,level+1) 
+			end
+		end
+	end
+end
+
+if ARGV == []
+	usage
+	exit
+end
+
+snapshot_dim = nil
+
+$snapshot_file = ""
+$source_file = ""
+input_folder = ""
+output_folder = ""
+
+ARGV.each do |op|
+	sop = op.split("=")
+	$source_file 	= sop[1] 		if ["--vixml-file","-v"].include? sop[0]
+	input_folder 	= sop[1] 		if ["--input-folder","-fin"].include? sop[0]
+	output_folder 	= sop[1] 		if ["--output-folder","-fout"].include? sop[0]
+	$snapshot_file 	= sop[1] 		if ["--snapshot-file","-s"].include? sop[0] 
+	$output_file 	= sop[1] 		if ["--output-file","-o"].include? sop[0] 
+	$snapshot_dim 	= sop[1] 		if sop[0] == "--snapshot-dimension"
+	$output_file 	= sop[1] 		if sop[0] == "--output-file"
+	if sop[0] == "--help"
+		help
+		exit
+	end
+	if sop[0] == "--version"
+		puts "SCAPE ViXML Viewer. Version 0.9"
+		puts "UPMC - LIP6"
+		exit
+	end
+end
+
+if $source_file.empty? and !input_folder.empty? and output_folder.empty?
+	output_folder = input_folder
+	puts "WARNING: output folder is #{output_folder}"
+end
+
+if $source_file.empty? and input_folder.empty? and output_folder.empty?
+	puts "ERROR: input-folder and output-folder should be passed together"
+	exit
+end
+
+if input_folder.empty? and $source_file.empty?
+	puts "ERROR: ViXML file not given"
+	exit
+end
+
+#~ if !$source_file.empty? and $snapshot_file.empty?
+	#~ puts "ERROR: snapshot image not given"
+	#~ exit
+#~ end
+
+if input_folder.empty?
+	collection = [$source_file]
+else
+	collection = Dir.glob("#{input_folder}/*.xml")
+end
+
+collection.each do |xml|
+	$cont=0
+	svg = ""
+	$struc = []
+	
+	input_file = File.open(xml)
+	snapshot_file = xml.gsub(".xml",".png") unless input_folder.empty?
+	snapshot_file = xml.gsub(".xml",".png") if $snapshot_file.empty?
+	
+	snapshot_dim = ImageSize.new(File.open(snapshot_file,'rb').read)
+	
+	doc = Nokogiri::XML(input_file)
+	document_node = doc.at("/XML/Document")
+	
+	if input_folder.empty?
+		unless $snapshot_dim.nil? 
+			d = $snapshot_dim.split("x").collect {|e| e.to_i}
+			document_geometry = {'left'=>0, 'top'=>0, 'width'=>d[0], 'height'=>d[1]}
+		else
+			document_geometry = parse_geometry(document_node)
+			puts "Image: #{snapshot_dim.w}x#{snapshot_dim.h}"
+			puts "Document: #{document_geometry["width"]}x#{document_geometry["height"]}"
+			
+		end
+	else
+		document_geometry = parse_geometry(document_node)
+	end
+	
+	#svg += svg_header(document_geometry["width"],document_geometry["height"])
+	svg += svg_header(snapshot_dim.w,snapshot_dim.h)
+	#if input_folder.empty?
+		#svg += svg_image 0, 0, document_geometry["width"], document_geometry["height"], $snapshot_file
+	#	svg += svg_image 0, 0, snapshot_dim.w, snapshot_dim.h, snapshot_file
+	#else
+		#svg += svg_image 0, 0, document_geometry["width"], document_geometry["height"], snapshot_file
+	svg += svg_image 0, 0, snapshot_dim.w, snapshot_dim.h, snapshot_file
+	#end
+	traverse(doc.at("/XML/Document"),nil,0)
+
+	filtered = $struc.collect {|e| e if (['block','document'].include? e.tag.downcase) and (!e.children.collect{|c|c.tag.downcase}.include? 'block')}
+	filtered.delete(nil)
+	sortie = filtered.collect {|e| svg_polygon(e.node)}
+
+	svg += sortie.join("")
+	svg += svg_footer
+
+	if input_folder.empty?
+		if $output_file.nil?
+			puts svg
+		else
+			File.open($output_file,'w') {|f| f.puts svg}
+		end
+	else
+		ofile = xml.gsub(".xml",".svg")
+		File.open(ofile,'w') {|f| f.puts svg}
+		puts "INFO: file #{ofile} created"
+	end
+end

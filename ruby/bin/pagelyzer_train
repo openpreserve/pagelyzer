@@ -1,0 +1,290 @@
+#!/usr/bin/ruby1.9.1
+#-*- mode: ruby; encoding: utf-8 -*-
+# Alexis Lechervy
+# Andrés Sanoja
+# UPMC - LIP6
+#
+#
+#
+# pagelyzer_changedetection
+#
+# Requires: Ruby 1.9.1+ (1.8.x versions won't work), rubygems 1.3.7+
+#
+# Copyright (C) 2011, 2012, 2013 Alexis Lechervy and Andrés Sanoja, Université Pierre et Marie Curie -
+# Laboratoire d'informatique de Paris 6 (LIP6)
+#
+# Contributors: Stephane Gançarski - LIP6
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# This script covers all the change detection process. It is integrated with
+# the pageanalyzer, marcalizer and VIDIFF tools.
+#
+# Default Degree of Coherence (DOC=6)
+#
+
+#./pagelyzer train --urls=/home/lechervy/git/pagelyzer-ruby-0.9.1-standalone/ext/labels_url.txt --url_archive --param_init=/home/lechervy/git/pagelyzer-ruby-0.9.1-standalone/ext/ex_images.xml --type=images
+
+require 'open3'
+require 'fileutils'
+require_relative '../lib/pagelyzer_capture.rb'
+require_relative '../lib/pagelyzer_analyzer.rb'
+require 'rjb'
+
+
+def usage
+	puts "USAGE: pagelyzer_changedetection --urls=FILE_TEXT --param_init=FILE_XML --url_archive [--doc=(1..10)] [--output-folder=FOLDER] [--browser=BROWSER_CODE | --browser1=BROWSER_CODE --browser2=BROWSER_CODE] [--verbose] --type=[images|structure|hybrid]"
+end
+
+def help
+	usage
+	puts "This tool aims integrates all the change detection and segmentation tools"
+	puts "Help:"
+	puts " type = hybrid | webshot\n"
+	puts "Browsers code are the same as defined in selenium. For instance:"
+	puts " - firefox"
+	puts " - chrome"
+	puts " - iexploreproxy"
+	puts " - safariproxy"
+	puts " - opera"
+	puts
+end
+
+def config(key,current_folder)
+	conf = File.open("#{current_folder}/conf/pagelyzer.conf",'r')
+	value = ""
+	conf.each_line do |line|
+		pair = line.split(":")
+		if pair[0].strip == key
+			value = pair[1].strip
+			break
+		end
+	end
+	return value
+end
+
+def remove_slash(path)
+	path.sub(/(\/)+$/,'')
+end
+
+def verify_data_folder(path)
+	state = true
+	state = File.exists? path+"/js/decorate_mini.js"
+	state
+end
+
+def get_java_instance
+	libpath = "#{Dir.pwd}/lib"
+	#classpath = ENV['CLASSPATH'] ||= ''
+	classpath = [File.join(libpath,'MarcAlizer.jar'),File.join(libpath,'pagelyzerjavalib.jar')].join(":")
+	Rjb::load(classpath, ['-Xms128m','-Xmx1024m'])
+	mainclass = Rjb::import('Scape.ScapeTrain')
+	libclass = Rjb::import('pagelyzerjavalib.Pagelyzerjavalib')
+	return [mainclass.new,libclass.new]
+end
+
+def get_java_class(class_name)
+	return Rjb::import(class_name)
+end
+
+if defined?($command_options)
+	argv = $command_options.split(" ")
+else
+	argv = ARGV
+end
+
+if argv==[]
+	usage
+	exit 
+end
+
+
+current_folder = File.expand_path(File.dirname(File.dirname(__FILE__)))
+output_folder = "#{current_folder}/out"
+marcalizer_obj,javalib_obj = get_java_instance
+
+#~ config not needed in standalone configuration
+#~ marcalizer_folder = config('marcalizer',current_folder) #get marcalizer custom folder
+#~ marcalizer_folder = remove_slash(marcalizer_folder)
+#~ data_folder = config('data-folder',current_folder) #get the data folder usually /usr/share/pagelyzer-ruby
+#~ data_folder = remove_slash(data_folder)
+
+#~ unless verify_data_folder(data_folder)
+	#~ puts "ERROR: necessary files are not found in #{data_folder}. Please edit #{current_folder}/conf/pagelyzer.conf file and point it to the folder where data files are"
+	#~ exit
+#~ end
+
+urls =""
+param_init="#{current_folder}/ext/ex1.xml"
+browser = ""
+js_files_url =""
+thumb=false
+no_screenshot = false
+type = 'images'
+doc=6
+browser1 = ""
+browser2 = ""
+verbose = false
+general_browser = false
+url_archive = true
+
+unless File.exists? output_folder
+	FileUtils.mkdir_p output_folder
+end
+
+argv.each do |op|
+	sop = op.strip.split("=")
+	urls 			= sop[1] if sop[0] == "--urls"
+	param_init		= sop[1] if sop[0] == "--param_init"
+	url_archive 	= true if sop[0] == "--url_archive"
+	if sop[0] == "--browser"
+		browser 		= sop[1] 
+		general_browser = true
+	end
+	output_folder 	= sop[1] if sop[0] == "--output-folder"
+	js_files_url 	= sop[1] if sop[0] == "--js-files-url"
+	doc 			= sop[1] if sop[0] == "--doc"
+	browser1 		= sop[1] if sop[0] == "--browser1"
+	browser2 		= sop[1] if sop[0] == "--browser2"
+	browser 		= sop[1] if sop[0] == "--browser"
+	type 			= sop[1] if sop[0] == "--type"
+	verbose 		= true if sop[0] == "--verbose"
+	thumb 			= true if sop[0] == "--thumbnail"
+	no_screenshot	= true if sop[0] == "--no-screenshot"
+
+	if op[0..6] == "--help"
+		help
+		exit
+	end
+	if op[0..9] == "--version"
+		puts "SCAPE Train. Version 0.92"
+		puts "UPMC - LIP6"
+		exit
+	end
+end
+
+if urls.nil?
+	puts "ERROR: there were problems with urls. Verify that they are included as parameters"
+	exit
+end
+
+if browser.empty? 
+	if browser1.empty? and browser2.empty?
+		puts "Notice: using 'firefox' as default browser"
+		browser1="firefox"
+		browser2="firefox"
+	else
+		browser1 = "firefox" if browser1.empty?
+		browser2 = "firefox" if browser2.empty?
+	end
+else
+	puts "Notice: using '#{browser}' as default browser"
+	browser1 = browser # if browser1.empty?
+	browser2 = browser # if browser2.empty?
+end
+
+no_screenshot = true if type=="structure"
+
+fileclass = get_java_class('java.io.File')
+exf = fileclass.new_with_sig('Ljava.lang.String;',param_init)
+marcalizer_obj._invoke('init','Ljava.io.File;',exf)
+	
+cdriver = Capture.new
+cdriver.open([browser1,browser2])	
+
+fic =File.open(urls,'r')
+i=1
+fic.each_line{|ligne|  
+	ligne_split = ligne.strip.split(" ")
+	url1 = ligne_split[1]
+	url2 = ligne_split[2]
+	label = ligne_split[0].to_i
+
+	puts "#{i}- Label du couple : #{label} -> #{url1} , #{url2}"
+	i+=1
+
+	if label == 2
+		next
+	end
+
+	begin
+	#cdriver = Capture.new
+	data1 = cdriver.start(url1,browser1,output_folder,no_screenshot,thumb,current_folder)
+	data2 = cdriver.start(url2,browser2,output_folder,no_screenshot,thumb,current_folder)
+	 
+
+	if type=='images'
+		bufferedimage = get_java_class("java.awt.image.BufferedImage")
+		bi1 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data1[2])
+		bi2 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data2[2])
+		marcalizer_obj._invoke('addExampleOfTrain','Ljava.awt.image.BufferedImage;Ljava.awt.image.BufferedImage;I',bi1,bi2,label)
+	elsif type=='structure'
+		
+		bom1 =  BlockOMatic.new
+		bom1.set_source_content(data1[1])
+		bom1.set_pdoc(5)
+		xml1 = bom1.start
+		
+		bom2 =  BlockOMatic.new
+		bom2.set_source_content(data2[1])
+		bom2.set_pdoc(5)
+		xml2 = bom2.start
+		
+		if url_archive
+			string_xml1 = xml1.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
+			string_xml2 = xml2.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
+		else
+			string_xml1 = xml1.to_xml
+			string_xml2 = xml2.to_xml
+		end
+		marcalizer_obj._invoke('addExampleOfTrain','Ljava.lang.String;Ljava.lang.String;I',string_xml1,string_xml2,label)
+	elsif type=='hybrid'
+		
+		bufferedimage = get_java_class("java.awt.image.BufferedImage")
+		bi1 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data1[2])
+		bi2 = javalib_obj._invoke('getBufferedImage','Ljava.lang.String;',data2[2])
+		
+		bom1 =  BlockOMatic.new
+		bom1.set_source_content(data1[1])
+		bom1.set_pdoc(5)
+		xml1 = bom1.start
+		
+		bom2 =  BlockOMatic.new
+		bom2.set_source_content(data2[1])
+		bom2.set_pdoc(5)
+		xml2 = bom2.start
+		
+		if url_archive
+			string_xml1 = xml1.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
+			string_xml2 = xml2.to_xml.gsub(/http\:\/\/[\S]*http\:\/\//,'')
+		else
+			string_xml1 = xml1.to_xml
+			string_xml2 = xml2.to_xml
+		end
+		
+		marcalizer_obj._invoke('addExampleOfTrain','Ljava.lang.String;Ljava.lang.String;Ljava.awt.image.BufferedImage;Ljava.awt.image.BufferedImage;I',string_xml1,string_xml2,bi1,bi2,label)
+	else
+		puts "ERROR: Type '#{type}' not recognized"
+	end
+	rescue
+	  #there were a problem in the capture of pages
+	  puts "ERROR: can't process these urls:\n#{url1}\n#{url2}"
+	  next
+	end
+}
+
+#cdriver.close
+
+marcalizer_obj._invoke('train')
+marcalizer_obj._invoke('saveSVM')
