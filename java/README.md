@@ -49,36 +49,36 @@ It may be other port if needed.
 ## Command-line Parameters
 
 
-Usage: java -jar JPagelyzer -get <arg> [options]
+Usage: java -jar JPagelyzer -get arg [options]
 
 General
 ---------------- 
  
- -get <arg>           Funcionality to run: score, source, screenshot, segmentation -hub <arg> Selenium Server hub full address http://<host>:<port>/wd/hub. Default: http://127.0.0.1:8015/wd/hub  
+ -get arg           Funcionality to run: score, source, screenshot, segmentation -hub arg Selenium Server hub full address http://host:port/wd/hub. Default: http://127.0.0.1:8015/wd/hub  
  -local               Use local selenium WebDriver class instead of server  
- -ofile <arg>         Output file  
- -port <arg>          Internal jPagelyzer internal server port. Default: 8016 (in general this doesn't need to be changed only if this port is used by another application)  
+ -ofile arg         Output file  
+ -port arg          Internal jPagelyzer internal server port. Default: 8016 (in general this doesn't need to be changed only if this port is used by another application)  
 
 Score functionality (change detection)
 ---------------------------------------
    
- -url1 <arg>          First URL  
- -url2 <arg>          Second URL  
- -browser1 <arg>      Browser for first URL  
- -browser2 <arg>      Browser for second URL  
- -cmode <arg>         Comparation mode: images (default), structure and hybrid  
- -cpath <arg>         Parameters configuration path  
- -granularity <arg>   Segmentation granularity (3 default)  
+ -url1 arg          First URL  
+ -url2 arg          Second URL  
+ -browser1 arg      Browser for first URL  
+ -browser2 arg      Browser for second URL  
+ -cmode arg         Comparation mode: images (default), structure and hybrid  
+ -cpath arg         Parameters configuration path  
+ -granularity arg   Segmentation granularity (3 default)  
  
 Screenshot, Segmentation and Source functionalities
 -----------------------------------------------------  
  
- -url <arg>           web page URL  
- -browser <arg>		  Browser for render URL (default: firefox )  
+ -url arg           web page URL  
+ -browser arg		  Browser for render URL (default: firefox )  
 
 Debuging
 ------------------ 
- -debugpath <arg>     path for storing debug image files of after-rendering  
+ -debugpath arg     path for storing debug image files of after-rendering  
  -debugshot           get image files of after-rendering. Only used when -get score parameter is used  
 
 Browsers code are the same as defined in selenium. For instance:  
@@ -113,9 +113,9 @@ url1 will be evaluated with browser1 and url2 with browser2
 
 `$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -local`
 
-5. Change detection using selenium server in different <myhost> and <myport>
+5. Change detection using selenium server in different myhost and myport
 
-`$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -hub http://<myhost>:<myport>/wd/hub`
+`$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -hub http://myhost:myport/wd/hub`
 
 6. Using custom parameters configuration file
 
