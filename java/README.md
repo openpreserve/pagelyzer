@@ -54,10 +54,7 @@ Usage: java -jar JPagelyzer -get <arg> [options]
 General
 ---------------- 
  
- -get <arg>           Funcionality to run: score, source, screenshot, segmentation  
- -hub <arg>           Selenium Server hub full address  
-                      http://<host>:<port>/wd/hub. Default:  
-                      http://127.0.0.1:8015/wd/hub  
+ -get <arg>           Funcionality to run: score, source, screenshot, segmentation -hub <arg> Selenium Server hub full address http://<host>:<port>/wd/hub. Default: http://127.0.0.1:8015/wd/hub  
  -local               Use local selenium WebDriver class instead of server  
  -ofile <arg>         Output file  
  -port <arg>          Internal jPagelyzer internal server port. Default: 8016 (in general this doesn't need to be changed only if this port is used by another application)  
@@ -81,10 +78,8 @@ Screenshot, Segmentation and Source functionalities
 
 Debuging
 ------------------ 
- -debugpath <arg>     path for storing debug image files of  
-                      after-rendering  
- -debugshot           get image files of after-rendering. Only used when  
-                      -get score parameter is used  
+ -debugpath <arg>     path for storing debug image files of after-rendering  
+ -debugshot           get image files of after-rendering. Only used when -get score parameter is used  
 
 Browsers code are the same as defined in selenium. For instance:  
 * firefox (default)
@@ -142,6 +137,8 @@ e.g. to run pagelyzer on your chrome/chromium instance, you should install the C
 * IMPORTANT: remember to set the paths in configuration files located in ext/ folder.
 
 # External References:
-[1] http://docs.seleniumhq.org/about/platforms.jsp#browsers
-[2] http://code.google.com/p/selenium/wiki/FrequentlyAskedQuestions#Q:_Which_browsers_does_WebDriver_support?
-[3] https://code.google.com/p/selenium/downloads/list
+[1] http://docs.seleniumhq.org/about/platforms.jsp#browsers  
+
+[2] http://code.google.com/p/selenium/wiki/FrequentlyAskedQuestions#Q:_Which_browsers_does_WebDriver_support?  
+
+[3] https://code.google.com/p/selenium/downloads/list  
