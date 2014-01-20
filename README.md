@@ -1,4 +1,4 @@
-Pagelyzer Installation and Configuration Manual
+Pagelyzer
 ====================================================================
 
 Suite of tools for detecting changes in web pages and their rendering
