@@ -51,7 +51,8 @@ It may be other port if needed.
 
 Usage: jPagelyzer help
 
- General:  
+General
+---------------- 
  
  -get <arg>           Funcionality to run: score, source, screenshot, segmentation  
  -hub <arg>           Selenium Server hub full address  
@@ -61,7 +62,9 @@ Usage: jPagelyzer help
  -ofile <arg>         Output file  
  -port <arg>          Internal jPagelyzer internal server port. Default: 8016 (in general this doesn't need to be changed only if this port is used by another application)  
 
- Score functionality (change detection):  
+Score functionality (change detection)
+---------------------------------------
+   
  -url1 <arg>          First URL  
  -url2 <arg>          Second URL  
  -browser1 <arg>      Browser for first URL  
@@ -70,12 +73,14 @@ Usage: jPagelyzer help
  -cpath <arg>         Parameters configuration path  
  -granularity <arg>   Segmentation granularity (3 default)  
  
- Screenshot, Segmentation and Source functionalities:  
+Screenshot, Segmentation and Source functionalities
+-----------------------------------------------------  
  
  -url <arg>           web page URL  
  -browser <arg>		  Browser for render URL (default: firefox )  
 
-Debuging:  
+Debuging
+------------------ 
  -debugpath <arg>     path for storing debug image files of  
                       after-rendering  
  -debugshot           get image files of after-rendering. Only used when  
