@@ -24,3 +24,9 @@ Responsables WP
 
 This work was partially supported by the SCAPE Project. The SCAPE project is co-funded
 by the European Union under FP7 ICT-2009.4.1 (Grant Agreement number 270137).
+
+
+Important Note:
+----------------
+Some parts of this package are adapted from the BrowserShot proyect developed by IM, France. https://github.com/sbarton/browser-shot-tool-mapred
+
