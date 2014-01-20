@@ -49,7 +49,7 @@ It may be other port if needed.
 ## Command-line Parameters
 
 
-Usage: jPagelyzer help
+Usage: java -jar JPagelyzer -get <arg> [options]
 
 General
 ---------------- 
