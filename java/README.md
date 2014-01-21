@@ -58,7 +58,8 @@ Usage: java -jar JPagelyzer -get arg [options]
 General
 ---------------- 
  
- -get arg           Funcionality to run: score, source, screenshot, segmentation -hub arg Selenium Server hub full address http://host:port/wd/hub. Default: http://127.0.0.1:8015/wd/hub  
+ -get arg           Funcionality to run: score, source, screenshot, segmentation  
+ -hub arg Selenium Server hub full address http://host:port/wd/hub. Default: http://127.0.0.1:8015/wd/hub  
  -local               Use local selenium WebDriver class instead of server  
  -ofile arg         Output file  
  -port arg          Internal jPagelyzer internal server port. Default: 8016 (in general this doesn't need to be changed only if this port is used by another application)  
