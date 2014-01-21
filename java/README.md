@@ -105,35 +105,33 @@ Browsers code are the same as defined in selenium. For instance:
 # Examples
 
 1. Capture a web page screenshot with default parameters:
-
-`$ java -jar JPagelyzer.jar -get screenshot -url=http://www.google.fr -ofile image.png`
-
+```bash
+$ java -jar JPagelyzer.jar -get screenshot -url=http://www.google.fr -ofile image.png
+```
 2. Change detection on two pages with default parameters
-
-`$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html`
-
+```bash
+$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html
+```
 3. Change detection on two pages with hybrid method
-
-`$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cmode hybrid`
-
+```bash
+$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cmode hybrid
+```
 4. Change detection with different browsers
-
-`$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cmode hybrid -browser1 firefox -browser2 chrome`
-
-url1 will be evaluated with browser1 and url2 with browser2
-
+```bash
+$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cmode hybrid -browser1 firefox -browser2 chrome
+```
 4. Change detection without connecting to Selenium server
-
-`$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -local`
-
+```bash
+$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -local
+```
 5. Change detection using selenium server in different myhost and myport
-
-`$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -hub http://myhost:myport/wd/hub`
-
+```bash
+$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -hub http://myhost:myport/wd/hub
+```
 6. Using custom parameters configuration file
-
-`$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cpath /my/path/ext/ex_myparams.xml`
-
+```bash
+$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cpath /my/path/ext/ex_myparams.xml
+```
 
 ## Remarks:
 * Firefox driver is the default to selenium. For installing other browsers can reference to [2],
@@ -143,9 +141,9 @@ e.g. to run pagelyzer on your chrome/chromium instance, you should install the C
   `$ sudo cp chromedriver /usr/bin/`
 
 * If no granularity parameter is given, a default of 3 will be chosen.
-* The URL's should include the http schema
-`--url=http://www.host.com ---it is ok!
- --url=host.com ---won't work!`
+* The URL's should include the http schema  
+`--url=http://www.host.com ---it is ok!` 
+`--url=host.com ---won't work!`  
 
 * IMPORTANT: remember to set the paths in configuration files located in ext/ folder.
 
