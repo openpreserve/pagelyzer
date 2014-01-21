@@ -58,13 +58,13 @@ Usage: java -jar JPagelyzer -get arg [options]
 General Parameters
 ---------------- 
  
- | parameter 	| arguments 							  	| description 													|  
- | ------------ | ----------------------------------------- | ------------------------------------------------------------- |  
- | get 			| score, source, screenshot, segmentation 	| Funcionality to run: score, source, screenshot, segmentation 	|  
- | hub			| URI										| Selenium Server hub full address http://host:port/wd/hub. Default: http://127.0.0.1:8015/wd/hub |  
- | local        | none | Use local selenium WebDriver class instead of server |  
- | ofile 		| path |     Output file  |  
- | port			| number |      Internal jPagelyzer internal server port. Default: 8016 (in general this doesn't need to be changed only if this port is used by another application)  |  
+| parameter 	| arguments 							  	| description 													|  
+| ------------ | ----------------------------------------- | ------------------------------------------------------------- |  
+| get 			| score, source, screenshot, segmentation 	| Funcionality to run: score, source, screenshot, segmentation 	|  
+| hub			| URI										| Selenium Server hub full address http://host:port/wd/hub. Default: http://127.0.0.1:8015/wd/hub |  
+| local        | none | Use local selenium WebDriver class instead of server |  
+| ofile 		| path |     Output file  |  
+| port			| number |      Internal jPagelyzer internal server port. Default: 8016 (in general this doesn't need to be changed only if this port is used by another application)  |  
   
 Score functionality (change detection)
 ---------------------------------------
