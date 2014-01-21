@@ -105,32 +105,53 @@ Browsers code are the same as defined in selenium. For instance:
 # Examples
 
 1. Capture a web page screenshot with default parameters:
-```bash
-$ java -jar JPagelyzer.jar -get screenshot -url=http://www.google.fr -ofile image.png
+```
+$ java -jar JPagelyzer.jar -get screenshot 
+       -url=http://www.google.fr 
+       -ofile image.png
 ```
 2. Change detection on two pages with default parameters
-```bash
-$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html
+```
+$ java -jar JPagelyzer.jar -get score 
+       -url1=http://www.host.com/page1.html 
+       -url2=http://www.host.com/page2.html
 ```
 3. Change detection on two pages with hybrid method
-```bash
-$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cmode hybrid
+```
+$ java -jar JPagelyzer.jar -get score 
+       -url1=http://www.host.com/page1.html 
+       -url2=http://www.host.com/page2.html 
+       -cmode hybrid
 ```
 4. Change detection with different browsers
-```bash
-$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cmode hybrid -browser1 firefox -browser2 chrome
+```
+$ java -jar JPagelyzer.jar -get score 
+       -url1=http://www.host.com/page1.html 
+       -url2=http://www.host.com/page2.html 
+       -cmode hybrid 
+       -browser1 firefox 
+       -browser2 chrome
 ```
 4. Change detection without connecting to Selenium server
-```bash
-$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -local
+```
+$ java -jar JPagelyzer.jar -get score 
+       -url1=http://www.host.com/page1.html 
+       -url2=http://www.host.com/page2.html 
+       -local
 ```
 5. Change detection using selenium server in different myhost and myport
-```bash
-$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -hub http://myhost:myport/wd/hub
+```
+$ java -jar JPagelyzer.jar -get score 
+       -url1=http://www.host.com/page1.html 
+       -url2=http://www.host.com/page2.html 
+       -hub http://myhost:myport/wd/hub
 ```
 6. Using custom parameters configuration file
-```bash
-$ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cpath /my/path/ext/ex_myparams.xml
+```
+$ java -jar JPagelyzer.jar -get score 
+       -url1=http://www.host.com/page1.html 
+       -url2=http://www.host.com/page2.html 
+       -cpath /my/path/ext/ex_myparams.xml
 ```
 
 ## Remarks:
