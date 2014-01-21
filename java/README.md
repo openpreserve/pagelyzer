@@ -134,24 +134,24 @@ $ java -jar JPagelyzer.jar -get score
 ```
 4. Change detection without connecting to Selenium server
 ```
-$ java -jar JPagelyzer.jar -get score 
-       -url1=http://www.host.com/page1.html 
-       -url2=http://www.host.com/page2.html 
+$ java -jar JPagelyzer.jar -get score  
+       -url1=http://www.host.com/page1.html  
+       -url2=http://www.host.com/page2.html  
        -local
 ```
 5. Change detection using selenium server in different myhost and myport
 ```
-$ java -jar JPagelyzer.jar -get score 
-       -url1=http://www.host.com/page1.html 
-       -url2=http://www.host.com/page2.html 
-       -hub http://myhost:myport/wd/hub
+$ java -jar JPagelyzer.jar -get score  
+       -url1=http://www.host.com/page1.html  
+       -url2=http://www.host.com/page2.html  
+       -hub http://myhost:myport/wd/hub  
 ```
 6. Using custom parameters configuration file
 ```
-$ java -jar JPagelyzer.jar -get score 
-       -url1=http://www.host.com/page1.html 
-       -url2=http://www.host.com/page2.html 
-       -cpath /my/path/ext/ex_myparams.xml
+$ java -jar JPagelyzer.jar -get score  
+       -url1=http://www.host.com/page1.html  
+       -url2=http://www.host.com/page2.html  
+       -cpath /my/path/ext/ex_myparams.xml  
 ```
 
 ## Remarks:
