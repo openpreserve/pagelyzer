@@ -105,9 +105,7 @@ Browsers code are the same as defined in selenium. For instance:
 # Examples
 
 1. Capture a web page screenshot with default parameters:  
-$ java -jar JPagelyzer.jar -get screenshot 
-       -url=http://www.google.fr 
-       -ofile image.png
+    $ java -jar JPagelyzer.jar -get screenshot -url=http://www.google.fr -ofile image.png
 2. Change detection on two pages with default parameters  
     $ java -jar JPagelyzer.jar -get score -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html
 3. Change detection on two pages with hybrid method  

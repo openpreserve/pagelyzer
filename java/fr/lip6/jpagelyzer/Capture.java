@@ -87,7 +87,7 @@ public class Capture {
          * @return 
          */
         public void initWebDriver() {
-            //WebDriver driver = null;
+            String msg = "";
             boolean done = false;
             int attemptNo = 0;
             while (!done) {
@@ -102,22 +102,25 @@ public class Capture {
                     done = true;
                 } catch (MalformedURLException e) {
                         throw new RuntimeException("Invalid Selenium driver URL", e);
-//                } catch (IOException e) {
-//                    System.out.println("Attempt failed sleeping for 10s.");
-//                    try {
-//                        Thread.sleep(10 * 1000);
-//                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(Capture.class.getName()).log(Level.SEVERE, null, ex);
-//                    }                
+                } catch (IOException e) {
+                    if (JPagelyzer.verbose) {msg = e.toString();}
+                    System.out.println("Attempt failed sleeping for 10s."+msg);
+                    try {
+                        Thread.sleep(10 * 1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Capture.class.getName()).log(Level.SEVERE, null, ex);
+                    }                
                 } catch (WebDriverException e) {
-                    System.out.println("Attempt failed sleeping for 10s.");
+                    if (JPagelyzer.verbose) {msg = e.toString();}
+                    System.out.println("Attempt failed sleeping for 10s."+msg);
                     try {
                         Thread.sleep(10 * 1000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Capture.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } catch (Exception e) {
-                    System.out.println("Some proble arrived :("+e.toString());
+                    if (JPagelyzer.verbose) {msg = e.toString();}
+                    System.out.println("Some proble arrived :("+msg);
                 }
             }
             

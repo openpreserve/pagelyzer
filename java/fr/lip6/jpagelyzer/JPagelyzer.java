@@ -69,6 +69,7 @@ public class JPagelyzer {
      public static String seleniumStat = "";
      public static boolean debugshot = false;
      public static String debugPath = null;
+     public static boolean verbose = false;
 
     /**
      * @param url1
@@ -191,9 +192,11 @@ public class JPagelyzer {
         options.addOption("hub",true,"Selenium Server hub full address http://<host>:<port>/wd/hub. Default: http://127.0.0.1:8015/wd/hub");
         options.addOption("port",true,"Internal jPagelyzer internal server port. Default: 8016");
         options.addOption("ofile",true,"Output file");
-        options.addOption("local",false,"Use local selenium WebDriver instead of server");
         options.addOption("debugshot",false,"get image files of after-rendering. Only used when -get score parameter is used");
         options.addOption("debugpath",true,"path for storing debug image files of after-rendering");
+        
+        options.addOption("local",false,"Use local selenium WebDriver instead of server");
+        options.addOption("verbose",false,"Verbose output");
         
         if (JPagelyzer.debugshot) {
             System.out.println("Debug mode. Path "+JPagelyzer.debugPath);
@@ -219,6 +222,15 @@ public class JPagelyzer {
             JPagelyzer.seleniumStat = "Selenium: remote "+JPagelyzer.seleniumUrl;
         }
         
+        if (cmd.hasOption("debugshot")) {JPagelyzer.debugshot = true;}
+        if (cmd.hasOption("debugpath")) {JPagelyzer.debugPath = cmd.getOptionValue("debugpath");}
+        if ((JPagelyzer.debugshot) && (JPagelyzer.debugPath == null)) {
+            System.out.println("Debug was activated, but no path is specified to put the files. Use -debugpath path");
+            System.exit(0);
+        }
+        if (cmd.hasOption("verbose")) {JPagelyzer.verbose = true;}
+        
+        
         switch(cmd.getOptionValue("get")) {
             case "score":
                 if (cmd.hasOption("url1")) {url1 = cmd.getOptionValue("url1");} else {System.out.println("URL1 parameter missing");System.exit(0);}
@@ -232,12 +244,7 @@ public class JPagelyzer {
                 if (cmd.hasOption("browser2")) browser2 = cmd.getOptionValue("browser2");
                 if (cmd.hasOption("cmode")) mode = cmd.getOptionValue("cmode");
                 if (cmd.hasOption("hub")) {JPagelyzer.seleniumUrl = cmd.getOptionValue("hub");}
-                if (cmd.hasOption("debugshot")) {JPagelyzer.debugshot = true;}
-                if (cmd.hasOption("debugpath")) {JPagelyzer.debugPath = cmd.getOptionValue("debugpath");}
-                if ((JPagelyzer.debugshot) && (JPagelyzer.debugPath == null)) {
-                    System.out.println("Debug was activated, but no path is specified to put the files. Use -debugpath path");
-                    System.exit(0);
-                }
+                
                 if (cmd.hasOption("cpath")) {
                     cpath = cmd.getOptionValue("cpath");
                 } else {
