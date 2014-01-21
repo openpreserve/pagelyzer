@@ -59,7 +59,7 @@ General Parameters
 ---------------- 
  
 | parameter 	| arguments 							  	| description 													|  
-| ------------ | ----------------------------------------- | ------------------------------------------------------------- |  
+| ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
 | get 			| score, source, screenshot, segmentation 	| Funcionality to run: score, source, screenshot, segmentation 	|  
 | hub			| URI										| Selenium Server hub full address http://host:port/wd/hub. Default: http://127.0.0.1:8015/wd/hub |  
 | local        | none | Use local selenium WebDriver class instead of server |  
@@ -69,28 +69,28 @@ General Parameters
 Score functionality (change detection)
 ---------------------------------------
  
- | parameter 	| arguments 							  	| description 													|
- | ------------ | ----------------------------------------- | ------------------------------------------------------------- |  
- | url1 | URI | First URL |
- | url2 | URI | Second URL |
- | browser1 | browsercode |	Browser for first URL  |
- | browser2 | browsercode |	Browser for second URL  |
- | cmode | comparation mode | Comparation mode: images (default), structure and hybrid |
- | cpath | path | Parameters configuration path  |
- | granularity | number | Segmentation granularity from 1-10 range (3 default)  |
+| parameter 	| arguments 							  	| description 													|
+| ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
+| url1 | URI | First URL |
+| url2 | URI | Second URL |
+| browser1 | browsercode |	Browser for first URL  |
+| browser2 | browsercode |	Browser for second URL  |
+| cmode | comparation mode | Comparation mode: images (default), structure and hybrid |
+| cpath | path | Parameters configuration path  |
+| granularity | number | Segmentation granularity from 1-10 range (3 default)  |
  
 Screenshot, Segmentation and Source functionalities
 -----------------------------------------------------  
  
- | parameter 	| arguments 							  	| description 													|
- | ------------ | ----------------------------------------- | ------------------------------------------------------------- |  
- | url | URI | web page URL | 
- | browser |  browser code | Browser for render URL (default: firefox )   | 
+| parameter 	| arguments 							  	| description 													|
+| ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
+| url | URI | web page URL | 
+| browser |  browser code | Browser for render URL (default: firefox )   | 
 
 Debuging
 ------------------ 
 | parameter 	| arguments 							  	| description 													|
-| ------------ | ----------------------------------------- | ------------------------------------------------------------- |  
+| ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
 | debugpath |  path | path for storing debug image files of after-rendering  | 
 | debugshot | none | get image files of after-rendering. Only used when -get score parameter is used  | 
 
