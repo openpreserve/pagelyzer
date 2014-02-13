@@ -1,9 +1,6 @@
 Pagelyzer Installation and Configuration Manual - Java (Standalone Version)
 ====================================================================
 
-Suite of tools for detecting changes in web pages and their rendering
----------------------------------------------------------------------
-
 Authors
 -------
 * Andrés Sanoja <andres.sanoja@lip6.fr>
