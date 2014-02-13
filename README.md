@@ -1,6 +1,43 @@
 Pagelyzer Installation and Configuration Manual - Java (Standalone Version)
 ====================================================================
 
+### What does Pagelyzer do?
+
+Pagelyzer is a tool which compares two web pages versions and decides if they are similar or not.
+
+It is based on:
+* a web page segmentation algorithm
+* a combination of structural and visual comparison methods embedded in a statistical discriminative model,
+* a visual similarity measure designed for Web pages that improves change detection,
+* a supervised feature selection method adapted to Web archiving.
+
+We train a Support Vector Machine model with vectors of similarity scores between successive versions of pages. The trained model then determines whether two versions, defined by their vector of similarity scores, are similar or not.
+
+### What are the benefits for the end user?
+
+A list of benefits Pagelyzer brings to the end user:
+
+* Crawler optimization e.g discovering new crawl strategies based on patterns
+
+* Quality assurance for crawlers, for example, by comparing the live version of the page with the just crawled one.
+
+* Detecting format obsolescence following to evolving technologies, is the rendering of web pages are identique visually by using different versions of the browser or different browsers
+
+* Archive maintenance, different operations like format migration can change the archived page versions renderings.
+
+### Who is the intended audience?
+
+Pagelyzer is for:
+
+* Content holders national libraries
+* Institutions that are insterested in web archiving
+* Institutions that want to start web archiving
+* Web archivists
+* Archive managers
+* Digital preservation specialists
+
+
+
 Authors
 -------
 * Andrés Sanoja <andres.sanoja@lip6.fr>
