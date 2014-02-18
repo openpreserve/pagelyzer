@@ -40,11 +40,13 @@ Pagelyzer is for:
 
 Authors
 -------
-* Andrés Sanoja <andres.sanoja@lip6.fr>
+* Andrés Sanoja <andres.sanoja@lip6.fr> (web page segmentation, content based)
+* Marc Law <marc.law@lip6.fr> ( supervised framework, image based, svm, marcalizer)
+* Zeynep Pehlivan <zeynep.pehlivan@lip6.fr> (general info)
+
+Contributed but not working anymore for the project
 * Alexis Lechervy <alexis.lechervy@lip6.fr> 
-* Zeynep Pehlivan <zeynep.pehlivan@lip6.fr>
 * Myriam Ben Saad <myriam.ben-saad@lip6.fr>
-* Marc Law <marc.law@lip6.fr>
 * Carlos Sureda <carlos.sureda@lip6.fr>
 * Jordi Creus <jordi.creus@lip6.fr>
 
