@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -41,6 +42,8 @@ public class XMLDescriptors {
 		{
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			//documentDelta  = builder.parse(fichierDelta);
+			//documentViXML1 = builder.parse(new File(fichierXml1)); // for test
+			//documentViXML2 = builder.parse(new File(fichierXml2));
 			documentViXML1 = builder.parse(new InputSource(new StringReader(fichierXml1)));
 			documentViXML2 = builder.parse(new InputSource(new StringReader(fichierXml2)));
 			//Le parsing est terminé ;)
@@ -52,9 +55,66 @@ public class XMLDescriptors {
 		//On initialise un nouvel élément racine avec l'élément racine du document.
 		rootViXML1 = documentViXML1.getDocumentElement();
 		rootViXML2 = documentViXML2.getDocumentElement();
-		desc.add(JaccardIndexLinks(rootViXML1, rootViXML2, false));
-		desc.add(JaccardIndexImages(rootViXML1, rootViXML2, false));
+		//desc.add(JaccardIndexLinks(rootViXML1, rootViXML2, false));
+		//desc.add(JaccardIndexImages(rootViXML1, rootViXML2, false));
+		NodeList nodeLstsource = rootViXML1.getElementsByTagName("Block");
+	    NodeList nodeLstversion = rootViXML2.getElementsByTagName("Block");
+		desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion));// links
+		desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion));// images
+		desc.add(BlockBasedContent(2,nodeLstsource, nodeLstversion));// Text
 	
+	}
+	
+	private static double BlockBasedContent(int type, NodeList nodeLstsource, NodeList nodeLstversion)
+	{ 
+	    
+	    if(nodeLstsource.getLength() != nodeLstversion.getLength())
+	    	return -1000; // structural change  ////TODO discuss with MARC
+	    
+	    double resultoverblocks = 0;
+
+	    HashMap<String, Double> temptext1;
+	    HashMap<String, Double> temptext2;
+	    for(int i = 0; i< nodeLstsource.getLength();i++ )
+	    {
+	    	if(type == 0) // Links
+			{
+	    		resultoverblocks+=JaccardIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), false);
+			}
+	    	else if(type == 1) // Images
+	    		resultoverblocks+=JaccardIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), false);
+	    	else // Txt
+	    	{
+	    		// get first document text
+	    		Element el = (Element) nodeLstsource.item(i);
+	    		if(el.getAttribute("ID")!="") // not all blocks I need leaf blocks
+	    		{
+		    		NodeList txtl = el.getElementsByTagName("Txts");
+		    		
+		    		
+		    		
+		    		if(txtl!=null)
+		    			temptext1 = CosineSimilarity.getFeaturesFromString(((Element)txtl.item(0)).getAttribute("Txt"));
+		    		else return 0;
+		    		
+		    		// second document text 
+		    		el = (Element) nodeLstversion.item(i);
+		    		txtl = el.getElementsByTagName("Txts");
+		    		
+		    		if(txtl!=null)
+		    			temptext2 = CosineSimilarity.getFeaturesFromString(((Element)txtl.item(0)).getAttribute("Txt"));
+		    		else return 0;
+		    		//System.out.println(temptext1);
+		    		//System.out.println(temptext2);
+		    		//System.out.println(CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2));
+		    		resultoverblocks+= CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
+	    		}
+	    	}
+	    }
+	    
+		return resultoverblocks;
+		
+		
 	}
 	
 	/**

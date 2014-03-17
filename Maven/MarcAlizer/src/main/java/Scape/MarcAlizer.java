@@ -220,13 +220,20 @@ public class MarcAlizer {
 	
 	public static void main(String[] args) {		
 		MarcAlizer sc= new MarcAlizer();
-		sc.init(new File(args[0]), args[1]);
+		//sc.init(new File(args[0]), args[1]);
 		try {
+			// Just to test marcalizer without pagelyzer. 
+			
 			URL url1=new URL("http://im1a11.internetmemory.org/shots/2/cas/screenshot-57.png");
 			//url1.openConnection().connect();
 			URL url2=new URL("http://im1a11.internetmemory.org/shots/2/ref/screenshot-57.png");
 			//url2.openConnection().connect();
-			sc.run(ImageIO.read(url1),ImageIO.read(url2));
+			
+			String file1 = "/home/pehlivanz/SCAPE_ZP/Roc/dataset_doceng_2012/xml/2/VIPSDoc_08-22-11_03-54-55.xml";
+			String file2  = "/home/pehlivanz/SCAPE_ZP/Roc/dataset_doceng_2012/xml/2/VIPSDoc_08-22-11_03-54-31.xml";
+             
+			sc.run(file1,file2);
+			//sc.run(ImageIO.read(url1),ImageIO.read(url2));
 		} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
