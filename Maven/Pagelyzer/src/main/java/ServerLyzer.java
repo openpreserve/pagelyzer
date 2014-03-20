@@ -87,14 +87,14 @@ public class ServerLyzer implements Container {
          
          //InputStream is = new FileInputStream(home+"/"+filename);
          
-         // Before maven 
+          // Before maven 
          //String content = new Scanner(new File(home+"/ext/js/"+filename)).useDelimiter("\\Z").next();
-         URL resourceUrl = getClass().
-         getResource(filename);
-         Path resourcePath = (Path) Paths.get(resourceUrl.toURI());
-         String content = new Scanner(new File(resourcePath.toString())).useDelimiter("\\Z").next();
+         String resourceUrl = getClass().getResource("/js/" + filename).getPath();
+      //   Path resourcePath = (Path) Paths.get(resourceUrl.toURI());
+         String content = new Scanner(new File(resourceUrl)).useDelimiter("\\Z").next();
          
          body.print(content);
+         
          
          
          
