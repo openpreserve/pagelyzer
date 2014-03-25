@@ -12,6 +12,7 @@ Pagelyzer (Maven)
 * These defaults can be overriden by parameters
 
 For example, asuming that the value in the configuration file set as:
+
 	pagelyzer.run.default.parameter.get = "score"
 	
 then
@@ -21,8 +22,8 @@ then
 it is similar to the first above
 
 The only mandatory parameters are:
-* the URLS and 
-* the CONFIGURATION file.
+* the *URLS* and 
+* the *CONFIGURATION* file.
 	
 
 
