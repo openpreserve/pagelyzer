@@ -37,21 +37,16 @@
 # https://github.com/sbarton/browser-shot-tool-mapred
  */
 
+package pagelyzer;
 
-/**
- *
- * @author sanojaa
- */
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,9 +60,30 @@ import org.simpleframework.transport.Server;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
+/**
+ * Internal web server. Used to work with javascript injections in the capture of a web page
+ * @author sanojaa
+ */
 public class ServerLyzer implements Container {
+    /**
+     * the socket connection
+     **/
     Connection connection;
-    int port;
+    /**
+     * the socket port
+     */
+    static int port;
+    /**
+     * the custom www root folder
+     */
+    static String wwwroot=null;
+    
+    /**
+     * handle a http request and serve a file
+     * @param request the http request
+     * @param response the http response
+     */
+    @Override
    public void handle(Request request, Response response) {
       try {
          PrintStream body = response.getPrintStream();
@@ -83,30 +99,42 @@ public class ServerLyzer implements Container {
          response.set("Server", "ServerLyzer/1.0 (Simple 4.0)");
          response.setDate("Date", time);
          response.setDate("Last-Modified", time);
-         String filename=path.getPath().replace("/","");
+         String filename="/js/"+path.getPath().replace("/","");
          
-         //InputStream is = new FileInputStream(home+"/"+filename);
-         
-         // Before maven 
-         //String content = new Scanner(new File(home+"/ext/js/"+filename)).useDelimiter("\\Z").next();
-         URL resourceUrl = getClass().
-         getResource(filename);
-         Path resourcePath = (Path) Paths.get(resourceUrl.toURI());
-         String content = new Scanner(new File(resourcePath.toString())).useDelimiter("\\Z").next();
-         
+         String content;
+         if (ServerLyzer.wwwroot == null){
+            URL resourceUrl = getClass().getResource(filename);
+            content = new Scanner(new File(resourceUrl.toURI().getPath().toString())).useDelimiter("\\Z").next();
+         } else {
+            content = new Scanner(new File(ServerLyzer.wwwroot+filename)).useDelimiter("\\Z").next();
+         }
          body.print(content);
-         
-         
-         
+
          body.println(msg);
          body.close();
-      } catch(Exception e) {
+      } catch(IOException | URISyntaxException e) {
          e.printStackTrace();
       }
-   } 
+   }
 
+    /**
+     * Starts the server
+     * @param port port of the server
+     * @param wwwroot custom www root folder
+     * @throws Exception
+     */
+    public void start(int port,String wwwroot) throws Exception {
+       ServerLyzer.wwwroot = Utils.checkLastSlash(wwwroot);
+       start(port);
+   }
+    
+   /**
+     * Starts the server
+     * @param port port of the server
+     * @throws Exception
+     */ 
    public void start(int port) throws Exception {
-      this.port = port;
+      ServerLyzer.port = port;
       Container container = new ServerLyzer();
       Server server = new ContainerServer(container);
       this.connection = new SocketConnection(server);
@@ -114,11 +142,17 @@ public class ServerLyzer implements Container {
       System.out.println("Starting server on port "+port);
       this.connection.connect(address);
    }
+   
+   /**
+     * Stops the server
+     */
    public void stop() {
-       System.out.println("Shutting down server on port "+this.port);
+       System.out.println("Shutting down server on port "+ServerLyzer.port);
         try {
             this.connection.close();
         } catch (IOException ex) {
+            Logger.getLogger(ServerLyzer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(ServerLyzer.class.getName()).log(Level.SEVERE, null, ex);
         }
    }

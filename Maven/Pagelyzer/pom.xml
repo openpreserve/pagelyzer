@@ -3,17 +3,25 @@
   <groupId>scape.Pagelyzer</groupId>
   <artifactId>Pagelyzer</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+<packaging>jar</packaging>
    <build> 
    <plugins>
    		<plugin>
 	   		<groupId>org.apache.maven.plugins</groupId>
 	    	<artifactId>maven-compiler-plugin</artifactId>
 	    	<version>3.1</version>
-	    	<configuration>
+<configuration>
 		        <source>1.7</source>
 		        <target>1.7</target>
     		</configuration>
    		</plugin>
+                <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <configuration>
+             <mainClass>pagelyzer.JPagelyzer</mainClass>
+        </configuration>
+        </plugin>
    </plugins> 
   </build>  
   <dependencies>
@@ -42,5 +50,11 @@
 		<artifactId>MarcAlizer</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
+        <dependency>
+	<groupId>commons-configuration</groupId>
+	<artifactId>commons-configuration</artifactId>
+	<version>1.10</version>
+</dependency>
+            
   </dependencies>
 </project>

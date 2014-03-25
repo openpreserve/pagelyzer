@@ -1,4 +1,3 @@
-
 /*
 # Andrés Sanoja
 # UPMC - LIP6
@@ -38,7 +37,7 @@
 # https://github.com/sbarton/browser-shot-tool-mapred
  */
 
-
+package pagelyzer;
 import com.opera.core.systems.OperaDriver;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,18 +53,35 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
- *
- * @author sanojaa
  * Class encapsulating the browser representation for the job
+ * @author sanojaa
  * This class is a adaptation from the BrowserRep class from BrowserShot_mapred proyect
 */
        public class BrowserRep {
+           /**
+            * The webdriver instance
+            */
             WebDriver driver;
+            /**
+             * The browser caparilities
+             */
             DesiredCapabilities capabilities;
+            /**
+             * A description of the browser
+             */
             String desc;
+            /**
+             * Reference to the Browser's javascript interpreter
+             */
             JavascriptExecutor js;
+            /**
+             * Max time out
+             */
             private static final long MAX_WAIT_S = 45;
             
+            /**
+             * Constructor
+             */
             public BrowserRep() {
                 this.driver = null;
                 this.capabilities = null;
@@ -73,6 +89,12 @@ import org.openqa.selenium.remote.RemoteWebDriver;
                 this.js = null;
             }
             
+            /**
+             * Constructor
+             * @param driver the selenium webdriver
+             * @param capabilities the capabilities of the browser
+             * @param desc the description of the browser
+             */
             public BrowserRep(WebDriver driver, DesiredCapabilities capabilities, String desc) {
                 this.driver = driver;
                 this.capabilities = capabilities;
@@ -82,12 +104,18 @@ import org.openqa.selenium.remote.RemoteWebDriver;
                 }
             }   
             
+            /**
+             * Sets the javascript interpreter if present to the driver
+             */
             private void setJSDriver() {
                 if (this.driver instanceof JavascriptExecutor) {
                     this.js = (JavascriptExecutor)this.driver;
                 }
             }
             
+            /**
+             * Set the selenium driver as local (webdriver instance)
+             */
             public void setLocalDriver() {
                 switch (this.desc) {
                     case "firefox"  : this.driver = new FirefoxDriver();break;
@@ -101,14 +129,22 @@ import org.openqa.selenium.remote.RemoteWebDriver;
                 this.driver.manage().timeouts().implicitlyWait(MAX_WAIT_S, TimeUnit.SECONDS);
             }
             
-            public void setRemoteDriver() throws MalformedURLException {
-                this.driver = new RemoteWebDriver(new URL(JPagelyzer.seleniumUrl),capabilities);
+            /**
+             * Set the selenium driver as remote (selenium grid or hub)
+             * @param url the web page to process
+             * @throws MalformedURLException 
+             */
+            public void setRemoteDriver(String url) throws MalformedURLException {
+                this.driver = new RemoteWebDriver(new URL(url),capabilities);
                 setJSDriver();
                 this.driver = new Augmenter().augment(this.driver);
                 this.driver.manage().timeouts().pageLoadTimeout(MAX_WAIT_S, TimeUnit.SECONDS);
                 this.driver.manage().timeouts().implicitlyWait(MAX_WAIT_S, TimeUnit.SECONDS);
             }
             
+            /**
+             * Close the current selenium instance
+             */
             public void close() {
                 this.driver.close();
                 this.driver = null;

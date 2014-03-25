@@ -37,7 +37,7 @@
 # https://github.com/sbarton/browser-shot-tool-mapred
  */
 
-
+package pagelyzer;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
@@ -52,16 +52,42 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
- *
+ * Data structure to hold capture results
  * @author sanojaa
  */
 public class CaptureResult {
-     public byte[] image = null;
-     public String viXML = null;
-     public String srcHTML = null;
-     public byte[] debug = null;
-     
-      public BufferedImage getBufferedImage() {
+   /**
+   * byte array to hold an image
+   */
+    public byte[] image;
+   /**
+   * String to hold the segmentation results
+   */
+    public String viXML;
+       /**
+   * String to hold the rendered source code
+   */
+    public String srcHTML;
+       /**
+   * Used for debugging. Intermediate images.
+   */
+    public byte[] debug;
+
+    /**
+     * Constructor
+     */
+    public CaptureResult() {
+        this.debug = null;
+        this.srcHTML = null;
+        this.image = null;
+        this.viXML = null;
+    }
+
+    /**
+     * Get bufferImage from byte array
+     * @return BufferedImage
+     */
+    public BufferedImage getBufferedImage() {
           InputStream in = new ByteArrayInputStream(this.image);
           BufferedImage bimage = null;
          try {
@@ -71,8 +97,12 @@ public class CaptureResult {
          }
         return bimage;
       }
-      
-      public void saveDebugFile(String to) {
+
+    /**
+     * Writes debug image to disk
+     * @param to file to save to
+     */
+    public void saveDebugFile(String to) {
           if (this.debug == null) return;
           OutputStream out=null;
         try {

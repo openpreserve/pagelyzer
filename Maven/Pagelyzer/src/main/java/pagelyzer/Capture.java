@@ -37,21 +37,14 @@
 # https://github.com/sbarton/browser-shot-tool-mapred
  */
 
-
+package pagelyzer;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,26 +53,27 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.ErrorHandler;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.*;
 
 /**
- *
+ * Class that encapsulates selenium web driver (local and remote)
  * @author sanojaa
  */
 public class Capture {
-    
-    private String dbg="Connecting to Selenium server at " + JPagelyzer.seleniumUrl;
     public BrowserRep browser = new BrowserRep();
     public static double granularity = 0.6;
     public CaptureResult result = new CaptureResult();
+    private Configuration config;
     
+    /**
+     * Constructor
+     * @param conf the current configuration
+     */
+    public Capture(Configuration conf) {
+        this.config = conf;
+    }
         /**
          * This function is a adaptation from the initWebDriver() method from BrowserShot_mapred proyect
          * Initialize the webdriver given the capability object
@@ -94,16 +88,16 @@ public class Capture {
                 attemptNo++;
                 try {
                     System.out.println("Attempt = "+attemptNo);
-                    if (JPagelyzer.local) {
+                    if (config.get("selenium.run.mode").equals(Configuration.LOCAL)) {
                         this.browser.setLocalDriver();
                     } else {
-                        this.browser.setRemoteDriver();
+                        this.browser.setRemoteDriver(config.get("selenium.server.url"));
                     }
                     done = true;
                 } catch (MalformedURLException e) {
                         throw new RuntimeException("Invalid Selenium driver URL", e);
                 } catch (IOException e) {
-                    if (JPagelyzer.verbose) {msg = e.toString();}
+                    if (config.getLogic("pagelyzer.run.verbose")) {msg = e.toString();}
                     System.out.println("Attempt failed sleeping for 10s."+msg);
                     try {
                         Thread.sleep(10 * 1000);
@@ -111,7 +105,7 @@ public class Capture {
                         Logger.getLogger(Capture.class.getName()).log(Level.SEVERE, null, ex);
                     }                
                 } catch (WebDriverException e) {
-                    if (JPagelyzer.verbose) {msg = e.toString();}
+                    if (config.getLogic("pagelyzer.run.verbose")) {msg = e.toString();}
                     System.out.println("Attempt failed sleeping for 10s."+msg);
                     try {
                         Thread.sleep(10 * 1000);
@@ -119,7 +113,7 @@ public class Capture {
                         Logger.getLogger(Capture.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } catch (Exception e) {
-                    if (JPagelyzer.verbose) {msg = e.toString();}
+                    if (config.getLogic("pagelyzer.run.verbose")) {msg = e.toString();}
                     System.out.println("Some proble arrived :("+msg);
                 }
             }
@@ -127,9 +121,11 @@ public class Capture {
             
         }
     
-        /*
+        /**
+         * Prepare a new instance of webdriver for browser
         * This function is a adaptation from the setup() method from BrowserShot_mapred proyect
-        */
+        * @param browser the current browser to setup
+        **/
         protected void setup(String browser) {     
             System.out.println("Setting up browser: "+browser);
             DesiredCapabilities capability = null;
@@ -151,55 +147,79 @@ public class Capture {
             this.browser.capabilities = capability;
             initWebDriver();
         }
-        /*
+        
+        /**
+         * Close the current webdriver instance
         * This function is a adaptation from the cleanup() method from BrowserShot_mapred proyect
-        */
+        * @throws IOException
+        * @throws InterruptedException
+        **/
         protected void cleanup() throws IOException, InterruptedException {     
                this.browser.driver.close();
         }
         
-        private static String getStringFromInputStream(InputStream is) {
- 
-		BufferedReader br = null;
-		StringBuilder sb = new StringBuilder();
- 
-		String line;
-		try {
- 
-			br = new BufferedReader(new InputStreamReader(is));
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
- 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
- 
-		return sb.toString();
- 
-	}
         
-        /*
+//        private static String getStringFromInputStream(InputStream is) {
+//
+//		BufferedReader br = null;
+//		StringBuilder sb = new StringBuilder();
+// 
+//		String line;
+//		try {
+// 
+//			br = new BufferedReader(new InputStreamReader(is));
+//			while ((line = br.readLine()) != null) {
+//				sb.append(line);
+//			}
+// 
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (br != null) {
+//				try {
+//					br.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+// 
+//		return sb.toString();
+// 
+//	}
+        
+        /**
+         * Execute a capture from a current browser instance.
         * This function is a adaptation from the getScreenShotWithTimeout() method from BrowserShot_mapred proyect
-        */
+     * @param url the web page to capture
+     * @param screenshot indicates if a page screenshot should be taken
+     * @param segmentation indicates if the segmentation should be done
+     * @return CaptureResult the result of the capture
+        **/
         public CaptureResult process(String url,boolean screenshot,boolean segmentation) {
-            System.out.println("getting data using driver: "+this.browser.desc);
-            String serverlink = "http://127.0.0.1:"+JPagelyzer.port;
-            
-            String srcJS = serverlink +"/bomlib.js";
-            String jqueryJS = serverlink + "/jquery-min.js";
-            String polyKJS = serverlink + "/polyk.js";
-            String cryptoJS = serverlink + "/md5.js";
-            
+            String serverlink;
+            boolean local = true;
             ServerLyzer server = null;
+            String srcJS = "";
+            String jqueryJS = "";
+            String polyKJS = "";
+            String cryptoJS = "";
+                    
+            System.out.println("getting data using driver: "+this.browser.desc);
+            
+            if (segmentation) {
+                if ((config.get("pagelyzer.run.internal.server.remote.url")==null)) {
+                    serverlink = "http://"+config.get("pagelyzer.run.internal.server.local.ip")+":"+config.get("pagelyzer.run.internal.server.local.port");
+                    local=true;
+                } else {
+                    serverlink = config.get("pagelyzer.run.internal.server.remote.url");
+                    local=false;
+                }
+                srcJS = serverlink +"/bomlib.js";
+                jqueryJS = serverlink + "/jquery-min.js";
+                polyKJS = serverlink + "/polyk.js";
+                cryptoJS = serverlink + "/md5.js";
+            }
             
             try {
                 this.browser.driver.get(url);
@@ -211,8 +231,11 @@ public class Capture {
                     result.image =  ((TakesScreenshot)this.browser.driver).getScreenshotAs(OutputType.BYTES);
                 }
                 if (segmentation) {
-                    server = new ServerLyzer();
-                    server.start(JPagelyzer.port);
+                    if (local) {
+                        server = new ServerLyzer();
+                        int port = config.getNumber("pagelyzer.run.internal.server.local.port");
+                        server.start(port,config.get("pagelyzer.run.internal.server.local.wwwroot"));
+                    }
                     
                     this.browser.js.executeScript("var s=window.document.createElement('script');s.setAttribute('id','bominject');s.setAttribute('src','"+srcJS+"');window.document.head.appendChild(s)");
                     this.browser.js.executeScript("var j=window.document.createElement('script');j.setAttribute('id','bomjquery');j.setAttribute('src','"+jqueryJS+"');window.document.head.appendChild(j)");
@@ -226,15 +249,17 @@ public class Capture {
                     System.out.println("Using BoM algorithm v"+bomversion + " pAC=" + Capture.granularity);
                     
                     result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + Capture.granularity + ",50,false);");
-                    if (JPagelyzer.debugshot) {
+                    if (config.getLogic("pagelyzer.debug.screenshots.active")) {
                         result.debug =  ((TakesScreenshot)this.browser.driver).getScreenshotAs(OutputType.BYTES);
                     }
-                    server.stop();
+                    if (local) {
+                        server.stop();
+                    }
                 }
             } catch(WebDriverException e) {
                 System.out.println("ERROR: Could not load " + url);
-                if (!JPagelyzer.local) {
-                    System.out.println("Can not connect to server "+JPagelyzer.seleniumUrl);
+                if (config.get("selenium.run.mode").equals(Configuration.REMOTE)) {
+                    System.out.println("Can not connect to server "+config.get("selenium.server.url"));
                 }
                 System.out.println("Trying to reinitialize browser");
                 if (server != null) server.stop();
@@ -255,8 +280,8 @@ public class Capture {
                 
             } catch (Throwable e) {
                 if (server != null) server.stop();
-                if (!JPagelyzer.local) {
-                    System.out.println("Can not connect to server "+JPagelyzer.seleniumUrl);
+                if (config.get("selenium.run.mode").equals(Configuration.REMOTE)) {
+                    System.out.println("Can not connect to server "+config.get("selenium.server.url"));
                 }
                 System.out.println("ERROR: Could not load " + url);
                 System.out.println(e);
@@ -266,7 +291,13 @@ public class Capture {
             return(result);
         }   
 
-        public void run(String url,boolean screenshot,boolean segmentation) {
+    /**
+     * Invoke the capture process
+     * @param url the web page to capture
+     * @param screenshot indicates if the screenshot should be taken
+     * @param segmentation indicates if the segmentation should be done
+     */
+    public void run(String url,boolean screenshot,boolean segmentation) {
             this.result = process(url,screenshot,segmentation);
         }
 }
