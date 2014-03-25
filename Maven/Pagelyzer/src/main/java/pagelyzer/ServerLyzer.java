@@ -68,6 +68,10 @@ public class ServerLyzer implements Container {
     /**
      * the socket connection
      **/
+	
+	
+	
+	private Configuration config;
     Connection connection;
     /**
      * the socket port
@@ -78,6 +82,12 @@ public class ServerLyzer implements Container {
      */
     static String wwwroot=null;
     
+    
+    public ServerLyzer(Configuration config2)
+    {
+    	config = config2;
+    	
+    }
     /**
      * handle a http request and serve a file
      * @param request the http request
@@ -99,12 +109,17 @@ public class ServerLyzer implements Container {
          response.set("Server", "ServerLyzer/1.0 (Simple 4.0)");
          response.setDate("Date", time);
          response.setDate("Last-Modified", time);
-         String filename="/js/"+path.getPath().replace("/","");
+         String filename= config.get("pagelyzer.run.default.comparison.path").replace("/ext", "/js/") +path.getPath();
          
          String content;
          if (ServerLyzer.wwwroot == null){
+        	 content = new Scanner(new File(filename)).useDelimiter("\\Z").next();
+        	 /*
+        	  * UPdated because the code below gives :/home/pehlivanz/workspace/Pagelyzer/target/Pagelyzer-0.0.1-SNAPSHOT-jar-with-dependencies.jar!/js/bomlib.js
+        	  * for the jars
             URL resourceUrl = getClass().getResource(filename);
             content = new Scanner(new File(resourceUrl.toURI().getPath().toString())).useDelimiter("\\Z").next();
+            */
          } else {
             content = new Scanner(new File(ServerLyzer.wwwroot+filename)).useDelimiter("\\Z").next();
          }
@@ -112,7 +127,7 @@ public class ServerLyzer implements Container {
 
          body.println(msg);
          body.close();
-      } catch(IOException | URISyntaxException e) {
+      } catch(IOException e) {
          e.printStackTrace();
       }
    }
@@ -135,7 +150,7 @@ public class ServerLyzer implements Container {
      */ 
    public void start(int port) throws Exception {
       ServerLyzer.port = port;
-      Container container = new ServerLyzer();
+      Container container = new ServerLyzer(config);
       Server server = new ContainerServer(container);
       this.connection = new SocketConnection(server);
       SocketAddress address = new InetSocketAddress(port);

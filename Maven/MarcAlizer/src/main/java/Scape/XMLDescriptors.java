@@ -28,7 +28,7 @@ public class XMLDescriptors {
 	static Document documentViXML1;
 	static Document documentViXML2;
 	
-	public static void run(String fichierXml1, String fichierXml2/*, String fichierDelta*/, ArrayList<Double> desc) {
+	public static void run(String fichierXml1, String fichierXml2/*, String fichierDelta*/, ArrayList<Double> desc, boolean isFortrain) {
 		// TODO Auto-generated method stub
 		//Element rootDelta;
 		Element rootViXML1;
@@ -42,10 +42,16 @@ public class XMLDescriptors {
 		{
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			//documentDelta  = builder.parse(fichierDelta);
-			//documentViXML1 = builder.parse(new File(fichierXml1)); // for test
-			//documentViXML2 = builder.parse(new File(fichierXml2));
-			documentViXML1 = builder.parse(new InputSource(new StringReader(fichierXml1)));
-			documentViXML2 = builder.parse(new InputSource(new StringReader(fichierXml2)));
+			if(isFortrain)
+			{
+				documentViXML1 = builder.parse(new File(fichierXml1)); // for test
+				documentViXML2 = builder.parse(new File(fichierXml2));
+			}
+			else // coming from pagelyzer
+			{	
+				documentViXML1 = builder.parse(new InputSource(new StringReader(fichierXml1)));
+				documentViXML2 = builder.parse(new InputSource(new StringReader(fichierXml2)));
+			}
 			//Le parsing est terminé ;)
 		}
 		catch(Exception e){
@@ -59,17 +65,20 @@ public class XMLDescriptors {
 		//desc.add(JaccardIndexImages(rootViXML1, rootViXML2, false));
 		NodeList nodeLstsource = rootViXML1.getElementsByTagName("Block");
 	    NodeList nodeLstversion = rootViXML2.getElementsByTagName("Block");
-		desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion));// links
-		desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion));// images
-		desc.add(BlockBasedContent(2,nodeLstsource, nodeLstversion));// Text
+		desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Adr"));// links
+		desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Name"));// links
+		desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Src"));// images
+		desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Name"));// images
+		desc.add(BlockBasedContent(2,nodeLstsource, nodeLstversion,"Txt"));// Text
+	
 	
 	}
 	
-	private static double BlockBasedContent(int type, NodeList nodeLstsource, NodeList nodeLstversion)
+	private static double BlockBasedContent(int type, NodeList nodeLstsource, NodeList nodeLstversion, String atr)
 	{ 
 	    
 	    if(nodeLstsource.getLength() != nodeLstversion.getLength())
-	    	return -1000; // structural change  ////TODO discuss with MARC
+	    	return 0; // structural change  ////TODO discuss with MARC
 	    
 	    double resultoverblocks = 0;
 
@@ -79,10 +88,10 @@ public class XMLDescriptors {
 	    {
 	    	if(type == 0) // Links
 			{
-	    		resultoverblocks+=JaccardIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), false);
+	    		resultoverblocks+=JaccardIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), false,atr);
 			}
 	    	else if(type == 1) // Images
-	    		resultoverblocks+=JaccardIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), false);
+	    		resultoverblocks+=JaccardIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), false,atr);
 	    	else // Txt
 	    	{
 	    		// get first document text
@@ -93,26 +102,27 @@ public class XMLDescriptors {
 		    		
 		    		
 		    		
-		    		if(txtl!=null)
-		    			temptext1 = CosineSimilarity.getFeaturesFromString(((Element)txtl.item(0)).getAttribute("Txt"));
+		    		if(txtl!=null&&txtl.item(0)!=null)
+		    			temptext1 = CosineSimilarity.getFeaturesFromString(((Element)txtl.item(0)).getAttribute(atr));
 		    		else return 0;
 		    		
 		    		// second document text 
 		    		el = (Element) nodeLstversion.item(i);
 		    		txtl = el.getElementsByTagName("Txts");
 		    		
-		    		if(txtl!=null)
-		    			temptext2 = CosineSimilarity.getFeaturesFromString(((Element)txtl.item(0)).getAttribute("Txt"));
+		    		if(txtl!=null&&txtl.item(0)!=null)
+		    			temptext2 = CosineSimilarity.getFeaturesFromString(((Element)txtl.item(0)).getAttribute(atr));
 		    		else return 0;
 		    		//System.out.println(temptext1);
 		    		//System.out.println(temptext2);
 		    		//System.out.println(CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2));
-		    		resultoverblocks+= CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
+		    		if(temptext1.size()!=0 &&temptext2.size()!=0)
+		    			resultoverblocks+= CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
 	    		}
 	    	}
 	    }
-	    
-		return resultoverblocks;
+		System.out.println(resultoverblocks);
+		return resultoverblocks/nodeLstsource.getLength();
 		
 		
 	}
@@ -263,8 +273,8 @@ public class XMLDescriptors {
 			tableVersionContainsLinks[coupleIndex-1] =  containsLinks(rootViXML2)?1:0;
 			tableSourceContainsImages[coupleIndex-1] =  containsImages(rootViXML1)?1:0;
 			tableVersionContainsImages[coupleIndex-1] = containsImages(rootViXML1)?1:0;*/
-			tableJaccardIndexLinks[coupleIndex-1] = JaccardIndexLinks(rootViXML1, rootViXML2, false);
-			tableJaccardIndexImages[coupleIndex-1] = JaccardIndexImages(rootViXML1, rootViXML2, false);
+			tableJaccardIndexLinks[coupleIndex-1] = JaccardIndexLinks(rootViXML1, rootViXML2, false,"Adr");
+			tableJaccardIndexImages[coupleIndex-1] = JaccardIndexImages(rootViXML1, rootViXML2, false,"Img");
 			/*tableJaccardIndexIDLinks[coupleIndex-1] = JaccardIndexIDLinks(rootViXML1, rootViXML2, false);
 			tableJaccardIndexIDImages[coupleIndex-1] = JaccardIndexIDImages(rootViXML1, rootViXML2, false);
 			tableMaxRatioDelete[coupleIndex-1] = maxRatioDelete(rootDelta, rootViXML1, rootViXML2);
@@ -695,12 +705,12 @@ public class XMLDescriptors {
 		return ((double)nbCommon)/a;
 	}
 
-	public static double JaccardIndexLinks(Element e1, Element e2, boolean split){
-		return JaccardIndex(e1, e2, split, "link", "Adr");
+	public static double JaccardIndexLinks(Element e1, Element e2, boolean split,String attr){
+		return JaccardIndex(e1, e2, split, "link", attr);
 	}
-
-	public static double JaccardIndexImages(Element e1, Element e2, boolean split){
-		return JaccardIndex(e1, e2, split, "img", "Src");
+	
+	public static double JaccardIndexImages(Element e1, Element e2, boolean split,String attr){
+		return JaccardIndex(e1, e2, split, "img", attr);
 	}
 
 	public static double JaccardIndexIDLinks(Element e1, Element e2, boolean split){

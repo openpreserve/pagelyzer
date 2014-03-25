@@ -37,6 +37,12 @@ public class MarcAlizer {
 	 * Initialize the algorithm
 	 * @param param the file with the paramter of our algorithm.
 	 */
+	
+	public void init(File param){
+		
+		init(param,param.getParent());
+	}
+	
 	public void init(File param, String path){
 		isInialize=true;
 
@@ -48,7 +54,7 @@ public class MarcAlizer {
 		 * Download SVM
 		 */
 		try {
-			File f = new File(path + configFile.getBinSVM());
+			File f = new File( path + configFile.getBinSVM());
 			if(f.exists()){				
 				FileInputStream fis = new FileInputStream(f);
 				ObjectInputStream ois = new ObjectInputStream(fis);
@@ -116,6 +122,10 @@ public class MarcAlizer {
 
 		/* run SVM*/
 		double res = svm.valueOf(pairDescTest);
+		if(res > 1)
+			res = 1;
+		else if(res < -1)
+			res = -1;
 		System.out.println("Distance between the two web-pages:: "+res);
 		return res;		
 	}
@@ -140,7 +150,7 @@ public class MarcAlizer {
 	public double run(String fichierXml1, String fichierXml2){
 		/* create the visual couple feature descriptors */
 		ArrayList<Double> pairDesc = new ArrayList<Double> ();
-		XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc);
+		XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc,false);
 		return run(pairDesc);
 	}
 	/**
@@ -155,7 +165,7 @@ public class MarcAlizer {
 		/* create the visual couple feature descriptors */
 		ArrayList<Double> pairDesc = new ArrayList<Double> ();
 		create_features_visual(image1,image2,pairDesc);
-		XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc);
+		XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc,false);
 		return run(pairDesc);
 	}
 	/**

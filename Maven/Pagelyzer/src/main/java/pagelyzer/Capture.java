@@ -232,7 +232,7 @@ public class Capture {
                 }
                 if (segmentation) {
                     if (local) {
-                        server = new ServerLyzer();
+                        server = new ServerLyzer(config);
                         int port = config.getNumber("pagelyzer.run.internal.server.local.port");
                         server.start(port,config.get("pagelyzer.run.internal.server.local.wwwroot"));
                     }

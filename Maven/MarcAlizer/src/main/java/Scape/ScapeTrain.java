@@ -50,7 +50,7 @@ public class ScapeTrain extends MarcAlizer{
 			return;
 		
 		ArrayList<Double> pairDesc = new ArrayList<Double>();
-		XMLDescriptors.run(fichierXml1,fichierXml2,pairDesc);
+		XMLDescriptors.run(fichierXml1,fichierXml2,pairDesc,true);
 
 		addExampleOfTrain(pairDesc,label);
 	}
@@ -62,7 +62,7 @@ public class ScapeTrain extends MarcAlizer{
 		
 		ArrayList<Double> pairDesc = new ArrayList<Double>();
 		create_features_visual(image1,image2,pairDesc);
-		XMLDescriptors.run(fichierXml1,fichierXml2,pairDesc);
+		XMLDescriptors.run(fichierXml1,fichierXml2,pairDesc, true);
 		
 		addExampleOfTrain(pairDesc,label);
 	}
@@ -113,6 +113,7 @@ public class ScapeTrain extends MarcAlizer{
 	public void saveSVM(){
 		if(isTrain){
 			try {
+				System.out.println("configFile.getBinSVM(): " + configFile.getBinSVM());
 				FileOutputStream fos = new FileOutputStream(configFile.getBinSVM());
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(svm);
@@ -131,24 +132,47 @@ public class ScapeTrain extends MarcAlizer{
 	 */
 	public static void main(String[] args) {
 		ScapeTrain sc= new ScapeTrain();
-		sc.init( new File(args[0]), args[1]);
+		File f = new File(args[0]);
+		sc.init(f);
+		String params = f.getParent();
+		
+		boolean isImage = f.getName().startsWith("ex_image");
+		boolean isHybrid = f.getName().startsWith("ex_hybrid");
+		boolean isXml = f.getName().startsWith("ex_structure");
+		
 		
 		FileReader fr=null;
+		
 		BufferedReader r=null;
 		try {
 			fr = new FileReader(args[1]);
 			r = new BufferedReader(fr);
-		} 
+		}
 		catch (FileNotFoundException e) {e.printStackTrace();} 
 		
 		String parent=(new File(args[1])).getParentFile().getAbsolutePath()+"/";
+		System.out.println("parent : " + parent);
 		int i=0;
 		try {
-			while(r.ready()){
+			while(r.ready()) {
 				String []l=r.readLine().split("\t");
-				System.out.println("n°"+i+" -> "+l[1]+" , "+(i+1)+" -> "+l[2]+"|| label= "+l[0]);
+				if (l[0].equals("2"))
+					continue;
+				if (isImage) {
+					System.out.println("image pair: n°"+i+" -> "+l[1]+" , "+(i+1)+" -> "+l[2]+"|| label= "+l[0]);
+					sc.addExampleOfTrain(ImageIO.read(new File(parent+l[1])), ImageIO.read(new File(parent+l[2])), new Integer(l[0]));
+				} else if (isXml) {
+					System.out.println("xml pair: n°"+i+" -> "+l[1]+" , "+(i+1)+" -> "+l[2]+"|| label= "+l[0]);
+					sc.addExampleOfTrain(parent+l[1], parent+l[2], new Integer(l[0]));					
+				} else if (isHybrid) {
+					System.out.println("hybrid pair: n°"+i+" -> "+l[1]+" , "+(i+1)+" -> "+l[2]+"|| label= "+l[0]);
+					System.out.println(parent+l[1]);
+					System.out.println(parent+l[2]);
+					sc.addExampleOfTrain(parent+l[1], parent+l[2], ImageIO.read(new File(parent+l[3])), ImageIO.read(new File(parent+l[4])), new Integer(l[0]));
+				}
+				else 
+					System.out.println("Type problem: xml file is not hybrid, image or xml.");
 				i+=2;
-				sc.addExampleOfTrain(ImageIO.read(new File(parent+l[1])), ImageIO.read(new File(parent+l[2])), new Integer(l[0]));
 			}
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
