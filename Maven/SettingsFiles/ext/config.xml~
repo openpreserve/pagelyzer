@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# Andrés Sanoja
+# UPMC - LIP6
+# pagelyzer 
+#
+# Copyright (C) 2011, 2012, 2013, 2014 Andrés Sanoja, Université Pierre et Marie Curie -
+# Laboratoire d'informatique de Paris 6 (LIP6)
+#
+# Authors
+# Andrés Sanoja andres.sanoja@lip6.fr
+# Alexis Lechervy alexis.lechervy@lip6.fr
+# Zeynep Pehlivan zeynep.pehlivan@lip6.fr
+# Myriam Ben Saad myriam.ben-saad@lip6.fr
+# Marc Law marc.law@lip6.fr
+# Carlos Sureda carlos.sureda@lip6.fr
+# Jordi Creus jordi.creus@lip6.fr
+# LIP6 / Université Pierre et Marie Curie
+
+# Responsables WP
+# Matthieu CORD/UPMC
+# Stéphane GANÇARSKI/UPMC
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# Some parts of this package are adapted from the BrowserShot proyect developed by IM, France.
+# https://github.com/sbarton/browser-shot-tool-mapred
+-->
+<!-- 
+All these values can be overriden by command line arguments. These are the defaults loaded as Pagelyzer config.
+-->
+<config>
+    <pagelyzer>
+        <run>
+            <verbose>true</verbose>
+            <default>
+                <parameter>
+                    <get>score</get>
+                    <browser>firefox</browser>
+                    <browser1>firefox</browser1>
+                    <browser2>firefox</browser2>
+                    <outputfile>page.#{ext}</outputfile>
+                </parameter>
+                <comparison>
+                    <mode>images</mode>
+                    <!-- Uncomment <path> to take always this path by default. If it is commented the <JarPath>/resources/ext/ will be used-->
+                    <!--
+                    <path>/home/sanojaa/src/pagelyzer/Maven/Pagelyzer/src/main/resources/ext/</path>
+                    -->
+                    <subdir>/home/pehlivanz/Bureau/pagelyzerconfig/ext/</subdir>
+                </comparison>
+            </default>
+            <internal>
+                <server>
+                    <!-- 
+                      uncommend <url> to use another server different from localhost. For instance, remote apache server
+                      if it is uncommented the internal ServerLyzer class will be used.
+                    -->
+                    <!--
+                    <remote>
+                        <url>http://remote:port/path</url>
+                    </remote>
+                    -->
+                    <local>
+                        <ip>127.0.0.1</ip>
+                        <port>8016</port>
+                         <!-- 
+                            uncommend <wwwroot> to use another server different from the provided with the jar. For instance, remote other web folder
+                            if it is uncommented the internal ServerLyzer default location will be used.
+                          -->
+                        <!--<wwwroot>/var/www/</wwwroot>-->
+                    </local>
+                </server>
+            </internal>
+        </run>
+         <debug>
+            <screenshots>
+                <active>true</active>
+                <path>/home/sanojaa/</path>
+                <filepattern>page#{n}.png</filepattern>
+            </screenshots>
+        </debug>
+    </pagelyzer>
+    <selenium>
+        <run>
+            <mode>local</mode>     
+        </run>
+        <server>
+            <url>http://127.0.0.1:8015/wd/hub</url>
+        </server>
+    </selenium>
+    <bom>
+        <granularity>5</granularity>
+        <separation>50</separation>
+    </bom>
+</config>
