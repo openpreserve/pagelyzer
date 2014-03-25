@@ -54,9 +54,8 @@ All these values can be overriden by command line arguments. These are the defau
                 </parameter>
                 <comparison>
                     <mode>hybrid</mode>
-                    <!-- Uncomment <path> to take always this path by default. If it is commented the <JarPath>/resources/ext/ will be used-->
                     <!--
-                    <path>/home/sanojaa/src/pagelyzer/Maven/Pagelyzer/src/main/resources/ext/</path>
+                    <path> TO ext file that you can find in SettingsFile  </path>
                     -->
                     <subdir>/home/pehlivanz/Bureau/pagelyzerconfig/ext/</subdir>
                 </comparison>
