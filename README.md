@@ -64,6 +64,23 @@ Important Note:
 Some parts of this package are adapted from the BrowserShot project developed by IM, France. https://github.com/sbarton/browser-shot-tool-mapred
 
 
+References
+-----------
+References:
+
+[1] D. Cai, S. Yu, J.-R. Wen, and W.-Y. Ma. VIPS: a Vision-based Page Segmentation Algorithm. Technical report, Microsoft Research, 2003.
+
+[2] Saad M.B., Gançarski S., Pehlivan Z.. A Novel Web Archiving Approach based on Visual Pages Analysis. In 9th International Web Archiving Workshop (IWAW), ECDL 2009
+
+[3] Sanoja, Gançarski S. "Yet another Web Page Segmentation Tool". Proceedings iPRES 2012. Toronto. Canada, 2012
+
+[4] D. Lowe. Distinctive image features from scale-invariant keypoints. IJCV, 60, 2004
+
+[5] Pehlivan Z., Saad M.B. , Gançarski S..Understanding Web Pages Changes. DEXA (1) 2010: 1-15
+
+[6] M. Teva Law, C. Sureda, N. Thome, S. Gançarski, M. Cord. Structural and Visual Similarity Learning for Web Page Archiving, Workshop CBMI 2012
+
+
 Installation and Configuration Manual - Java (Standalone Version)
 ====================================================================
 
