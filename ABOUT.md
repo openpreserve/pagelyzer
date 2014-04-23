@@ -40,6 +40,14 @@ Pagelyzer is for:
 
 Authors
 -------
+
+Responsable Workpackage:
+
+* Matthieu CORD/UPMC
+* Stéphane GANÇARSKI/UPMC
+
+Contributors:
+
 * Andrés Sanoja <andres.sanoja@lip6.fr> (web page segmentation, content based)
 * Marc Law <marc.law@lip6.fr> ( supervised framework, image based, svm, marcalizer)
 * Zeynep Pehlivan <zeynep.pehlivan@lip6.fr> (general info)
@@ -51,12 +59,6 @@ Contributed but not working anymore for the project
 * Jordi Creus <jordi.creus@lip6.fr>
 
 LIP6 / Université Pierre et Marie Curie
-
-Responsables WP
----------------
-
-* Matthieu CORD/UPMC
-* Stéphane GANÇARSKI/UPMC
 
 
 Important Note:
