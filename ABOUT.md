@@ -83,10 +83,10 @@ Publications
 
 Blog Posts:
 
-SCAPE QA Tool: Technologies behind Pagelyzer - I Support Vector Machine
+* SCAPE QA Tool: Technologies behind Pagelyzer - I Support Vector Machine
 http://www.openplanetsfoundation.org/blogs/2014-02-07-scape-qa-tool-technologies-behind-pagelyzer-i-support-vector-machine
 
-SCAPE QA Tool: Technologies behind Pagelyzer - II Web Page Segmentation
+* SCAPE QA Tool: Technologies behind Pagelyzer - II Web Page Segmentation
 http://www.openplanetsfoundation.org/blogs/2014-02-12-scape-qa-tool-technologies-behind-pagelyzer-ii-web-page-segmentation
 
 
