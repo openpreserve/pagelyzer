@@ -1,4 +1,4 @@
-package Scape;
+package eu.scape_project;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URL;
@@ -19,11 +18,15 @@ import javax.imageio.ImageIO;
 
 
 
+
+
 import JDescriptors.CreateIHSVectors;
 import JDescriptors.SpatialPyramids;
 import JDescriptors.fr.lip6.Descriptor;
 import JKernelMachines.fr.lip6.classifier.SMOSVM;
 import JKernelMachines.fr.lip6.kernel.IndexedKernel;
+import Scape.FileConfig;
+import Scape.XMLDescriptors;
 
 public class MarcAlizer {
 	

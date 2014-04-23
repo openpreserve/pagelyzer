@@ -1,48 +1,51 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>fr.lip6.JDescriptors</groupId>
-  <artifactId>JDescriptors</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    <dependencies>
-  	<dependency>
-  		<groupId>commons-cli</groupId>
-  		<artifactId>commons-cli</artifactId>
-  		<version>1.1</version>
-  	</dependency>
-  	<dependency>
-        <groupId>gov.nist.math</groupId>
-        <artifactId>jama</artifactId>
-        <version>1.0.2</version>
-    </dependency>
-	  <dependency>
-  	    <groupId>net.java.dev.jai-imageio</groupId>
-  	    <artifactId>jai-imageio-core-standalone</artifactId>
-  	    <version>1.2-pre-dr-b04-2011-07-04</version>
-	  </dependency>
-  </dependencies>
-  <repositories>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>JDescriptors</artifactId>
+	<parent>
+		<groupId>eu.scape-project.pagelyzer</groupId>
+		<artifactId>pagelyzer-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>commons-cli</groupId>
+			<artifactId>commons-cli</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.nist.math</groupId>
+			<artifactId>jama</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.media.jai</groupId>
+			<artifactId>com.springsource.javax.media.jai.core</artifactId>
+			<version>1.1.3</version>
+		</dependency>
+	</dependencies>
+	<repositories>
 		<repository>
-		    <releases />
-		    <snapshots>
-		        <enabled>false</enabled>
-		    </snapshots>
-		    <id>mygrid-repository</id>
-		    <name>myGrid Repository</name>
-		    <url>http://www.mygrid.org.uk/maven/repository</url>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
 		</repository>
-    </repositories>
-     
+	</repositories>
+
+
+
 </project>

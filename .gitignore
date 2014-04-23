@@ -1,0 +1,22 @@
+# Maven
+target/
+
+# IDEA
+.idea/
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+workbench.xmi
+
+# Mac OS X
+.DS_Store
+
+# VI
+.*.swp
+.*.vim
+
+# Logger
+*.log

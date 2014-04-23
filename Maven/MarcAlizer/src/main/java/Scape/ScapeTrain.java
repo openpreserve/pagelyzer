@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import eu.scape_project.MarcAlizer;
 import JKernelMachines.fr.lip6.classifier.SMOSVM;
 import JKernelMachines.fr.lip6.evaluation.Evaluator;
 import JKernelMachines.fr.lip6.kernel.IndexedKernel;

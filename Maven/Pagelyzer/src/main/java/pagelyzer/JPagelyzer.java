@@ -39,7 +39,7 @@
 
 package pagelyzer;
 
-import Scape.MarcAlizer;
+import eu.scape_project.MarcAlizer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

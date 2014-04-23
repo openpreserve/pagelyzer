@@ -1,0 +1,66 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>eu.scape-project.pagelyzer</groupId>
+    <artifactId>pagelyzer-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>pagelyzer</name>
+
+    <description>Compares two web pages</description>    
+    
+    <modules>
+        <module>JDescriptors</module>
+        <module>JKernelMachines</module>
+        <module>MarcAlizer</module>
+        <module>Pagelyzer</module>
+    </modules>
+ 
+    <developers>
+        <developer>
+            <id>as</id>
+            <name>Anders</name>
+            <email>anders@lip6.fr</email>
+        </developer>
+    </developers>
+  
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:openplanets/pagelyzer.git</connection>
+        <developerConnection>scm:git:git@github.com:openplanets/pagelyzer.git</developerConnection>
+        <url>git@github.com:openplanets/pagelyzer.git</url>
+    </scm>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <cdh.version>0.20.2-cdh3u5</cdh.version>
+        <pig.version>0.10.0-cdh3u4</pig.version>
+        <jwat.version>1.0.0</jwat.version>
+    </properties>
+  
+</project>
