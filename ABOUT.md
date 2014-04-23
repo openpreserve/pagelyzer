@@ -97,3 +97,6 @@ http://www.openplanetsfoundation.org/blogs/2014-02-07-scape-qa-tool-technologies
 http://www.openplanetsfoundation.org/blogs/2014-02-12-scape-qa-tool-technologies-behind-pagelyzer-ii-web-page-segmentation
 
 
+### Credits
+* This work was partially supported by the SCAPE project. The SCAPE project is co-funded by the European Union under FP7 ICT-2009.4.1 (Grant Agreement number 270137)
+* 
