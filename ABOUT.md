@@ -66,17 +66,27 @@ Important Note:
 Some parts of this package are adapted from the BrowserShot project developed by IM, France. https://github.com/sbarton/browser-shot-tool-mapred
 
 
-References
+Publications
 -----------
 
-[1] A. Sanoja and S. Gançarski. Block-o-Matic: A Web Page Segmentation Framework. Paper accepted for oral presentation in the International Conference on Multimedia Computing and Systems (ICMCS'14). Morroco, April 2014.
+* A. Sanoja and S. Gançarski. Block-o-Matic: A Web Page Segmentation Framework. Paper accepted for oral presentation in the International Conference on Multimedia Computing and Systems (ICMCS'14). Morroco, April 2014.
 
-[2] Sanoja A., Gançarski S. "Block-o-Matic: a Web Page Segmentation Tool and its Evaluation". BDA. Nantes, France. 2013.http://hal.archives-ouvertes.fr/hal-00881693/
+* Sanoja A., Gançarski S. "Block-o-Matic: a Web Page Segmentation Tool and its Evaluation". BDA. Nantes, France. 2013.http://hal.archives-ouvertes.fr/hal-00881693/
 
-[3] Saad M.B., Gançarski S., Pehlivan Z.. A Novel Web Archiving Approach based on Visual Pages Analysis. In 9th International Web Archiving Workshop (IWAW), ECDL 2009
+* Saad M.B., Gançarski S., Pehlivan Z.. A Novel Web Archiving Approach based on Visual Pages Analysis. In 9th International Web Archiving Workshop (IWAW), ECDL 2009
 
-[4] Sanoja, Gançarski S. "Yet another Web Page Segmentation Tool". Proceedings iPRES 2012. Toronto. Canada, 2012
+* Sanoja, Gançarski S. "Yet another Web Page Segmentation Tool". Proceedings iPRES 2012. Toronto. Canada, 2012
 
-[5] Pehlivan Z., Saad M.B. , Gançarski S..Understanding Web Pages Changes. DEXA (1) 2010: 1-15
+* Pehlivan Z., Saad M.B. , Gançarski S..Understanding Web Pages Changes. DEXA (1) 2010: 1-15
 
-[6] M. Teva Law, C. Sureda, N. Thome, S. Gançarski, M. Cord. Structural and Visual Similarity Learning for Web Page Archiving, Workshop CBMI 2012
+* M. Teva Law, C. Sureda, N. Thome, S. Gançarski, M. Cord. Structural and Visual Similarity Learning for Web Page Archiving, Workshop CBMI 2012
+
+Blog Posts:
+
+SCAPE QA Tool: Technologies behind Pagelyzer - I Support Vector Machine
+http://www.openplanetsfoundation.org/blogs/2014-02-07-scape-qa-tool-technologies-behind-pagelyzer-i-support-vector-machine
+
+SCAPE QA Tool: Technologies behind Pagelyzer - II Web Page Segmentation
+http://www.openplanetsfoundation.org/blogs/2014-02-12-scape-qa-tool-technologies-behind-pagelyzer-ii-web-page-segmentation
+
+
