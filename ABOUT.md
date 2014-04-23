@@ -37,9 +37,16 @@ Pagelyzer is for:
 * Digital preservation specialists
 
 
+### Examples
+The rendering issues due to format obsolescence within the archive and monitor technological
+landscape can be detected by the comparison of web pages. This scenario aims at finding possible 
+solutions such as using of image comparison to detect rendering errors within web archives(compare 
+reference snapshots of web pages in different browser versions.
 
-Authors
--------
+
+The quality of the web crawlers can be also tested by comparing the crawled version of the page with the page online just after crawling. 
+
+### Authors
 
 Responsable Workpackage:
 
