@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import eu.scape_project.MarcAlizer;
 import JKernelMachines.fr.lip6.classifier.SMOSVM;
 import JKernelMachines.fr.lip6.evaluation.Evaluator;
 import JKernelMachines.fr.lip6.kernel.IndexedKernel;
@@ -23,7 +22,7 @@ import JKernelMachines.fr.lip6.type.TrainingSample;
 public class ScapeTrain extends MarcAlizer{
 	private boolean isTrain=false;
 	private /*public */ArrayList<TrainingSample<double[]>> trainingSamples = new ArrayList<TrainingSample<double[]>>();
-	
+	static String params;
 	public void addExampleOfTrain(ArrayList<Double> pairDesc, int label){
 		label = label==1 ? 1 : -1;
 		/* convert ArrayList in array of double*/
@@ -51,7 +50,7 @@ public class ScapeTrain extends MarcAlizer{
 			return;
 		
 		ArrayList<Double> pairDesc = new ArrayList<Double>();
-		XMLDescriptors.run(fichierXml1,fichierXml2,pairDesc,true);
+		XMLDescriptors.run(fichierXml1,fichierXml2,pairDesc);
 
 		addExampleOfTrain(pairDesc,label);
 	}
@@ -63,7 +62,7 @@ public class ScapeTrain extends MarcAlizer{
 		
 		ArrayList<Double> pairDesc = new ArrayList<Double>();
 		create_features_visual(image1,image2,pairDesc);
-		XMLDescriptors.run(fichierXml1,fichierXml2,pairDesc, true);
+		XMLDescriptors.run(fichierXml1,fichierXml2,pairDesc);
 		
 		addExampleOfTrain(pairDesc,label);
 	}
@@ -114,8 +113,8 @@ public class ScapeTrain extends MarcAlizer{
 	public void saveSVM(){
 		if(isTrain){
 			try {
-				System.out.println("configFile.getBinSVM(): " + configFile.getBinSVM());
-				FileOutputStream fos = new FileOutputStream(configFile.getBinSVM());
+				System.out.println("configFile.getBinSVM(): " + params + configFile.getBinSVM());
+				FileOutputStream fos = new FileOutputStream( params + configFile.getBinSVM());
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(svm);
 				oos.close();
@@ -135,7 +134,7 @@ public class ScapeTrain extends MarcAlizer{
 		ScapeTrain sc= new ScapeTrain();
 		File f = new File(args[0]);
 		sc.init(f);
-		String params = f.getParent();
+		params = f.getParent();
 		
 		boolean isImage = f.getName().startsWith("ex_image");
 		boolean isHybrid = f.getName().startsWith("ex_hybrid");

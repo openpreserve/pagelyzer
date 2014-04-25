@@ -63,7 +63,7 @@ import org.openqa.selenium.support.ui.*;
  */
 public class Capture {
     public BrowserRep browser = new BrowserRep();
-    public static double granularity = 0.6;
+    public static double granularity = 0.5;
     public CaptureResult result = new CaptureResult();
     private Configuration config;
     
@@ -126,7 +126,7 @@ public class Capture {
         * This function is a adaptation from the setup() method from BrowserShot_mapred proyect
         * @param browser the current browser to setup
         **/
-        protected void setup(String browser) {     
+        public void setup(String browser) {     
             System.out.println("Setting up browser: "+browser);
             DesiredCapabilities capability = null;
             if  (browser.equals("firefox")) {
@@ -154,7 +154,7 @@ public class Capture {
         * @throws IOException
         * @throws InterruptedException
         **/
-        protected void cleanup() throws IOException, InterruptedException {     
+        public void cleanup() throws IOException, InterruptedException {     
                this.browser.driver.close();
         }
         
@@ -246,9 +246,12 @@ public class Capture {
                     wait.until(ExpectedConditions.presenceOfElementLocated(By.id("bominject")));
                    
                     String bomversion = (String) this.browser.js.executeScript("return bomversion");
-                    System.out.println("Using BoM algorithm v"+bomversion + " pAC=" + Capture.granularity);
-                    
-                    result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + Capture.granularity + ",50,false);");
+                   
+                    System.out.println("Using BoM algorithm v"+bomversion + " pAC=" + config.get("bom.granularity"));
+                    result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + config.get("bom.granularity") + "," + config.get("bom.separation")+ ",false)");
+
+
+                    //result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + Capture.granularity + ",50,false);");
                     if (config.getLogic("pagelyzer.debug.screenshots.active")) {
                         result.debug =  ((TakesScreenshot)this.browser.driver).getScreenshotAs(OutputType.BYTES);
                     }

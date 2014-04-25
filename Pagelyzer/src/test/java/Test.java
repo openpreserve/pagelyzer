@@ -19,10 +19,11 @@ public class Test {
 	        String temp;
 	        String[] urls;
 	       
-	        String[] pagelyzerargs = {"-get","score","-config","src/main/resources/ext/config.xml","-url1","http://www.lip6.fr" ,"-url2","http://www.lip6.fr"};
+	        //String[] pagelyzerargs = {"-get","score","-config","src/main/resources/ext/config.xml","-url1","http://www.lip6.fr" ,"-url2","http://www.lip6.fr"};
+	        String[] pagelyzerargs = {"-config","/home/pehlivanz/Bureau/SettingsFiles/config.xml"};
 	        // gibing urls not to have a config error
 
-	        JPagelyzer pagelyzer = new JPagelyzer(pagelyzerargs);
+	        JPagelyzer pagelyzer = new JPagelyzer(pagelyzerargs,false);
 	        
 	        StringBuffer sb = new StringBuffer();
 	        double scoreimg, scorexml,scorehybrid;

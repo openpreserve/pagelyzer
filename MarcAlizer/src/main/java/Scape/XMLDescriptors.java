@@ -28,7 +28,7 @@ public class XMLDescriptors {
 	static Document documentViXML1;
 	static Document documentViXML2;
 	
-	public static void run(String fichierXml1, String fichierXml2/*, String fichierDelta*/, ArrayList<Double> desc, boolean isFortrain) {
+	public static void run(String fichierXml1, String fichierXml2/*, String fichierDelta*/, ArrayList<Double> desc) {
 		// TODO Auto-generated method stub
 		//Element rootDelta;
 		Element rootViXML1;
@@ -42,16 +42,17 @@ public class XMLDescriptors {
 		{
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			//documentDelta  = builder.parse(fichierDelta);
-			if(isFortrain)
+			// This was used for the files created already on the disk by using VIPS
+			/*if(isFortrain)
 			{
 				documentViXML1 = builder.parse(new File(fichierXml1)); // for test
 				documentViXML2 = builder.parse(new File(fichierXml2));
 			}
 			else // coming from pagelyzer
-			{	
+			{	*/
 				documentViXML1 = builder.parse(new InputSource(new StringReader(fichierXml1)));
 				documentViXML2 = builder.parse(new InputSource(new StringReader(fichierXml2)));
-			}
+		//	}
 			//Le parsing est terminé ;)
 		}
 		catch(Exception e){
@@ -82,25 +83,33 @@ public class XMLDescriptors {
 	    
 	    double resultoverblocks = 0;
 
+	    int count = 0;
 	    HashMap<String, Double> temptext1;
 	    HashMap<String, Double> temptext2;
 	    for(int i = 0; i< nodeLstsource.getLength();i++ )
 	    {
-	    	if(type == 0) // Links
-			{
-	    		resultoverblocks+=JaccardIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), false,atr);
-			}
-	    	else if(type == 1) // Images
-	    		resultoverblocks+=JaccardIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), false,atr);
-	    	else // Txt
+	    	
+	    	if(((Element)nodeLstsource.item(i)).getAttribute("ID")!="" ) // 
 	    	{
-	    		// get first document text
-	    		Element el = (Element) nodeLstsource.item(i);
-	    		if(el.getAttribute("ID")!="") // not all blocks I need leaf blocks
-	    		{
+	    		count++;
+		    	if(type == 0) // Links
+				{
+		    		resultoverblocks+= JaccardIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), true,atr);
+
+				}
+		    	else if(type == 1) // Images
+		    	{
+		    		resultoverblocks+=JaccardIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), true,atr);
+		    		
+		    	}
+		    	else // Txt
+		    	{
+		    		// get first document text
+		    		
+		    		Element el = (Element) nodeLstsource.item(i);
+	
+		    	
 		    		NodeList txtl = el.getElementsByTagName("Txts");
-		    		
-		    		
 		    		
 		    		if(txtl!=null&&txtl.item(0)!=null)
 		    			temptext1 = CosineSimilarity.getFeaturesFromString(((Element)txtl.item(0)).getAttribute(atr));
@@ -118,11 +127,14 @@ public class XMLDescriptors {
 		    		//System.out.println(CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2));
 		    		if(temptext1.size()!=0 &&temptext2.size()!=0)
 		    			resultoverblocks+= CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
-	    		}
+	    		
+		    	}
 	    	}
 	    }
-		System.out.println(resultoverblocks);
-		return resultoverblocks/nodeLstsource.getLength();
+	    if(count == 0)
+	    	count = 1;
+		System.out.println(resultoverblocks/(double)count); //+ " -- " + count + " -- " + nodeLstsource.getLength());
+		return resultoverblocks/(double)count;
 		
 		
 	}
