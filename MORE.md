@@ -16,7 +16,3 @@ if two urls are similar or not. You can try to train your system with more data 
 
 No and yes. You can not use pagelyzer directly with the existing svm files because these files contain information learned for specific annotation and just to compare web pages. 
 But the idea behind Pagelyzer can be used. For this, you need to use Pagelyzer-Train function and update it to read images.
-
-4 - Testing giteclipse
-
-
