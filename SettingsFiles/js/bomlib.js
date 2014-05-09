@@ -1,45 +1,41 @@
 var containerList 	= ["BODY","DIV","UL","DL","P","TABLE","TD","SECTION","HEADER","FOOTER","ASIDE","NAV","ARTICLE","OBJECT","IFRAME","INS"];
-var contentList 	= ["SPAN","A","LI","DT","DD","H1","H2","H3","H4","H5","IMG","INS"];
+var contentList 	= ["SPAN","A","LI","DT","DD","H1","H2","H3","H4","H5","IMG","INS","INPUT","P"];
 var excludeList 	= ["SCRIPT","STYLE","AREA","HEAD","META","FRAME","FRAMESET","BR","HR","NOSCRIPT"];
 var ignoreList 	 	= ["HTML","TBODY","TR","PARAM","LINK"];
 
-var ac = 0.5; //in pixel-square
-var mac = 0.002 //0.002 pixel-square
-var dc = 50; //50px
-var tc = 1; //3 words
+var ac = 5; //0 small blocks <--> 10 big blocks
+var dc = 50; //50px max separation distance between blocks for merging process
+var tc = 1; //minimum characters to be consider a valid text element not WS or valid innertext string
 
-var dx = dc;
-var dy = dc;
+var dx = dc; //max distance between blocks and page boundaries 
+var dy = dc; // used to determine labels to logic objects. Using DC parameter as default.
 
-var blocks = [];
-var geoList = [];
-
-var bind=0;
+var blocks = []; //list of all logic objects (blocks)
+var geoList = []; //list if all geometric objects (content)
 
 var bomversion = "1.1";
 
 var colors = {PAGE:'#FFFF00',CONTAINER:'#34FF00',CONTENT_CONTAINER:'#6FBEE5',CONTENT:'blue',DEFAULT:'magenta'};
 
-var page;
+var page; //page logical object
 
-var displayBlocks = true;
+var displayBlocks = true; //for debugging. Write DIVS representing blocks in live web page.
 
-function documentDim(win,doc) {
-	var w,h;
-	if (win) w=win; else win=window;
-	if (doc) d=doc; else doc=document;
-	return {w:$(doc).width(),h:$(doc).height()};
-}
+/* ViXML generation functions */
 
+/* escape special characters from link title */
 function code(s) {
     var res="";
     if (!s) return "";
-    res = res.replace("&","\&");
-    res = res.replace("'","\'");
-    res = res.replace('"',"\"");
+    res = s.replace("&","&amp;");
+    res = res.replace("'","&#39;");
+    res = res.replace('"',"&quot;");
+    res = res.replace(">","&gt;");
+    res = res.replace("<","&lt;");
     return res;
 }
 
+/* get ViXML document */
 function getViXML() {
     var cnt = "<XML>\n";
     cnt+="<Document url='"+(document.URL)+"' Title='"+code(document.title)+"' Version='"+bomversion+"' Pos='WindowWidth||PageRectLeft:"+documentDim().w+" WindowHeight||PageRectTop:"+documentDim().h+" ObjectRectWith:0 ObjectRectHeight:0'>\n";
@@ -49,23 +45,37 @@ function getViXML() {
     return(cnt);
 }
 
+/* get the image list of a block */
 function getImageList(obj) {
     var t="<Imgs ID='#ID#' IDList='$ID_LIST_IMAGES$'>\n";
     var a = "";
     var list = [];
     var col = [];
+
     for (var m=0;m<obj.geometricObjects.length;m++) {
         var geo = obj.geometricObjects[m];
+
         axc = obj.geometricObjects[m].element.getElementsByTagName("img");
+	//alert("img " +axc.length);
         for (p=0;p<axc.length;p++) {
             col.push(axc[p]);
         }
+
+	axc = obj.geometricObjects[m].element.getElementsByTagName("input");
+	//alert("input " +axc.length);
+	 for (p=0;p<axc.length;p++) {
+	  if (axc[p].type == "image") {
+            	col.push(axc[p]);
+            }
+	  }
     }
+
     col = col.filter(function(elem, pos) {return col.indexOf(elem) == pos;});
     
     for (var i=0;i<col.length;i++) {
         var img = col[i];
-        a = "<img ID='#ID#' Name='"+code(img.getAttribute('name'))+"' Src='"+code(img.getAttribute('src'))+"'/>"
+        var pt=img.getAttribute("alt");
+        a = "<img ID='#ID#' Name=\""+code(pt)+"\" Src='"+code(img.getAttribute('src'))+"'/>"
         var c = CryptoJS.MD5(a);
         list.push(c);
         t += a.replace('#ID#',c)+"\n";
@@ -76,6 +86,7 @@ function getImageList(obj) {
     return(t);
 }
 
+/* get the link list of a block */
 function getLinksList(obj) {
     var t="<Links ID='#ID#' IDList='$ID_LIST_LINKS$'>\n";
     var a = "";
@@ -84,6 +95,7 @@ function getLinksList(obj) {
     for (var m=0;m<obj.geometricObjects.length;m++) {
         var geo = obj.geometricObjects[m];
         axc = obj.geometricObjects[m].element.getElementsByTagName("a");
+
         for (p=0;p<axc.length;p++) {
             col.push(axc[p]);
         }
@@ -92,7 +104,8 @@ function getLinksList(obj) {
     
     for (var i=0;i<col.length;i++) {
         var link = col[i];
-        a = "<Link ID='#ID#' Name='"+code(link.getAttribute('name'))+"' Adr='"+code(link.getAttribute('href'))+"'/>"
+        var pt=$(link).text();
+        a = "<link ID='#ID#' Name=\""+code(pt)+"\" Adr='"+code(link.getAttribute('href'))+"'/>"
         var c = CryptoJS.MD5(a);
         list.push(c);
         t += a.replace('#ID#',c)+"\n";
@@ -103,6 +116,7 @@ function getLinksList(obj) {
     return(t);
 }
 
+/* get text nodes recursively in a block */
 function collectTextNodes(element, texts) {
     if (element.tagName.toLowerCase() == "script") return;
     
@@ -113,6 +127,9 @@ function collectTextNodes(element, texts) {
             collectTextNodes(child, texts);
     }
 }
+
+/* get text nodes recursively in a block */
+
 function getTextWithSpaces(element) {
     if (element.tagName.toLowerCase() == "script") return "";
     var texts= [];
@@ -127,15 +144,25 @@ function getText(obj) {
     for (var i=0;i<obj.geometricObjects.length;i++) {
         var geo = obj.geometricObjects[i];
         if (geo) {
-            all += getTextWithSpaces(geo.element)
+            if (!isExcluded(geo.element)) {
+		$(geo.element).find('script').remove();
+		all += getTextWithSpaces(geo.element)
+		}
+            
         }
     }
+
+
+    all = all.replace(/<[^>]+>/ig,"");
     all = all.replace(/\s+/g, ' ');
     all = code(all);
-    var txt = "<Txts ID='"+CryptoJS.MD5(all)+"' Txt='"+all+"'/>";
+    var txt = "<Txts ID=\""+CryptoJS.MD5(all)+"\" Txt=\""+all+"\"/>";
     return(txt);
 }
 
+
+
+/* get ViXML for a block */
 function getViXMLObject(obj,level,pid) {
 	if (!obj) return;
 	var xml = "";
@@ -148,14 +175,14 @@ function getViXMLObject(obj,level,pid) {
         
         
         if (obj.terminal()) {
-            internal=spc+"   " + getLinksList(obj);
-            internal+=spc+"   " + getImageList(obj);
-            internal+=spc+"   " + getText(obj);
-            block+=spc+"<Block Ref='Block"+pid+"' internal_id='"+obj.label+"' ID='"+CryptoJS.MD5(internal)+"' Pos='WindowWidth||PageRectLeft:" +obj.dim.x+ " WindowHeight||PageRectTop:"+obj.dim.y+" ObjectRectWidth:"+obj.dim.w+" ObjectRectHeight:"+obj.dim.h+"' Doc=''>\n"
+            internal= getLinksList(obj);
+            internal+=spc+ getImageList(obj);
+            internal+=spc+getText(obj);
+            block+=spc+"<Block Ref='Block"+pid+"' leafblock='1' internal_id='"+obj.label+"' ID='"+CryptoJS.MD5(internal)+"' Pos='WindowWidth||PageRectLeft:" +obj.dim.x+ " WindowHeight||PageRectTop:"+obj.dim.y+" ObjectRectWidth:"+obj.dim.w+" ObjectRectHeight:"+obj.dim.h+"' Doc=''>\n"
             block+=internal;
         } else {
             var tt=spc+"<Block Ref='Block"+pid+"' internal_id='"+obj.label+"' ID='#ID#' Pos='WindowWidth||PageRectLeft:" +obj.dim.x+ " WindowHeight||PageRectTop:"+obj.dim.y+" ObjectRectWidth:"+obj.dim.w+" ObjectRectHeight:"+obj.dim.h+"' Doc=''>\n"
-            block += tt.replace("#ID#",CryptoJS.MD5(tt));
+            block += tt.replace("#ID#","");
         }
         xml+=block;
         for (var j=0;j<obj.children.length;j++) {
@@ -169,6 +196,17 @@ function getViXMLObject(obj,level,pid) {
 	return(xml);
 }
 
+/*
+ * Get document geometry width and height;
+ * */
+function documentDim(win,doc) {
+	var w,h;
+	if (win) w=win; else win=window;
+	if (doc) d=doc; else doc=document;
+	return {w:$(doc).width(),h:$(doc).height()};
+}
+
+/* count the children of an element */
 function elementCount(element) {
 	if (!element) return;
 	if (isWS(element)) return;
@@ -184,6 +222,10 @@ function elementCount(element) {
 	return(count)
 }
 
+/* 
+ * count the children of a block
+ * onlyLeaves=true count only leaves or terminal blocks
+ */
 function blockCount(obj,onlyLeaves) {
 	if (!obj) return;
 	if (!obj.block)  return;
@@ -204,9 +246,11 @@ function blockCount(obj,onlyLeaves) {
 	return(count);
 }
 
+/*
+ * build logic objects in base of geometric objects go's
+ */
 function prepareLogicStructure(go,parent) {
 	if (!go) return;
-	//~ if (go.getAttribute("class")=="block") return;
 	var log,gchild,lchild;
 	log=parent;
 	if (go.children.length == 1) {
@@ -224,10 +268,20 @@ function prepareLogicStructure(go,parent) {
 	return(log);
 }
 
+/*
+ * used for debuging in local javascript console 
+ */
 function debug(s) {
     console.log(s);
 } 
 
+/*
+ * main function call to perform segmentation
+ * win: the browser window object, frame, etc.
+ * pac: parameter of granularity
+ * pdc: distance parameter of separation between blocks (used for merging)
+ * proclog: process logic structure. True for automatic segmentation
+ */ 
 function startSegmentation(win,pac,pdc,proclog) {	
 		contentWindow = win;
 		contentDocument = contentWindow.document;
@@ -247,11 +301,11 @@ function startSegmentation(win,pac,pdc,proclog) {
                 return(getViXML());
 }
 
+/*
+ * used to send segmentation results to a remote server
+*/
 function post_to_url(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
-
-    // The rest of this code assumes you are not using a library.
-    // It can be made less wordy if you use one.
     var form = document.createElement("form");
     form.setAttribute("method", method);
     form.setAttribute("action", path);
@@ -262,15 +316,14 @@ function post_to_url(path, params, method) {
             hiddenField.setAttribute("type", "hidden");
             hiddenField.setAttribute("name", key);
             hiddenField.setAttribute("value", params[key]);
-
             form.appendChild(hiddenField);
          }
     }
-
     outputDocument.body.appendChild(form);
     form.submit();
 }
 
+/* build the xpath of an element */
 function getXPath(elt) {
      var path = "";
      for (; elt && elt.nodeType == 1; elt = elt.parentNode)
@@ -280,10 +333,10 @@ function getXPath(elt) {
 	if (idx > 1) xname += "[" + idx + "]";
 	path = "/" + xname + path;
      }
- 
      return path.toLowerCase();	
 }
 
+/* auxiliar function of xpath one*/
 function getElementIdx(elt)
 {
     var count = 1;
@@ -295,15 +348,9 @@ function getElementIdx(elt)
     return count;
 }
 
-function findPos(obj) {
-   var curleft = obj.offsetLeft || 0;
-   var curtop = obj.offsetTop || 0;
-   while (obj = obj.offsetParent) {
-			curleft += obj.offsetLeft
-			curtop += obj.offsetTop
-   }
-   return {x:curleft,y:curtop};
-}
+/*
+ * get the absolute position of an element.
+ * */
 
 function getRect(obj) {
 	if (obj.tagName.toUpperCase() == "BODY") {
@@ -315,6 +362,7 @@ function getRect(obj) {
 	
 }
 
+/*is an element a text node? */
 function isText(element) {
 	if (element) {
 		if (element.nodeName=="#text") {
@@ -326,6 +374,7 @@ function isText(element) {
 	}
 }
 
+/*is an element a whitespace? */
 function isWS(element) {
 	if (element) {
 		if (element.nodeType == 3) {
@@ -342,6 +391,7 @@ function isWS(element) {
 	}
 }
 
+/*is an element a comment node? */
 function isComment(element) {
 	if (element) {
 		if (element.nodeType == 8) {
@@ -354,6 +404,7 @@ function isComment(element) {
 	}
 }
 
+/*is an element the root element? */
 function isRoot(element) {
 	if (element) {
 		if (element.tagName.toUpperCase() == "BODY") {
@@ -366,7 +417,7 @@ function isRoot(element) {
 	}
 }
 
-
+/*belongs an element to the content-container category ? */
 function isContentContainer(element) {
 	if (!element) return;
 	if (isContainer(element)) {
@@ -375,25 +426,21 @@ function isContentContainer(element) {
 		var n=element.childNodes.length;
 		for (var i=0; i<element.childNodes.length; i++) {
 			child = element.childNodes[i];
-			//~ console.log(child,isWS(child))
 			if (isContent(child)) {
 				etc++;
 			}
-			//~ console.log(isWS(child),child.data);
 			if (isWS(child) || isComment(child) || !visible(child) || isExcluded(child) || isIgnored(child)) {
 				n--;
 			}
 		}
-			//~ console.log("CONTENT",element.tagName,etc,element.childNodes.length,n);//~ console.log(element.tagName,etc,element.childNodes.length,n);
-
 		return(etc == n);
 	} else {
 		return(false);
 	}
 }
 
+/*belongs an element to the default category ? */
 function isDefault(element) {
-	//inspect area and text length of element
 	if (element.childNodes.length==0) {
 		return(true)
 	} 
@@ -406,6 +453,7 @@ function isDefault(element) {
 	return(element.childNodes.length == ws);
 }
 
+/*belongs an element to the content category ? */
 function isContent(element) {
 	if (!element) return;
 	if (!element.tagName) return;
@@ -414,15 +462,16 @@ function isContent(element) {
 	if (isText(element)) return(true);
 	var itis = false;
 	for (var i=0;i<contentList.length;i++) {
+		
 		if (contentList[i].toUpperCase() == element.tagName.toUpperCase()) {
 			itis = true;
 			break;
 		}
 	}
-
 	return(itis);
 }
 
+/*belongs an element to the container category ? */
 function isContainer(element) {
 	if (!element) return(false);
 	if (isWS(element)) return(false);
@@ -438,6 +487,8 @@ function isContainer(element) {
 	}
 	return(itis);
 }
+
+/*is the element excluded of processing? */
 function isExcluded(element) {
 	if (!element) return(false);
 	if (isWS(element)) return(false);
@@ -457,6 +508,7 @@ function isExcluded(element) {
 	return(itis);
 }
 
+/*is the element ignored in processing? */
 function isIgnored(element) {
 	if (!element) return(false);
 	if (isWS(element)) return(false);
@@ -474,6 +526,7 @@ function isIgnored(element) {
 	return(itis);
 }
 
+/*which category the element belongs */
 function BOMType(element) {
         if (!element) return(null);
         if (isWS(element)) return(null);
@@ -483,14 +536,12 @@ function BOMType(element) {
 	if (!visible(element)) return(null);
 	if (!isContent(element)) {
             var txn = $(element).text();
-            //if (element.textContent) {alert("firefox");txn=element.textContent;} else {alert("chrome");txn=element.innerText;}
             if (txn) {
                 if ((element.children.length==0) && (txn.trim()=="")) {
                         return(false);
                 }
             }
 	}
-	
 	//this bother on chrome evaluation with this pluging
 	if (element.getAttribute("id")) {
 		if (element.getAttribute("id").toLowerCase() == "window-resizer-tooltip") 
@@ -505,6 +556,7 @@ function BOMType(element) {
 	return(null);
 }
 
+/*build the content structure DOM -> geometric objects */
 function processContentStructure(element,level) {
 	if (!element) return;
 	if (isWS(element)) return(false);
@@ -540,6 +592,7 @@ function processContentStructure(element,level) {
 	}
 }
 
+/*refName -> name class#id */
 function refName(element) {
 	if (!element) return "";
 	if (isWS(element)) return("");
@@ -553,6 +606,7 @@ function refName(element) {
 	return(name);
 }
 
+/*process a geometric object*/
 function processGeometricObject(element) {
 	var bt = BOMType(element);
 	var geo;
@@ -569,6 +623,7 @@ function processGeometricObject(element) {
 	return(geo);
 }
 
+/* process the geometric structure */
 function processGeometricStructure(element,parent) {
 	if (!element) return;
 	if (isWS(element)) return(false);
@@ -578,7 +633,7 @@ function processGeometricStructure(element,parent) {
 	
 	var dim = getRect(element);
 	if ((dim.w<10) || (dim.h<10)) {
-		//~ element.setAttribute("bomtype",null); SKIP IT DO NOT CREATE GEOMETRIC OBJECT
+		//SKIP IT DO NOT CREATE GEOMETRIC OBJECT
 		return;
 	}
 	var geo = createNewGeometricObject(element,parent);
@@ -594,6 +649,7 @@ function processGeometricStructure(element,parent) {
 	return geo;
 }
 
+/* is visual cues present: bold, font sizes, background colors, etc.*/
 function visuallyDifferent(element) {
 	if (element) {
 		if (!included(element.style.backgroundColor.toLowerCase(),["","transparent","rgba(0,0,0,0)"])) {
@@ -603,43 +659,35 @@ function visuallyDifferent(element) {
 	return(false);
 }
 
-function distanceGL(go,lo) {
-	return(1);
-} //delete me
-function distanceGG(go,lo) {
-	return(0);
-} //delete me
-
-function edistance(x1,y1,x2,y2) {
-var xs = 0;
-var ys = 0;
-xs = x2-x1;
-xs = xs*xs;
-ys = y2-y1;
-ys = ys*ys;
-return(Math.sqrt(xs+ys));
-}
-
-function getPoints(geo) {
-	if (!geo) return;
-	if (!geo.getAttribute("bomgeometry")) return;
-	poly = geo.getAttribute("bomgeometry").split(" ");
-	for (var u=0;u<poly.length;u++) {
-		poly[u] = parseFloat(poly[u]);
-	}
-	return(poly);
-}
-
+/* get set of points of block geometry*/
 function getPolygonPoints(dim) {
 	var res = [];
 	res = res.concat([dim.x,dim.y]);
 	res = res.concat([dim.x,dim.y+dim.h]);
 	res = res.concat([dim.x+dim.w,dim.y+dim.h]);
 	res = res.concat([dim.x+dim.w,dim.y]);
-	//~ res = res.concat([dim.x,dim.y]);
 	return(res);
 }
 
+/* get set of X-axis of block geometry*/
+function getX(points) {
+	var x=[];
+	for (var i=0;i<points.length;i+=2) {
+		x.push(points[i]);
+	}
+	return(x);
+}
+
+/* get set of Y-axis of block geometry*/
+function getY(points) {
+	var y=[];
+	for (var i=1;i<points.length;i+=2) {
+		y.push(points[i]);
+	}
+	return(y);
+}
+
+/* is an element already visited */
 function visited(element) {
 	if (!element) return(true);
 	var res;
@@ -655,34 +703,22 @@ function visited(element) {
 }
 
 
-
-function isIn(geo,log) {
-	var itis = false;
-	for (var i=0;i<log.geometricObjects.length;i++) {
-		if (log.geometricObjects[i] == geo)
-			itis = true;
-	}
-	return(itis);
-}
-
-function isContained(p1,p2) {
-	var res = PolyK.Contained(p1,p2);
-	return(res);
-}
-
+/*is an element visible?*/
 function visible(obj) {
 	if (isWS(obj)) return(false);
 	if (isComment(obj)) return(false);
 	if (isText(obj)) return(true);
 	if (isExcluded(obj)) return(false);
-	//~ if (visited(obj)) return(false);
 	
-	var xvis=false;
+	var xvis=true;
 	var xarea=parseFloat((Math.abs(getRect(obj).w-getRect(obj).x))*(Math.abs(getRect(obj).h-getRect(obj).y)));
-	xvis = (included(obj.style.visibility.toUpperCase(),["","VISIBLE","INHERIT"])) && (!included(obj.style.display.toUpperCase(),["NONE"]));
+	if (obj.style) {
+		xvis = (included(obj.style.visibility.toUpperCase(),["","VISIBLE","INHERIT"])) && (!included(obj.style.display.toUpperCase(),["NONE"]));
+	}
 	return(xvis && (xarea>0));
 }
 
+/*is an element valid?*/
 function valid(obj) {
 	var val = false;
 	var c=0;
@@ -713,10 +749,10 @@ function valid(obj) {
 			}
 		}
 	}
-	
 	return(vok>0);
 }
 
+/* calcul the distance between two blocks */
 function distance(log1,log2) {
 	
 	var closest = {obj:undefined, value:9999999999};
@@ -750,10 +786,10 @@ function distance(log1,log2) {
 		closest.value = dbottom.dist;
 	}
 	
-	//console.log("closest",closest.obj,closest.value);
 	return(closest);
 }
 
+/*create a new logic object based on a geometric object geo*/
 function createNewLogicalObject(geo,parent) {
 	var log = new logicalObject();
 	log.parent = parent;
@@ -764,6 +800,7 @@ function createNewLogicalObject(geo,parent) {
 	return(log);
 }
 
+/* create a new geometric object based on an element*/
 function createNewGeometricObject(element,parent) {
 	var geo = new geometricObject();
 	geo.addContentElement(element);
@@ -773,6 +810,7 @@ function createNewGeometricObject(element,parent) {
 	return(geo);
 }
 
+/*are they? and which aligment exists between log1 and log2: horizontal or vertical?*/
 function getAligment(log1,log2) {
 	if ( (Math.abs(log1.dim.x-log2.dim.x)<dc) && (Math.abs(log1.dim.w-log2.dim.w)<dc)) {
 		return("V");
@@ -785,6 +823,7 @@ function getAligment(log1,log2) {
 	}
 }
 
+/*remove subblock*/
 function removeLogicObject(log) {
 	if (!log) return;
 	//console.log("delete "+log.id+" "+log.label)
@@ -806,6 +845,7 @@ function removeLogicObject(log) {
 
 }
 
+/*evaluates a logical object (block)*/
 function processLogicalObject(log) {
 	if (!log) return;
 	if (log.visited) return;
@@ -830,6 +870,7 @@ function processLogicalObject(log) {
 							if (log.children[j] && log.children[j].relativeArea()<ac) {
 								if (log.children[j] && (i!=j) && (distance(log.children[i],log.children[j]).value<dc) && (included(getAligment(log.children[i],log.children[j]),["V","H"])) ) {
 									log.children[i].mergeWith(log.children[j]);
+									
 									touch++;
 								} 
 							} 
@@ -844,20 +885,11 @@ function processLogicalObject(log) {
 			} 
 		}
 	}
-	/*for (var i=0;i<log.children.length;i++) {
-		if (log.children[i]) {
-			if (log.children[i].relativeArea()<ac) {
-				//log.clearChildrenBlocks();
-				//console.log("borrado");
-				break;
-			}
-		}
-	}*/
 	log.updateBlock();
 }
 
 
-
+/* evaluate the logic structure to conform final blocks */
 function processLogicStructure(log,level,pid,parent) {
 	if (!log) return;
 	if (log.visited) return;
@@ -896,45 +928,7 @@ function processLogicStructure(log,level,pid,parent) {
 	log.visited = true;
 }
 
-
-function getPolygonPoints(dim) {
-	var res = [];
-	res = res.concat([dim.x,dim.y]);
-	res = res.concat([dim.x,dim.y+dim.h]);
-	res = res.concat([dim.x+dim.w,dim.y+dim.h]);
-	res = res.concat([dim.x+dim.w,dim.y]);
-	return(res);
-}
-
-function getX(points) {
-	var x=[];
-	for (var i=0;i<points.length;i+=2) {
-		x.push(points[i]);
-	}
-	return(x);
-}
-
-function getY(points) {
-	var y=[];
-	for (var i=1;i<points.length;i+=2) {
-		y.push(points[i]);
-	}
-	return(y);
-}
-
-function getType(obj) { //not used
-	if (isWS(obj)) return("");
-	if (isComment(obj)) return("");
-	if (isText(obj)) return("");
-	if (isExcluded(obj)) return("");
-	if (visited(obj)) return("");
-	
-	return(obj.getAttribute("bomtype"));
-}
-function getId(go) { //not used
-	return(go.getAttribute("bomid"));
-}
-
+/* included obj in arr?*/
 function included(obj,arr) {
 	for (var i=0;i<arr.length;i++) {
 		if (arr[i]==obj) {
@@ -1053,24 +1047,33 @@ function logicalObject(obj) {
 		this.updateBlock();
 	}
 	
-	this.area = function() {
-		return( (this.dim.w) * (this.dim.h));
+	this.normW = function() {
+		return 100*this.dim.w/documentDim().w;
 	}
-	this.perimeter = function() {
-		return( 2*(this.dim.w+this.dim.h));
+	this.normH = function() {
+		return 100*this.dim.h/documentDim().h;
 	}
-	this.hypo = function() {
-		return(Math.sqrt(Math.pow(this.dim.w,2)+Math.pow(this.dim.h,2)));
+
+	this.normarea = function() {
+		var cont = 0;
+		for (var i=0;i<100;i+=10) {
+			if (this.normW()>i) cont++;
+		}
+		var dw = cont;
+		cont = 0;
+		for (var i=0;i<100;i+=10) {
+			if (this.normH()>i) cont++;
+		}
+		var dh = cont;
+		
+		var d = (dw*dh)*10/100;
+		return(d);
 	}
-	
 	this.relativeArea = function() {
-                //~ return(this.area() / this.parent.area() );
-                //~ return(this.hypo()/this.parent.hypo());
-                //~ return(this.perimeter()/this.parent.perimeter());
 		if (page) {
-			return(this.hypo()/page.hypo());
+			return(this.normarea());
 		} else {
-			return(0);
+			return(10);
 		}
 	}
 	
@@ -1098,6 +1101,7 @@ function logicalObject(obj) {
 		if (!geo) return;
 		if (!geo.element) return;
 		this.geometricObjects.push(geo);
+		
 		var nr;
 		var r;
 		if (!this.dim) {
@@ -1106,9 +1110,8 @@ function logicalObject(obj) {
 				this.dim = {x:0,y:0,w:documentDim(parent.contentWindow,parent.contentDocument).w,h:documentDim(parent.contentWindow,parent.contentDocument).h}
 			} else  {
 				this.dim = {x:0,y:0,w:0,h:0}
-				//~ gr = getRect(geo);
 				this.dim = geo.geometry;
-				this.type = geo.type; //getType(geo);
+				this.type = geo.type;
 			}
 			r = getPolygonPoints(this.dim);
 		} else {

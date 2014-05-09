@@ -2,7 +2,7 @@
 <java version="1.6.0_27" class="java.beans.XMLDecoder">
  <object class="Scape.FileConfig">
   <void property="binSVM">
-   <string>/ex1/bin/svm_hybride</string>
+   <string>/ex1/bin/svm_hybrid</string>
   </void>
   <void property="dicoHsv">
    <void method="add">
