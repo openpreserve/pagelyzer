@@ -1,13 +1,8 @@
 package JKernelMachines.fr.lip6.kernel;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-@SuppressWarnings("static-access")
+
 public class IndexedKernel {
 	/**
 	 * 
