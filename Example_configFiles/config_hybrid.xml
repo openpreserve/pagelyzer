@@ -43,7 +43,7 @@ All these values can be overriden by command line arguments. These are the defau
 <config>
     <pagelyzer>
         <run>
-            <verbose>true</verbose>
+            <verbose>false</verbose>
             <default>
                 <parameter>
                     <get>score</get>
@@ -54,10 +54,11 @@ All these values can be overriden by command line arguments. These are the defau
                 </parameter>
                 <comparison>
                     <mode>hybrid</mode>
+                    <!-- Uncomment <path> to take always this path by default. If it is commented the <JarPath>/resources/ext/ will be used-->
                     <!--
-                    <path> TO ext file that you can find in SettingsFile  </path>
+                    <path>/home/sanojaa/src/pagelyzer/Maven/Pagelyzer/src/main/resources/ext/</path>
                     -->
-                    <subdir>/home/pehlivanz/Bureau/pagelyzerconfig/ext/</subdir>
+                    <subdir>/home/pehlivanz/Bureau/SettingsFiles/ext/</subdir>
                 </comparison>
             </default>
             <internal>
@@ -85,8 +86,8 @@ All these values can be overriden by command line arguments. These are the defau
         </run>
          <debug>
             <screenshots>
-                <active>true</active>
-                <path>/home/sanojaa/</path>
+                <active>false</active>
+                <path>/home/pehlivanz/SCAPE_ZP/Roc/</path>
                 <filepattern>page#{n}.png</filepattern>
             </screenshots>
         </debug>
@@ -96,7 +97,7 @@ All these values can be overriden by command line arguments. These are the defau
             <mode>local</mode>     
         </run>
         <server>
-            <url>http://127.0.0.1:8015/wd/hub</url>
+            <url>http://localhost:8015/wd/hub</url>
         </server>
     </selenium>
     <bom>
