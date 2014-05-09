@@ -1,20 +1,13 @@
 package Scape;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
 import JKernelMachines.fr.lip6.classifier.SMOSVM;
-import JKernelMachines.fr.lip6.evaluation.Evaluator;
-import JKernelMachines.fr.lip6.kernel.IndexedKernel;
 import JKernelMachines.fr.lip6.kernel.typed.DoubleLinear;
 import JKernelMachines.fr.lip6.type.TrainingSample;
 
@@ -23,6 +16,8 @@ public class ScapeTrain extends MarcAlizer{
 	private boolean isTrain=false;
 	private /*public */ArrayList<TrainingSample<double[]>> trainingSamples = new ArrayList<TrainingSample<double[]>>();
 	static String params;
+	
+	
 	public void addExampleOfTrain(ArrayList<Double> pairDesc, int label){
 		label = label==1 ? 1 : -1;
 		/* convert ArrayList in array of double*/
@@ -33,7 +28,7 @@ public class ScapeTrain extends MarcAlizer{
 		trainingSamples.add(new TrainingSample<double[]>(pairDescTrain, label));
 	}
 	
-	public void addExampleOfTrain(BufferedImage image1,BufferedImage image2, int label){
+	public void addExampleOfTrain_Img(BufferedImage image1,BufferedImage image2, int label){
 		//we ignore the image with label 2
 		if(label==2)
 			return;
@@ -110,11 +105,11 @@ public class ScapeTrain extends MarcAlizer{
 	/**
 	 * save the SVM after training
 	 */
-	public void saveSVM(){
+	public void saveSVM(String path){
 		if(isTrain){
 			try {
-				System.out.println("configFile.getBinSVM(): " + params + configFile.getBinSVM());
-				FileOutputStream fos = new FileOutputStream( params + configFile.getBinSVM());
+				System.out.println("configFile.getBinSVM(): " + path + configFile.getBinSVM());
+				FileOutputStream fos = new FileOutputStream( path + configFile.getBinSVM());
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(svm);
 				oos.close();
@@ -129,7 +124,8 @@ public class ScapeTrain extends MarcAlizer{
 	/**
 	 * @usage java ScapeTrain <config.xml> <train.txt> 
 	 * @param args
-	 */
+	
+	
 	public static void main(String[] args) {
 		ScapeTrain sc= new ScapeTrain();
 		File f = new File(args[0]);
@@ -183,15 +179,7 @@ public class ScapeTrain extends MarcAlizer{
 		}
 		
 		sc.train();
-		sc.saveSVM();/*
-		int score=0;
-		for(int j=0 ; j<sc.trainingSamples.size() ; j++){
-			TrainingSample<double[]> ex=sc.trainingSamples.remove(0);
-			sc.train();
-			score+=sc.svm.valueOf(ex.sample)*ex.label>0 ? 1 : 0;
-			sc.trainingSamples.add(ex);
-		}
-		System.out.println("Score: "+score*1.0/sc.trainingSamples.size());*/
+		sc.saveSVM();
 	}
-	
+	 */
 }

@@ -48,8 +48,9 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openqa.selenium.By;
 
+import org.apache.commons.configuration.XMLConfiguration;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
@@ -63,16 +64,15 @@ import org.openqa.selenium.support.ui.*;
  */
 public class Capture {
     public BrowserRep browser = new BrowserRep();
-    public static double granularity = 0.5;
     public CaptureResult result = new CaptureResult();
-    private Configuration config;
-    
+    private XMLConfiguration config;
+    private int ATTEMPTMAX=10;
     /**
      * Constructor
-     * @param conf the current configuration
+     * @param config2 the current configuration
      */
-    public Capture(Configuration conf) {
-        this.config = conf;
+    public Capture(XMLConfiguration config2) {
+        this.config = config2;
     }
         /**
          * This function is a adaptation from the initWebDriver() method from BrowserShot_mapred proyect
@@ -84,20 +84,20 @@ public class Capture {
             String msg = "";
             boolean done = false;
             int attemptNo = 0;
-            while (!done) {
+            while (!done && attemptNo<ATTEMPTMAX) {// to limit attempts to 10 ZP
                 attemptNo++;
                 try {
                     System.out.println("Attempt = "+attemptNo);
-                    if (config.get("selenium.run.mode").equals(Configuration.LOCAL)) {
+                    if (config.getString("selenium.run.mode").equals(JPagelyzer.LOCAL)) {
                         this.browser.setLocalDriver();
                     } else {
-                        this.browser.setRemoteDriver(config.get("selenium.server.url"));
+                        this.browser.setRemoteDriver(config.getString("selenium.server.url"));
                     }
                     done = true;
                 } catch (MalformedURLException e) {
                         throw new RuntimeException("Invalid Selenium driver URL", e);
                 } catch (IOException e) {
-                    if (config.getLogic("pagelyzer.run.verbose")) {msg = e.toString();}
+                    if (config.getBoolean("pagelyzer.run.verbose")) {msg = e.toString();}
                     System.out.println("Attempt failed sleeping for 10s."+msg);
                     try {
                         Thread.sleep(10 * 1000);
@@ -105,7 +105,7 @@ public class Capture {
                         Logger.getLogger(Capture.class.getName()).log(Level.SEVERE, null, ex);
                     }                
                 } catch (WebDriverException e) {
-                    if (config.getLogic("pagelyzer.run.verbose")) {msg = e.toString();}
+                    if (config.getBoolean("pagelyzer.run.verbose")) {msg = e.toString();}
                     System.out.println("Attempt failed sleeping for 10s."+msg);
                     try {
                         Thread.sleep(10 * 1000);
@@ -113,7 +113,7 @@ public class Capture {
                         Logger.getLogger(Capture.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } catch (Exception e) {
-                    if (config.getLogic("pagelyzer.run.verbose")) {msg = e.toString();}
+                    if (config.getBoolean("pagelyzer.run.verbose")) {msg = e.toString();}
                     System.out.println("Some proble arrived :("+msg);
                 }
             }
@@ -208,11 +208,11 @@ public class Capture {
             System.out.println("getting data using driver: "+this.browser.desc);
             
             if (segmentation) {
-                if ((config.get("pagelyzer.run.internal.server.remote.url")==null)) {
-                    serverlink = "http://"+config.get("pagelyzer.run.internal.server.local.ip")+":"+config.get("pagelyzer.run.internal.server.local.port");
+                if ((config.getString("pagelyzer.run.internal.server.remote.url")==null)) {
+                    serverlink = "http://"+config.getString("pagelyzer.run.internal.server.local.ip")+":"+config.getString("pagelyzer.run.internal.server.local.port");
                     local=true;
                 } else {
-                    serverlink = config.get("pagelyzer.run.internal.server.remote.url");
+                    serverlink = config.getString("pagelyzer.run.internal.server.remote.url");
                     local=false;
                 }
                 srcJS = serverlink +"/bomlib.js";
@@ -233,8 +233,8 @@ public class Capture {
                 if (segmentation) {
                     if (local) {
                         server = new ServerLyzer(config);
-                        int port = config.getNumber("pagelyzer.run.internal.server.local.port");
-                        server.start(port,config.get("pagelyzer.run.internal.server.local.wwwroot"));
+                        int port = config.getInt("pagelyzer.run.internal.server.local.port");
+                        server.start(port,config.getString("pagelyzer.run.internal.server.local.wwwroot"));
                     }
                     
                     this.browser.js.executeScript("var s=window.document.createElement('script');s.setAttribute('id','bominject');s.setAttribute('src','"+srcJS+"');window.document.head.appendChild(s)");
@@ -247,22 +247,23 @@ public class Capture {
                    
                     String bomversion = (String) this.browser.js.executeScript("return bomversion");
                    
-                    System.out.println("Using BoM algorithm v"+bomversion + " pAC=" + config.get("bom.granularity"));
-                    result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + config.get("bom.granularity") + "," + config.get("bom.separation")+ ",false)");
+                    System.out.println("Using BoM algorithm v"+bomversion + " pAC=" + config.getString("bom.granularity"));
+                    result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + config.getString("bom.granularity") + "," + config.getString("bom.separation")+ ",false)");
 
 
                     //result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + Capture.granularity + ",50,false);");
-                    if (config.getLogic("pagelyzer.debug.screenshots.active")) {
-                        result.debug =  ((TakesScreenshot)this.browser.driver).getScreenshotAs(OutputType.BYTES);
-                    }
+                    //if (config.getLogic("pagelyzer.debug.screenshots.active")) {
+                     //   result.debug =  ((TakesScreenshot)this.browser.driver).getScreenshotAs(OutputType.BYTES);
+                    //}
+                    // WHy not to use just image? ZP
                     if (local) {
                         server.stop();
                     }
                 }
             } catch(WebDriverException e) {
                 System.out.println("ERROR: Could not load " + url);
-                if (config.get("selenium.run.mode").equals(Configuration.REMOTE)) {
-                    System.out.println("Can not connect to server "+config.get("selenium.server.url"));
+                if (config.getString("selenium.run.mode").equals(JPagelyzer.REMOTE)) {
+                    System.out.println("Can not connect to server "+config.getString("selenium.server.url"));
                 }
                 System.out.println("Trying to reinitialize browser");
                 if (server != null) server.stop();
@@ -283,8 +284,8 @@ public class Capture {
                 
             } catch (Throwable e) {
                 if (server != null) server.stop();
-                if (config.get("selenium.run.mode").equals(Configuration.REMOTE)) {
-                    System.out.println("Can not connect to server "+config.get("selenium.server.url"));
+                if (config.getString("selenium.run.mode").equals(JPagelyzer.REMOTE)) {
+                    System.out.println("Can not connect to server "+config.getString("selenium.server.url"));
                 }
                 System.out.println("ERROR: Could not load " + url);
                 System.out.println(e);

@@ -39,17 +39,16 @@
 
 package pagelyzer;
 
-import Scape.MarcAlizer;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -58,6 +57,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.XMLConfiguration;
+
+import Scape.MarcAlizer;
+import Scape.ScapeTrain;
 
 /**
  * Class to calculate de change detection between two web pages
@@ -65,101 +68,144 @@ import org.apache.commons.configuration.ConfigurationException;
  */
 public class JPagelyzer {
 
-     public Configuration config;
-     Options options = new Options();
+     public XMLConfiguration config;
+
      Options displayoptions = new Options();
+     public String comparemode ;// public to use in test
+     String cfile;
+     Boolean isDebugActive = false;
+     String debugfilePattern;
+     String debugPathtoSave ;
+     String outputfile;
+     boolean screenshot;
+     boolean segmentation;
+     boolean isTrain;
+     ScapeTrain sc ;
+     MarcAlizer marcalizer;
+     public String browser1;
+     public  String browser2; // public to use in test
+     int idcounter = 0; // to count how many time change detection called and use this counter as id to save files if debug mode is on
+     public static final String LOCAL = "local";
+     /**
+ * Constant remote
+ */
+     public static final String MODE_IMAGE = "image";
+     public static final String MODE_CONTENT = "content";
+     public static final String MODE_HYBRID = "hybrid";
+     public static final String REMOTE = "remote";
+     /**
+ * Constant score
+ */
+     public static final String SCORE = "score";
+     /**
+ * Constant screenshot
+ */
+     public static final String SCREENSHOT = "screenshot";
+     /**
+ * Constant source
+ */
+     public static final String SOURCE = "source";
+     /**
+ * Constant segmentation
+ */
+     public static final String SEGMENTATION = "segmentation";
+
      public String url1, url2,url;
     /**
      * get the current configuration
      * @return the current configuration
      */
-    public Configuration getConfig() {
+    public XMLConfiguration getConfig() {
         return(this.config);
     }
 
   
     public JPagelyzer(String[] args, boolean isTrain)
     {
+    	this.isTrain = isTrain;
         // no need any more cpath browser etc. they are all in config file
     	// not to change the usage of options I am adding display options to send to usage.
     	displayoptions.addOption("url1",true,"First URL to compra");
     	displayoptions.addOption("url2",true,"Second URL to compare");
     	displayoptions.addOption("config",true,"Global configuration file for an example of file: https://github.com/openplanets/pagelyzer/blob/master/config.xml");
-    	
-    	
-        options.addOption("get",true,"Funcionality to run");
-        options.addOption("url1",true,"First URL");
-        options.addOption("url",true,"web page URL");
-        options.addOption("url2",true,"Second URL");
-        options.addOption("browser1",true,"Browser for first URL");
-        options.addOption("browser2",true,"Browser for second URL");
-        options.addOption("browser",true,"Browser for rendering");
-        options.addOption("cpath",true,"Parameters configuration path");
-        options.addOption("config",true,"Global configuration file");
-        options.addOption("cmode",true,"Comparation mode");
-        options.addOption("granularity",true,"Segmentation granularity");
-        options.addOption("ofile",true,"Output file");
-        options.addOption("verbose",false,"Verbose output");
-        
+    	displayoptions.addOption("mode",true,"hybrid/content/image it can be also set in config file");
+
         CommandLineParser parser = new BasicParser();
         CommandLine cmd;
         
         /* Parsing comandline parameters*/
         try {
-            cmd = parser.parse(options, args);
+            cmd = parser.parse(displayoptions, args);
         } catch (ParseException pe) { 
-            usage(options); return; 
+            usage(displayoptions); return; 
         }
-        
-        /* verifying tha configuration file has been passed as parameter. Die if it is not */
-        
         if (!cmd.hasOption("config")) {usage(displayoptions);System.exit(0);}
+
+		try {
+			config = new XMLConfiguration(cmd.getOptionValue("config"));
+			
+		} catch (ConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
-        /* Loading and parsing configuration XML file. Override defaults from config if that is the case */
-        try {
-        	this.init(cmd.getOptionValue("config"));
-             if (cmd.hasOption("local"))        this.getConfig().set("selenium.run.mode", Configuration.LOCAL);
-             if (cmd.hasOption("debugshot"))    this.getConfig().set("pagelyzer.debug.screenshots.active", "true");
-             if (cmd.hasOption("debugpath"))    this.getConfig().set("pagelyzer.debug.screenshots.path",cmd.getOptionValue("debugpath"));
-             if (cmd.hasOption("verbose"))      this.getConfig().set("pagelyzer.run.verbose","true");
-             if (cmd.hasOption("get"))          this.getConfig().set("pagelyzer.run.default.parameter.get",cmd.getOptionValue("get"));
-             if (cmd.hasOption("hub"))          this.getConfig().set("selenium.server.url", cmd.getOptionValue("hub"));
-             if (cmd.hasOption("browser1"))     this.getConfig().set("pagelyzer.run.default.browser1",cmd.getOptionValue("browser1"));
-             if (cmd.hasOption("browser2"))     this.getConfig().set("pagelyzer.run.default.browser2",cmd.getOptionValue("browser2"));
-             if (cmd.hasOption("ofile"))        this.getConfig().set("pagelyzer.run.default.outputfile",cmd.getOptionValue("ofile"));
-             if (cmd.hasOption("cmode"))
-             {
-            	 this.getConfig().set("pagelyzer.run.default.comparison.mode",cmd.getOptionValue("cmode"));
-            	 this.getConfig().set("pagelyzer.run.default.comparison.file","ex_"+cmd.getOptionValue("cmode")+".xml");
-             }
-             if (cmd.hasOption("cpath"))        this.getConfig().set("pagelyzer.run.default.comparison.path",Utils.checkLastSlash(cmd.getOptionValue("cpath")));
-             if (cmd.hasOption("granularity"))  this.getConfig().set("bom.granularity",cmd.getOptionValue("granularity"));
-         } catch (ConfigurationException ex) {
-             Logger.getLogger(JPagelyzer.class.getName()).log(Level.SEVERE, null, ex);
-         }
+		if(displayoptions.getOption("mode").getValue()!=null)
+			
+			comparemode= displayoptions.getOption("mode").getValue();
+		else 
         
-        
+			comparemode = this.config.getString("pagelyzer.run.default.comparison.mode");
+		
+		
+		cfile = config.getString("pagelyzer.run.default.comparison.subdir")+ "ex_" + config.getString("pagelyzer.run.default.comparison.mode") +".xml";
+		isDebugActive =  config.getBoolean("pagelyzer.debug.screenshots.active");
+		debugfilePattern = config.getString("pagelyzer.debug.screenshots.filepattern");
+		debugPathtoSave = config.getString("pagelyzer.debug.screenshots.path");
+		outputfile = config.getString("pagelyzer.run.default.parameter.outputfile");
+		browser1 = config.getString("pagelyzer.run.default.parameter.browser1");
+		browser2 = config.getString("pagelyzer.run.default.parameter.browser2");
+		
+		
+		this.config.setProperty("pagelyzer.run.default.comparison.file","ex_"+comparemode+".xml");
+		
+		if(isTrain)
+		{
+			sc = new ScapeTrain();
+			try {
+				sc.init(new File(cfile));
+			} catch (Exception ex) {
+				System.err.println("Marcalize could not be initialized");
+				System.exit(0);
+			}
+    		
+		}
+		else
+		{
+			url1 = displayoptions.getOption("url1").getValue();
+			url2 = displayoptions.getOption("url2").getValue();
+			
+		}
         /* Validate program intrinsic input parameters and configuration */
-        if (this.getConfig().get("pagelyzer.run.default.parameter.get")==null) {usage(options);System.exit(0);}
-        if (this.getConfig().get("selenium.run.mode").equals(Configuration.LOCAL)) {
+        if (this.config.getString("pagelyzer.run.default.parameter.get")==null) {usage(displayoptions);System.exit(0);}
+        if (this.config.getString("selenium.run.mode").equals(LOCAL)) {
            System.out.println("Selenium: local WebDriver");
         } else {
-           System.out.println("Selenium: remote " + this.getConfig().get("selenium.server.url"));
+           System.out.println("Selenium: remote " + this.config.getString("selenium.server.url"));
         }
-        if (( this.getConfig().getLogic("pagelyzer.debug.screenshots.active")) && (this.getConfig().get("pagelyzer.debug.screenshots.path") == null)) {
+        if (( this.config.getBoolean("pagelyzer.debug.screenshots.active")) && (this.config.getString("pagelyzer.debug.screenshots.path") == null)) {
             System.out.println("Debug was activated, but no path is specified to put the files. Use -debugpath path or change the configuration file");
             System.exit(0);
         }
         
-        if (this.getConfig().get("pagelyzer.run.default.comparison.path")==null) {
-        	this.getConfig().set("pagelyzer.run.default.comparison.path",  this.getConfig().get("pagelyzer.run.default.comparison.subdir"));
+        if (this.config.getString("pagelyzer.run.default.comparison.path") ==null) {
+        	this.config.setProperty("pagelyzer.run.default.comparison.path",  this.config.getString("pagelyzer.run.default.comparison.subdir"));
         			//this.getClass().getResource(this.getConfig().get("pagelyzer.run.default.comparison.subdir")).getPath());
         }
         
         if(!isTrain)
         {
 	        
-	        if (this.getConfig().get("pagelyzer.run.default.parameter.get").equals(Configuration.SCORE) ) {
+	        if (this.config.getString("pagelyzer.run.default.parameter.get").equals(SCORE) ) {
 	            if (!cmd.hasOption("url1")) {
 	                System.out.println("URL1 parameter missing");
 	                System.exit(0);
@@ -180,24 +226,96 @@ public class JPagelyzer {
 	                System.exit(0);
 	            } else url = cmd.getOptionValue("url");
 	        }
+	        
+	        marcalizer = new MarcAlizer();
+	        
+	        try {
+	              marcalizer.init(new File(cfile));
+	              } catch (Exception ex) {
+	                  System.err.println("Marcalize could not be initialized");
+	                  System.exit(0);
+	              }
+        }
+        
+        //Capture settings // I removerd them from changedetection function but it can be global
+        switch (comparemode) {
+        case MODE_IMAGE    : screenshot = true;
+        				   segmentation = false;
+        				   break;
+        case MODE_CONTENT : 
+        	   screenshot = false;
+			   segmentation = true;
+			   break;
+        case MODE_HYBRID    : 
+        		screenshot = true;
+			   segmentation = true;
+			   break;   
+ 
+        }
+    
+    	
+    	
+    }
+    
+    public Capture GetCapture(String url1, String browser)
+    {
+    	 Capture capture = new Capture(this.config);
+    	 capture.setup(browser);
+    	 capture.run(url1, screenshot, segmentation); 
+    	 return capture;
+    }
+
+    
+    public void CallTrain(Capture capture1, Capture capture2, String label)
+    {
+
+    	if(capture1.result!=null)
+        {
+	            switch (comparemode) {
+	            case MODE_IMAGE  : 
+		        	sc.addExampleOfTrain_Img(capture1.result.getBufferedImage(), capture2.result.getBufferedImage(), Integer.parseInt(label));
+		        	break;
+	            case MODE_CONTENT : 
+		        	sc.addExampleOfTrain(capture1.result.viXML, capture2.result.viXML, Integer.parseInt(label));
+			    	break;
+	            case MODE_HYBRID    : 
+		        	sc.addExampleOfTrain(capture1.result.viXML, capture2.result.viXML, capture1.result.getBufferedImage(), capture2.result.getBufferedImage(), Integer.parseInt(label));
+		        	break;
+	 
+	            }
         }
     	
     	
     }
     
     
-  
-    /**
-     *
-     * @param configParam the current configuration
-     * @throws ConfigurationException
-     */
-    public void init(String configParam) throws ConfigurationException {
-        this.config = new Configuration(configParam);
+    public double CallMarcalizerResult(Capture capture1, Capture capture2)
+    {
+    	double result=-100; // error code
+    	if(capture1.result!=null && capture2.result!=null)
+	        {
+	       
+	        	
+	        	 switch (comparemode) {
+	        	 case MODE_IMAGE     :
+	            		result = marcalizer.run(capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
+	             		break;
+	        	 case MODE_CONTENT  : 
+	            	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML);
+	 				   break;
+	        	 case MODE_HYBRID     : 
+	            	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML,capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
+	 				   break;   
+	 	 
+	         }
+	        }
+			 else
+		     {
+		     	System.out.println("ERROR not able to get captures for " + url1  + " and " + url2 );
+		     }
+    	
+    	return result;
     }
-    
-    
-    
     
     /**
     * Method to detect the changement on two web pages versions. It prints the score
@@ -205,86 +323,43 @@ public class JPagelyzer {
     * @param url2 the second web page
      * @return 
     **/
-    public double changeDetection(String url1,String url2) {
-    	String cfile = config.get("pagelyzer.run.default.comparison.path")+ "ex_" + config.get("pagelyzer.run.default.comparison.mode") +".xml";
+    public double changeDetection(String url1,String url2, String label) {
+    	
+    	double result = -100; // train or if it is not train run error code
+    	idcounter++;
 
-        MarcAlizer marcalizer = new MarcAlizer();
-      
-        try {
-        marcalizer.init(new File(cfile), config.get("pagelyzer.run.default.comparison.path"));
-        } catch (Exception ex) {
-            System.err.println("Marcalize could not be initialized");
-            System.exit(0);
-        }
-        
-        Capture capture1 = new Capture(this.config);
-        Capture capture2 = new Capture(this.config);
-        
-        capture1.setup(config.get("pagelyzer.run.default.parameter.browser1"));
-        capture2.setup(config.get("pagelyzer.run.default.parameter.browser2"));
-        
-        double result=-100; // error code
-        boolean screenshot = false;
-        boolean segmentation = false;
-        switch (config.get("pagelyzer.run.default.comparison.mode")) {
-            case "images"    : screenshot = true;
-            				   segmentation = false;
-            				   break;
-            case "structure" : 
-            	   screenshot = false;
-				   segmentation = true;
-				   break;
-            case "hybrid"    : 
-            		screenshot = true;
-				   segmentation = true;
-				   break;   
-	 
-        }
-        
-        capture1.run(url1, screenshot, segmentation); 
-        capture2.run(url2, screenshot, segmentation); 
-        
-        
-        if(capture1.result!=null && capture2.result!=null)
-        {
-       
-        	 switch (config.get("pagelyzer.run.default.comparison.mode")) {
-             case "images"    :
-            		result = marcalizer.run(capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
-             		break;
-             case "structure" : 
-            	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML);
- 				   break;
-             case "hybrid"    : 
-            	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML,capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
- 				   break;   
- 	 
-         }
-            
-  
+        try {        
         	
-	        if (config.getLogic("debug.screenshots.active")) {
-	            String apath="";
-	            if (config.get("debug.screenshots.path").endsWith("/")) {
-	                apath = config.get("debug.screenshots.path");
-	                apath = apath.substring(0, apath.length() - 1);
-	            }
-	            capture1.result.saveDebugFile(apath + "/" + config.get("pagelyzer.debug.screenshots.filepattern").replace("#{n}", "1"));
-	            capture2.result.saveDebugFile(apath + "/" + config.get("pagelyzer.debug.screenshots.filepattern").replace("#{n}", "2"));
+	        Capture capture1 = GetCapture(url1,browser1 );
+	        
+	        Capture capture2 = GetCapture(url2,browser2);
+	
+	        
+	        if(isTrain)
+	        {
+	        	CallTrain(capture1,capture2,label);
+	        	
+	        }
+	        else
+	        {
+	        	result = CallMarcalizerResult(capture1, capture2);
+	            
+	        }
+	        	
+		    if (isDebugActive && capture1.result!=null && capture2.result!=null) {
+	          
+	            capture1.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", idcounter + "_1" ));
+	            capture2.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", idcounter + "_2" ));
 	        }
 	        
+	        capture1.cleanup();
+	        capture2.cleanup();
 	        
-	        try {        
-	            capture1.cleanup();
-	            capture2.cleanup();
-	        } catch (IOException | InterruptedException ex) {
-	                Logger.getLogger(JPagelyzer.class.getName()).log(Level.SEVERE, null, ex);
+	        }catch (Exception ex) {
+	        		Logger.getLogger(JPagelyzer.class.getName()).log(Level.SEVERE, null, ex);
 	        }
-        }
-        else
-        {
-        	System.out.println("ERROR not able to get captures for " + url1  + " and " + url2 );
-        }
+        
+
         return result;
     }
     
@@ -295,11 +370,11 @@ public class JPagelyzer {
      */
     public void get(String target, String url) {
         Capture capture = new Capture(config);
-        capture.setup(this.config.get("pagelyzer.run.default.parameter.browser"));
+        capture.setup(this.config.getString("pagelyzer.run.default.parameter.browser"));
         switch(target) {
-            case Configuration.SCREENSHOT   : capture.run(url,true,false);break;
-            case Configuration.SEGMENTATION : capture.run(url,false,true);break;
-            case Configuration.SOURCE       : capture.run(url,false,false);break;
+            case SCREENSHOT   : capture.run(url,true,false);break;
+            case SEGMENTATION : capture.run(url,false,true);break;
+            case SOURCE       : capture.run(url,false,false);break;
         }
         CaptureResult result = capture.result;
 
@@ -308,15 +383,15 @@ public class JPagelyzer {
             String ext="";
             
             switch(target) {
-                case Configuration.SCREENSHOT   :ext="png";break;
-                case Configuration.SEGMENTATION :ext="xml";break;
-                case Configuration.SOURCE       : ext="html";break;
+                case SCREENSHOT   :ext="png";break;
+                case SEGMENTATION :ext="xml";break;
+                case SOURCE       : ext="html";break;
             }
-             out = new BufferedOutputStream(new FileOutputStream(this.config.get("pagelyzer.run.default.parameter.outputfile").replace("#{ext}", ext)));
+             out = new BufferedOutputStream(new FileOutputStream(outputfile.replace("#{ext}", ext)));
              switch(target) {
-                case Configuration.SCREENSHOT   : out.write(result.image);break;
-                case Configuration.SEGMENTATION : out.write(result.viXML.getBytes("UTF-8"));break;
-                case Configuration.SOURCE       : out.write(result.srcHTML.getBytes("UTF-8"));break;
+                case SCREENSHOT   : out.write(result.image);break;
+                case SEGMENTATION : out.write(result.viXML.getBytes("UTF-8"));break;
+                case SOURCE       : out.write(result.srcHTML.getBytes("UTF-8"));break;
             }
             out.close();
             capture.cleanup();
@@ -351,21 +426,18 @@ public class JPagelyzer {
         /*
          * All is validated and fine, we can proceed to call functionalities
          */
-         switch(pagelyzer.getConfig().get("pagelyzer.run.default.parameter.get")) {
-             case Configuration.SCORE:
-                 String cfile=pagelyzer.getConfig().get("pagelyzer.run.default.comparison.path") + "/"+ "ex_" + pagelyzer.getConfig().get("pagelyzer.run.default.comparison.mode") +".xml";
-                 System.out.println("Using parameters found in " + cfile);
-                 System.out.println("Change detection. Mode: "+pagelyzer.getConfig().get("pagelyzer.run.default.comparison.mode")+". Port:" + pagelyzer.getConfig().get("pagelyzer.run.internal.server.local.port"));
-                 pagelyzer.changeDetection(pagelyzer.url1,pagelyzer.url2); 
+         switch(pagelyzer.getConfig().getString("pagelyzer.run.default.parameter.get")) {
+             case SCORE:
+                 pagelyzer.changeDetection(pagelyzer.url1,pagelyzer.url2,null); 
                  break;
-             case Configuration.SCREENSHOT:
-            	 pagelyzer.get(Configuration.SCREENSHOT,pagelyzer.url);
+             case SCREENSHOT:
+            	 pagelyzer.get(SCREENSHOT,pagelyzer.url);
                  break;
-             case Configuration.SOURCE:
-            	 pagelyzer.get(Configuration.SOURCE,pagelyzer.url);
+             case SOURCE:
+            	 pagelyzer.get(SOURCE,pagelyzer.url);
                  break;
-             case Configuration.SEGMENTATION:
-            	 pagelyzer.get(Configuration.SEGMENTATION,pagelyzer.url);
+             case SEGMENTATION:
+            	 pagelyzer.get(SEGMENTATION,pagelyzer.url);
                  break;
          }
     	

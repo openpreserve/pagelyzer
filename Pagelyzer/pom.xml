@@ -1,7 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>Pagelyzer</artifactId>
+<!--	<artifactId>PagelyzerTrain</artifactId>  -->
+<artifactId>Pagelyzer</artifactId>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>eu.scape-project.pagelyzer</groupId>
@@ -13,61 +14,181 @@
 
 
 
+<plugins>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-jar-plugin</artifactId>
+		<configuration>
+			<archive>
+				<manifest>
+					<mainClass>pagelyzer.JPagelyzer</mainClass>
+				</manifest>
+			</archive>
+			 <filters>
+	         <filter>
+	           <artifact>*:*</artifact>
+	           <excludes>
+	             <exclude>META-INF/*.SF</exclude>
+	             <exclude>META-INF/*.DSA</exclude>
+	             <exclude>META-INF/*.RSA</exclude>
+	           </excludes>
+	         </filter>
+	       </filters>
+		</configuration>
+	</plugin>
+		
+		
+		
+	<plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-jar-plugin</artifactId>
+         <version>2.4</version>
+         <configuration>
+			<archive>
+				<manifest>
+					<mainClass>Test</mainClass>
+				</manifest>
+			</archive>
+			 <filters>
+		        <filter>
+		          <artifact>*:*</artifact>
+		          <excludes>
+		            <exclude>META-INF/*.SF</exclude>
+		            <exclude>META-INF/*.DSA</exclude>
+		            <exclude>META-INF/*.RSA</exclude>
+		          </excludes>
+		        </filter>
+		      </filters>
+		 </configuration>
+         <executions>
+             <execution>
+                 <goals>
+                     <goal>test-jar</goal>
+                 </goals>
+             </execution>
+         </executions>
+	</plugin>
+		
+  <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-shade-plugin</artifactId>
+	    <executions>
+		  <execution>
+		    <id>shade-libs</id>
+		    <phase>package</phase>
+		    <goals>
+		      <goal>shade</goal>
+		    </goals>
+		    <configuration>
+		      <outputFile>target/assembly/${project.artifactId}-libs.jar</outputFile>
+		      <transformers>
+		        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+		          <resource>META-INF/spring.handlers</resource>
+		        </transformer>
+		        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+		          <resource>META-INF/spring.schemas</resource>
+		        </transformer>
+		      </transformers>
+				<filter>
+		                   <artifact>commons-logging:commons-logging</artifact>
+		                   <includes>
+		                       <include>**</include>
+		                   </includes>
+		        </filter> 
+		        <filters>
+		        <filter>
+		          <artifact>*:*</artifact>
+		          <excludes>
+		            <exclude>META-INF/*.SF</exclude>
+		            <exclude>META-INF/*.DSA</exclude>
+		            <exclude>META-INF/*.RSA</exclude>
+		          </excludes>
+		        </filter>
+		      </filters>
+		    </configuration>
+		  </execution>
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>pagelyzer.JPagelyzer</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>pagelyzer.JPagelyzer</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+     	 <execution>
+	        <id>shade-main</id>
+	        <phase>package</phase>
+	        <goals>
+	          <goal>shade</goal>
+	        </goals>
+		         <configuration>
+		              <transformers>
+		                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+		                  <manifestEntries>
+		                    <Main-Class>pagelyzer.JPagelyzer</Main-Class>
+		                  </manifestEntries>
+		                </transformer>
+		              </transformers>
+		          <outputFile>target/assembly/${project.artifactId}.jar</outputFile>
+			<filters>
+			<filter>
+			                  <artifact>commons-logging:commons-logging</artifact>
+			                  <includes>
+			                      <include>**</include>
+			                  </includes>
+			               </filter>    
+			       <filter>
+			         <artifact>*:*</artifact>
+			         <excludes>
+			           <exclude>META-INF/*.SF</exclude>
+			           <exclude>META-INF/*.DSA</exclude>
+			           <exclude>META-INF/*.RSA</exclude>
+			         </excludes>
+			       </filter>
+			     </filters>
+   				<minimizeJar>true</minimizeJar>
+	        </configuration>
+	      </execution>
+	    </executions>
+	</plugin>
 
 
-		</plugins>
+
+	<plugin>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<configuration>
+			<archive>
+				<manifest>
+					<mainClass>pagelyzer.JPagelyzer</mainClass>
+				</manifest>
+			</archive>
+			<descriptorRefs>
+				<descriptorRef>jar-with-dependencies</descriptorRef>
+			</descriptorRefs>
+		</configuration>
+		<executions>
+			<execution>
+				<id>make-assembly</id> 
+				<phase>package</phase> 
+				<goals>
+					<goal>single</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
+
+	<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.1</version>
+			<configuration>
+				<source>1.7</source>
+				<target>1.7</target>
+			</configuration>
+	</plugin>
+
+			
+</plugins>
 
 	</build>
 	<dependencies>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-server</artifactId>
-			<version>2.40.0</version>
+			<version>2.39.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.opera</groupId>
@@ -89,6 +210,7 @@
 			<artifactId>commons-configuration</artifactId>
 			<version>1.10</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>eu.scape-project.pagelyzer</groupId>
 			<artifactId>MarcAlizer</artifactId>

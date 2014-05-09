@@ -79,7 +79,9 @@ public class XMLDescriptors {
 	{ 
 	    
 	    if(nodeLstsource.getLength() != nodeLstversion.getLength())
-	    	return 0; // structural change  ////TODO discuss with MARC
+	    {	System.out.println(0);
+	    	return 0; // structural change  ////TODO discuss with MARC: HE SAID OK THE SYSTEM LEARN WITH THE NUMBER YOU GIVE
+	    }
 	    
 	    double resultoverblocks = 0;
 

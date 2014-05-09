@@ -50,8 +50,9 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.simpleframework.http.Path;
 
+import org.apache.commons.configuration.XMLConfiguration;
+import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.core.Container;
@@ -71,7 +72,7 @@ public class ServerLyzer implements Container {
 	
 	
 	
-	private Configuration config;
+	private XMLConfiguration config;
     Connection connection;
     /**
      * the socket port
@@ -83,7 +84,7 @@ public class ServerLyzer implements Container {
     static String wwwroot=null;
     
     
-    public ServerLyzer(Configuration config2)
+    public ServerLyzer(XMLConfiguration config2)
     {
     	config = config2;
     	
@@ -109,7 +110,7 @@ public class ServerLyzer implements Container {
          response.set("Server", "ServerLyzer/1.0 (Simple 4.0)");
          response.setDate("Date", time);
          response.setDate("Last-Modified", time);
-         String filename= config.get("pagelyzer.run.default.comparison.path").replace("/ext", "/js/") +path.getPath();
+         String filename= config.getString("pagelyzer.run.default.comparison.path").replace("/ext", "/js") +path.getPath();
          
          String content;
          if (ServerLyzer.wwwroot == null){

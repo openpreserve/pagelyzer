@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import pagelyzer.Capture;
 import pagelyzer.JPagelyzer;
 
 
@@ -10,6 +11,8 @@ public class Test {
 	/**
 	 * @param args
 	 * @throws IOException 
+	 * 
+	 * To run this test you shoud use hybrid settings as a default type to optimize other tests (not to use capture for each type of tests)
 	 */
 	public static void main(String[] args) throws IOException {
 		
@@ -19,42 +22,63 @@ public class Test {
 	        String temp;
 	        String[] urls;
 	       
-	        //String[] pagelyzerargs = {"-get","score","-config","src/main/resources/ext/config.xml","-url1","http://www.lip6.fr" ,"-url2","http://www.lip6.fr"};
-	        String[] pagelyzerargs = {"-config","/home/pehlivanz/Bureau/SettingsFiles/config.xml"};
+	        String[] pagelyzerargs = {"-config",args[1],"-url1","http://www.lip6.fr" ,"-url2","http://www.lip6.fr"};
+	       // String[] pagelyzerargs = {"-config",args[1]};
 	        // gibing urls not to have a config error
 
 	        JPagelyzer pagelyzer = new JPagelyzer(pagelyzerargs,false);
-	        
+	        Capture capture1;
+	        Capture capture2;
 	        StringBuffer sb = new StringBuffer();
+	       
 	        double scoreimg, scorexml,scorehybrid;
 	        for(int i=0;i<lines.size();i++)
 	        {
 	           
 	            temp = (String) lines.get(i);
-	            urls = temp.split(" ");
+	            urls = temp.split("\t");
+	            
+	            capture1 = pagelyzer.GetCapture(urls[0], pagelyzer.browser1);
+	            capture2 = pagelyzer.GetCapture(urls[1], pagelyzer.browser2);
+	            
+	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.mode","hybrid");
+                pagelyzer.config.setProperty("pagelyzer.run.default.comparison.file","ex_hybrid.xml");
+                pagelyzer.comparemode = "hybrid";
+                scorehybrid = pagelyzer.CallMarcalizerResult(capture1, capture2);
 	            
 	            // test images 
-	            pagelyzer.getConfig().set("pagelyzer.run.default.comparison.mode","images");
-                pagelyzer.getConfig().set("pagelyzer.run.default.comparison.file","ex_images.xml");
-	            scoreimg = pagelyzer.changeDetection(urls[0],urls[1]);
+	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.mode","image");
+	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.file","ex_image.xml");
+	            pagelyzer.comparemode = "image";
+	            scoreimg  = pagelyzer.CallMarcalizerResult(capture1, capture2);
 	            
 	           // test content  
-	            pagelyzer.getConfig().set("pagelyzer.run.default.comparison.mode","structure");
-                pagelyzer.getConfig().set("pagelyzer.run.default.comparison.file","ex_structure.xml");
-                scorexml = pagelyzer.changeDetection(urls[0],urls[1]);
+	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.mode","content");
+	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.file","ex_content.xml");
+	            pagelyzer.comparemode = "content";
+                scorexml = pagelyzer.CallMarcalizerResult(capture1, capture2);
                 
                 
                 // test  hybrid
-                pagelyzer.getConfig().set("pagelyzer.run.default.comparison.mode","hybrid");
-                pagelyzer.getConfig().set("pagelyzer.run.default.comparison.file","ex_hybrid.xml");
-                scorehybrid = pagelyzer.changeDetection(urls[0],urls[1]);
+                
                 
                 sb.append(urls[0] + " " + urls[1] + " " + scoreimg + " " + scorexml +" " + scorehybrid + "\n");
 	        }
 	       
-	        org.apache.commons.io.FileUtils.writeStringToFile(new File("/home/pehlivanz/SCAPE_ZP/Pagelyzer/testIM_450resultwithName.txt"), sb.toString());
+	        org.apache.commons.io.FileUtils.writeStringToFile(new File(args[2]), sb.toString());
 		
 
 	}
+	
+	public static void NewTest(String[] args)
+	{
+		 String[] pagelyzerargs = {"-config",args[0]};
+		 JPagelyzer pagelyzer = new JPagelyzer(pagelyzerargs,true);
+		 
+		 
+		
+		
+	}
 
+	
 }
