@@ -22,10 +22,9 @@ and run it:
 
     $ java -jar selenium-server-standalone-2.24.1.jar -port 8015
 
-It may be other port if needed.
+It may be another port if required.
 
 ## Command-line Parameters
-
 
 Usage: java -jar JPagelyzer -get arg [options]
 
@@ -61,14 +60,14 @@ Screenshot, Segmentation and Source functionalities
 | url | URI | web page URL | 
 | browser |  browser code | Browser for render URL (default: firefox )   | 
 
-Debuging
+Debugging
 ------------------ 
 | parameter 	| arguments 							  	| description 													|
 | ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
 | debugpath |  path | path for storing debug image files of after-rendering  | 
 | debugshot | none | get image files of after-rendering. Only used when -get score parameter is used  | 
 
-Browsers code are the same as defined in selenium. For instance:  
+Browser codes are the same as defined in selenium. For instance:  
 * firefox (default)
 * chrome
 * iexploreproxy
@@ -94,18 +93,18 @@ Browsers code are the same as defined in selenium. For instance:
     $ java -jar JPagelyzer.jar -get score  -url1=http://www.host.com/page1.html -url2=http://www.host.com/page2.html -cpath /my/path/ext/ex_myparams.xml  
 
 ## Remarks:
-* Firefox driver is the default to selenium. For installing other browsers can reference to [2],
-e.g. to run pagelyzer on your chrome/chromium instance, you should install the ChromeDriver before:
+* Firefox driver is the default to selenium. For installing other browsers please reference to [2],
+e.g. to run pagelyzer on your chrome/chromium instance, you should first install the ChromeDriver.
 * Download the appropriate version from http://code.google.com/p/chromedriver/downloads/list 
 * Unzip it and copy it to a visible folder, e.g:
   `$ sudo cp chromedriver /usr/bin/`
 
-* If no granularity parameter is given, a default of 3 will be chosen.
+* If no granularity parameter is given, a default of 3 will be chosen
 * The URL's should include the http schema  
 `--url=http://www.host.com ---it is ok!` 
 `--url=host.com ---won't work!`  
 
-* IMPORTANT: remember to set the paths in configuration files located in ext/ folder.
+* IMPORTANT: remember to set the paths in configuration files located in ext/ folder
 
 # External References:
 
