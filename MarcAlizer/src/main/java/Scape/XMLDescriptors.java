@@ -66,9 +66,9 @@ public class XMLDescriptors {
 		//desc.add(JaccardIndexImages(rootViXML1, rootViXML2, false));
 		NodeList nodeLstsource = rootViXML1.getElementsByTagName("Block");
 	    NodeList nodeLstversion = rootViXML2.getElementsByTagName("Block");
-		desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Adr"));// links
+		//desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Adr"));// links
 		desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Name"));// links
-		desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Src"));// images
+		//desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Src"));// images
 		desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Name"));// images
 		desc.add(BlockBasedContent(2,nodeLstsource, nodeLstversion,"Txt"));// Text
 	
