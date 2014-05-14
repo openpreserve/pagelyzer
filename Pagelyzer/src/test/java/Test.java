@@ -31,10 +31,10 @@ public class Test {
 	        Capture capture2;
 	        StringBuffer sb = new StringBuffer();
 	       
-	        double scoreimg, scorexml,scorehybrid;
+	        double scoreimg= -100, scorexml=-100,scorehybrid = -100;
 	        for(int i=0;i<lines.size();i++)
 	        {
-	           
+	            System.out.println("TEST " + i);
 	            temp = (String) lines.get(i);
 	            urls = temp.split("\t");
 	            
@@ -44,25 +44,35 @@ public class Test {
 	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.mode","hybrid");
                 pagelyzer.config.setProperty("pagelyzer.run.default.comparison.file","ex_hybrid.xml");
                 pagelyzer.comparemode = "hybrid";
-                scorehybrid = pagelyzer.CallMarcalizerResult(capture1, capture2);
+                if(capture1!=null && capture2!=null)
+                	scorehybrid = pagelyzer.CallMarcalizerResult(capture1, capture2);
 	            
 	            // test images 
 	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.mode","image");
 	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.file","ex_image.xml");
 	            pagelyzer.comparemode = "image";
-	            scoreimg  = pagelyzer.CallMarcalizerResult(capture1, capture2);
+	            if(capture1!=null && capture2!=null)
+	            	scoreimg  = pagelyzer.CallMarcalizerResult(capture1, capture2);
 	            
 	           // test content  
 	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.mode","content");
 	            pagelyzer.config.setProperty("pagelyzer.run.default.comparison.file","ex_content.xml");
 	            pagelyzer.comparemode = "content";
-                scorexml = pagelyzer.CallMarcalizerResult(capture1, capture2);
+	            if(capture1!=null && capture2!=null)
+	            	scorexml = pagelyzer.CallMarcalizerResult(capture1, capture2);
                 
                 
                 // test  hybrid
                 
-                
+                try {
+					capture1.cleanup();
+					capture2.cleanup();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 sb.append(urls[0] + " " + urls[1] + " " + scoreimg + " " + scorexml +" " + scorehybrid + "\n");
+                System.out.println(sb.toString());
 	        }
 	       
 	        org.apache.commons.io.FileUtils.writeStringToFile(new File(args[2]), sb.toString());

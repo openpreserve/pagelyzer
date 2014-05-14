@@ -260,8 +260,14 @@ public class JPagelyzer {
     public Capture GetCapture(String url1, String browser)
     {
     	 Capture capture = new Capture(this.config);
-    	 capture.setup(browser);
-    	 capture.run(url1, screenshot, segmentation); 
+    	 boolean done = capture.setup(browser);
+    	 if(done)
+    		 capture.run(url1, screenshot, segmentation); 
+    	 else 
+    	{
+    		 System.out.println("Capture GetCapture error : Can not get capture for page " + url1);
+    		 capture = null;
+    	}
     	 return capture;
     }
 
@@ -292,7 +298,7 @@ public class JPagelyzer {
     public double CallMarcalizerResult(Capture capture1, Capture capture2)
     {
     	double result=-100; // error code
-    	if(capture1.result!=null && capture2.result!=null)
+    	if( capture1.result!=null && capture2.result!=null)
 	        {
 	       
 	        	
@@ -327,31 +333,30 @@ public class JPagelyzer {
     	
     	double result = -100; // train or if it is not train run error code
     	idcounter++;
+    	Capture capture1 = GetCapture(url1,browser1 );
+	        
+	    Capture capture2 = GetCapture(url2,browser2);
 
-        try {        
-        	
-	        Capture capture1 = GetCapture(url1,browser1 );
-	        
-	        Capture capture2 = GetCapture(url2,browser2);
-	
-	        
-	        if(isTrain)
+	        if(capture1!=null && capture2!=null)
 	        {
-	        	CallTrain(capture1,capture2,label);
-	        	
-	        }
-	        else
-	        {
-	        	result = CallMarcalizerResult(capture1, capture2);
-	            
-	        }
+		        if(isTrain)
+		        {
+		        	CallTrain(capture1,capture2,label);
+		        	
+		        }
+		        else
+		        {
+		        	result = CallMarcalizerResult(capture1, capture2);
+		            
+		        }
+	      
 	        	
 		    if (isDebugActive && capture1.result!=null && capture2.result!=null) {
 	          
 	            capture1.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", idcounter + "_1" ));
 	            capture2.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", idcounter + "_2" ));
 	        }
-	        
+	        try {  
 	        capture1.cleanup();
 	        capture2.cleanup();
 	        
@@ -359,7 +364,7 @@ public class JPagelyzer {
 	        		Logger.getLogger(JPagelyzer.class.getName()).log(Level.SEVERE, null, ex);
 	        }
         
-
+	        }
         return result;
     }
     

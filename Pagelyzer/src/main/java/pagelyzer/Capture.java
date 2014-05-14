@@ -80,7 +80,7 @@ public class Capture {
          * @param capability
          * @return 
          */
-        public void initWebDriver() {
+        public boolean initWebDriver() {
             String msg = "";
             boolean done = false;
             int attemptNo = 0;
@@ -118,6 +118,8 @@ public class Capture {
                 }
             }
             
+            return done;
+            
             
         }
     
@@ -126,7 +128,7 @@ public class Capture {
         * This function is a adaptation from the setup() method from BrowserShot_mapred proyect
         * @param browser the current browser to setup
         **/
-        public void setup(String browser) {     
+        public boolean setup(String browser) {     
             System.out.println("Setting up browser: "+browser);
             DesiredCapabilities capability = null;
             if  (browser.equals("firefox")) {
@@ -145,7 +147,7 @@ public class Capture {
             capability.setPlatform(Platform.LINUX);                
             this.browser.desc = browser;
             this.browser.capabilities = capability;
-            initWebDriver();
+            return initWebDriver();
         }
         
         /**
