@@ -27,11 +27,16 @@ var displayBlocks = true; //for debugging. Write DIVS representing blocks in liv
 function code(s) {
     var res="";
     if (!s) return "";
-    res = s.replace("&","&amp;");
-    res = res.replace("'","&#39;");
-    res = res.replace('"',"&quot;");
-    res = res.replace(">","&gt;");
-    res = res.replace("<","&lt;");
+    res = s.replace(/&/g,"");
+    res = res.replace(/>/g,"");
+    res = res.replace(/</g,"");
+    res = res.replace(/&quot;/g,"");
+    res = res.replace(/(['"])/g, "");
+    res = res.replace(/<(?:.|\n)*?>/gm, '');
+	res = res.replace(/<[^>]+>/ig,"");
+    	res = res.replace(/\s+/g, ' ');
+    	res = res.replace(/&/g,"");
+
     return res;
 }
 
@@ -105,7 +110,10 @@ function getLinksList(obj) {
     for (var i=0;i<col.length;i++) {
         var link = col[i];
         var pt=$(link).text();
-        a = "<link ID='#ID#' Name=\""+code(pt)+"\" Adr='"+code(link.getAttribute('href'))+"'/>"
+	all = link.getAttribute('href');
+	all = code(all);
+ 
+        a = "<link ID='#ID#' Name=\""+code(pt)+"\" Adr='"+all+"'/>"
         var c = CryptoJS.MD5(a);
         list.push(c);
         t += a.replace('#ID#',c)+"\n";
@@ -155,6 +163,7 @@ function getText(obj) {
 
     all = all.replace(/<[^>]+>/ig,"");
     all = all.replace(/\s+/g, ' ');
+    all = all.replace(/&/,"");
     all = code(all);
     var txt = "<Txts ID=\""+CryptoJS.MD5(all)+"\" Txt=\""+all+"\"/>";
     return(txt);
@@ -1284,6 +1293,5 @@ function geometricObject() {
 		return($(this.element).find('*').length)
 	}
 }
-
 
 
