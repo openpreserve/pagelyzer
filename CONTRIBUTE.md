@@ -20,7 +20,7 @@ For using the recommended IDE you require:
 2. Change the code and push into the forked project
 3. [Submit a pull request](https://help.github.com/articles/using-pull-requests)
 
-To increase the changes of you code being accepted and merged into the official source here's a checklist of things to go over before submitting a contribution. For example:
+To increase the chances of your changes being accepted and merged into the official source here's a checklist of things to go over before submitting a contribution. For example:
 
 * Has unit tests (that covers at least 80% of the code)
 * Has documentation (at least 80% of public API)
