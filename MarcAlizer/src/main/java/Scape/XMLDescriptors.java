@@ -134,7 +134,7 @@ public class XMLDescriptors {
 		    		if(toadd != -1000)
 		    			resultoverblocks = toadd;
 		    		else 
-		    			{System.out.println("ERROR  ******************************");
+		    			{//no image;
 		    			 resultoverblocks = 1;}
 		    		
 		    		
@@ -147,7 +147,7 @@ public class XMLDescriptors {
 		    		if(toadd != -1000)
 		    			resultoverblocks = toadd;
 		    		else 
-	    			{System.out.println("ERROR  ******************************");
+	    			{//no link;
 	    			 resultoverblocks = 1;}
 		    		
 		    	}
@@ -158,7 +158,7 @@ public class XMLDescriptors {
 		    			resultoverblocks = toadd;
 		    		//else resultoverblocks = 1; // most of the  time happens because of segmentation error
 		    		else 
-	    			{System.out.println("ERROR  ******************************");
+	    			{
 	    			 resultoverblocks = 1;}
 		    	}
 		    	//resultoverblocks = toadd;
@@ -578,10 +578,10 @@ public class XMLDescriptors {
 		for (int i = 0 ; i < length ; ++i){
 			String address = ((Element)l.item(i)).getAttribute(attribute);
 			if (split) {
-				address = address.replace("http://im1c5.internetmemory.org", "");
-				address = address.replace("http://webarchive.nationalarchives.gov.uk","");
-				/*String[] s = address.split("://");
-				address = s[s.length-1];*/
+				//address = address.replace("http://im1c5.internetmemory.org", "");
+				//address = address.replace("http://webarchive.nationalarchives.gov.uk","");
+				String[] s = address.split("://");
+				address = s[s.length-1];
 			}
 			
 			if(result.containsKey(address))
@@ -621,9 +621,13 @@ public class XMLDescriptors {
 	public static double CosineIndex(Element e1, Element e2, boolean split, String tag, String attribute){
 		HashMap<String, Double> hash1 = getLinksOrImageMap(e1, split, tag, attribute);
 		HashMap<String, Double> hash2 = getLinksOrImageMap(e2, split, tag, attribute);
-		if(!hash1.isEmpty()  && !hash2.isEmpty())
-			return CosineSimilarity.calculateCosineSimilarity(hash1, hash2);
-		return -1000;
+		if(hash1.isEmpty())
+			hash1.put("no info", 1.0);
+		if (hash2.isEmpty())
+			hash2.put("no info", 1.0);
+		
+		return CosineSimilarity.calculateCosineSimilarity(hash1, hash2);
+		
 	}
 
 	public static double CosineIndexLinks(Element e1, Element e2, boolean split,String attr){
