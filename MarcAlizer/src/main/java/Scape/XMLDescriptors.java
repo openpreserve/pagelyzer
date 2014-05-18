@@ -28,7 +28,7 @@ public class XMLDescriptors {
 	static Document documentViXML1;
 	static Document documentViXML2;
 	
-	public static void run(String fichierXml1, String fichierXml2/*, String fichierDelta*/, ArrayList<Double> desc) {
+	public static boolean run(String fichierXml1, String fichierXml2/*, String fichierDelta*/, ArrayList<Double> desc) {
 		// TODO Auto-generated method stub
 		//Element rootDelta;
 		Element rootViXML1;
@@ -37,22 +37,26 @@ public class XMLDescriptors {
 		//double[] tableJaccardIndex  = new double[2];//Links & Images 
 
 		//On crée une instance de SAXBuilder
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		
 		try
 		{
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			//documentDelta  = builder.parse(fichierDelta);
 			// This was used for the files created already on the disk by using VIPS
-			/*if(isFortrain)
+			if(false)
 			{
 				documentViXML1 = builder.parse(new File(fichierXml1)); // for test
 				documentViXML2 = builder.parse(new File(fichierXml2));
 			}
 			else // coming from pagelyzer
-			{	*/
+			{	
+			
+			
 				documentViXML1 = builder.parse(new InputSource(new StringReader(fichierXml1)));
 				documentViXML2 = builder.parse(new InputSource(new StringReader(fichierXml2)));
-		//	}
+			}
 			//Le parsing est terminé ;)
 		}
 		catch(Exception e){
@@ -64,47 +68,124 @@ public class XMLDescriptors {
 		rootViXML2 = documentViXML2.getDocumentElement();
 		//desc.add(JaccardIndexLinks(rootViXML1, rootViXML2, false));
 		//desc.add(JaccardIndexImages(rootViXML1, rootViXML2, false));
-		NodeList nodeLstsource = rootViXML1.getElementsByTagName("Block");
+		/*NodeList nodeLstsource = rootViXML1.getElementsByTagName("Block");
 	    NodeList nodeLstversion = rootViXML2.getElementsByTagName("Block");
-		//desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Adr"));// links
-		desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Name"));// links
-		//desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Src"));// images
-		desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Name"));// images
-		desc.add(BlockBasedContent(2,nodeLstsource, nodeLstversion,"Txt"));// Text
-	
-	
+	    if(nodeLstsource.getLength() == nodeLstversion.getLength())
+	    {	
+			desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Adr"));// links
+			desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Name"));// links
+			desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Src"));// images
+			desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Name"));// images
+			desc.add(BlockBasedContent(2,nodeLstsource, nodeLstversion,"Txt"));// Text
+			return true;
+	    }*/
+		
+		desc.add(WithoutBlock(0,rootViXML1, rootViXML2,"Adr"));// links
+		desc.add(WithoutBlock(0,rootViXML1, rootViXML2,"Name"));// links
+		desc.add(WithoutBlock(1,rootViXML1, rootViXML2,"Src"));// images
+		desc.add(WithoutBlock(1,rootViXML1, rootViXML2,"Name"));// images
+		desc.add(WithoutBlock(2,rootViXML1, rootViXML2,"Txt"));// Text
+		
+		if(desc.contains((double)-1000))
+			return false;
+		
+		return true;
 	}
+	
+	private static double WithoutBlock(int type, Element rootViXML1, Element rootViXML2, String atr)
+	{ 
+	    double resultoverblocks = 0;
+
+	    int count = 0;
+	    HashMap<String, Double> temptext1 = null;
+	    HashMap<String, Double> temptext2 = null;
+	    double toadd = 0;
+
+		    	if(type==2) // Txt
+		    	{
+		    
+	
+		    		String text1 = "";
+		    		String text2 = "";
+		    		NodeList txtl = rootViXML1.getElementsByTagName("Txts");
+		    		if(txtl!=null&&txtl.item(0)!=null)
+		    		{
+		    			for(int k=0;k<txtl.getLength();k++)
+		    				text1+=((Element)txtl.item(k)).getAttribute(atr);
+		    			
+		    			temptext1 = CosineSimilarity.getFeaturesFromString(text1);
+		    		}
+		    		
+		    		
+		    		// second document text 
+		    		
+		    		txtl = rootViXML2.getElementsByTagName("Txts");
+		    		if(txtl!=null&&txtl.item(0)!=null)
+		    		{
+		    			for(int k=0;k<txtl.getLength();k++)
+		    				text2+=((Element)txtl.item(k)).getAttribute(atr);
+		    			
+		    			temptext2 = CosineSimilarity.getFeaturesFromString(text2);
+		    		}
+		    		
+		    		
+		    		if(temptext1!=null && temptext2!=null && temptext1.size()!=0 &&temptext2.size()!=0)
+		    			toadd = CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
+		    		if(toadd != -1000)
+		    			resultoverblocks = toadd;
+		    		else 
+		    			{System.out.println("ERROR  ******************************");
+		    			 resultoverblocks = 1;}
+		    		
+		    		
+		    	}
+		    	else if(type==0)
+		    	{
+
+		    		toadd = //JaccardIndexLinks(rootViXML1, rootViXML2, false, atr);//
+		    				CosineIndexLinks(rootViXML1, rootViXML2, true,atr);
+		    		if(toadd != -1000)
+		    			resultoverblocks = toadd;
+		    		else 
+	    			{System.out.println("ERROR  ******************************");
+	    			 resultoverblocks = 1;}
+		    		
+		    	}
+		    	else
+		    	{
+		    		toadd = CosineIndexImages(rootViXML1, rootViXML2, true,atr);
+		    		if(toadd != -1000)
+		    			resultoverblocks = toadd;
+		    		//else resultoverblocks = 1; // most of the  time happens because of segmentation error
+		    		else 
+	    			{System.out.println("ERROR  ******************************");
+	    			 resultoverblocks = 1;}
+		    	}
+		    	//resultoverblocks = toadd;
+	    	System.out.println(resultoverblocks);
+	    	
+		return resultoverblocks;
+		
+		
+	}
+	
 	
 	private static double BlockBasedContent(int type, NodeList nodeLstsource, NodeList nodeLstversion, String atr)
 	{ 
-	    
-	    if(nodeLstsource.getLength() != nodeLstversion.getLength())
-	    {	System.out.println(0);
-	    	return 0; // structural change  ////TODO discuss with MARC: HE SAID OK THE SYSTEM LEARN WITH THE NUMBER YOU GIVE
-	    }
-	    
 	    double resultoverblocks = 0;
 
 	    int count = 0;
 	    HashMap<String, Double> temptext1;
 	    HashMap<String, Double> temptext2;
+	    double toadd;
 	    for(int i = 0; i< nodeLstsource.getLength();i++ )
 	    {
 	    	
 	    	if(((Element)nodeLstsource.item(i)).getAttribute("ID")!="" ) // 
 	    	{
 	    		count++;
-		    	if(type == 0) // Links
-				{
-		    		resultoverblocks+= JaccardIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), true,atr);
-
-				}
-		    	else if(type == 1) // Images
-		    	{
-		    		resultoverblocks+=JaccardIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), true,atr);
-		    		
-		    	}
-		    	else // Txt
+		    
+		    	if(type==2) // Txt
 		    	{
 		    		// get first document text
 		    		
@@ -131,6 +212,26 @@ public class XMLDescriptors {
 		    			resultoverblocks+= CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
 	    		
 		    	}
+		    	else if(type == 0)
+		    	{
+
+		    		toadd = CosineIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), true,atr);
+		    		if(toadd != -1000)
+		    			resultoverblocks += toadd;
+		    		else 
+		    			{//System.out.println("ERROR  ******************************");
+		    			 resultoverblocks += 1;}
+		    		
+		    	}
+		    	else
+		    	{
+		    		toadd = CosineIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), true,atr);
+		    		if(toadd != -1000)
+		    			resultoverblocks += toadd;
+		    		else 
+		    			{//System.out.println("ERROR  ******************************");
+		    			 resultoverblocks += 1;}
+		    	}
 	    	}
 	    }
 	    if(count == 0)
@@ -141,230 +242,6 @@ public class XMLDescriptors {
 		
 	}
 	
-	/**
-	 * @param args
-	 */
-	public static void run_old(String filePath, String repM) {
-		// TODO Auto-generated method stub
-		//Element rootDelta;
-		Element rootViXML1;
-		Element rootViXML2;
-		File src = new File(filePath);
-		if(!src.exists() || !src.isDirectory())
-		{
-			System.out.println(filePath+" : No such directory !");
-			return;
-		}
-		String[] files2 = src.list();
-		int nbCouples = files2.length;
-		/*int[] tableSameStructure = new int[nbCouples];
-		int[] tableContainsDelete = new int[nbCouples];
-		int[] tableContainsInsert = new int[nbCouples];
-		int[] tableContainsNoDeleteNorInsert = new int[nbCouples];
-		int[] tableContainsUpdate = new int[nbCouples];
-		int[] tableNbDeletedBlocks = new int[nbCouples];
-		int[] tableNbInsertedBlocks = new int[nbCouples];
-		int[] tableNbUpdatedBlocks = new int[nbCouples];
-		int[] tableSourceContainsLinks = new int[nbCouples];
-		int[] tableVersionContainsLinks = new int[nbCouples];
-		int[] tableSourceContainsImages = new int[nbCouples];
-		int[] tableVersionContainsImages = new int[nbCouples];*/
-		double[] tableJaccardIndexLinks = new double[nbCouples];
-		double[] tableJaccardIndexImages = new double[nbCouples];
-		/*double[] tableJaccardIndexIDLinks = new double[nbCouples];
-		double[] tableJaccardIndexIDImages = new double[nbCouples];
-		double[] tableMaxRatioDelete = new double[nbCouples];
-		double[] tableMinRatioDelete = new double[nbCouples];
-		double[] tableMaxRatioUpdate = new double[nbCouples];
-		double[] tableMinRatioUpdate = new double[nbCouples];
-		double[] tableMaxRatioInsert = new double[nbCouples];
-		double[] tableMinRatioInsert = new double[nbCouples];
-		int[] nbBlocksSourceUpperBounded = new int[nbCouples];
-		int[] nbBlocksVersionUpperBounded = new int[nbCouples];
-		int[] tableNbDeleteAllTree = new int[nbCouples];
-		int[] tableNbInsertAllTree = new int[nbCouples];
-		int[] tableNbUpdateAllTree = new int[nbCouples];*/
-
-
-
-		for (String f2 : files2) {
-			int coupleIndex = Integer.valueOf(f2);
-			String deltaFileName = null;// = "DeltaVI-XML_07-05-11_15-16-26.xml";
-			boolean first = true;
-			String viXML1FileName = null;
-			String viXML2FileName = null;
-			for(String f : new File(filePath+f2).list()) {
-				File fi = new File(filePath+f2+"/"+f);
-//				System.out.println("f = " + f);
-				if ("delta".equals(fi.getName())) {
-					deltaFileName = "delta/" +fi.list()[0];
-//					System.out.println(deltaFileName);
-				}
-				else if (first){
-					viXML1FileName = f;
-					first = false;
-				}
-				else if ((f.compareTo(viXML1FileName) < 0)) {
-					viXML2FileName = viXML1FileName;
-					viXML1FileName = f;
-				}
-				else 
-					viXML2FileName = f;
-			}
-
-			//On crée une instance de SAXBuilder
-			//SAXBuilder sxb = new SAXBuilder();
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			try
-			{
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				documentDelta = builder.parse(new File(filePath+f2+"/" + deltaFileName));
-				//System.out.println(filePath+f2+"/" + viXML1FileName);
-				documentViXML1 = builder.parse(new File(filePath+f2+"/" + viXML1FileName));
-				documentViXML2 = builder.parse(new File(filePath+f2+"/" + viXML2FileName));
-				//On crée un nouveau document JDOM avec en argument le fichier XML
-				//Le parsing est terminé ;)
-				//documentDelta = sxb.build(new File(filePath + deltaFileName));
-				//documentViXML1 = sxb.build(new File(filePath + viXML1FileName));
-				//documentViXML2 = sxb.build(new File(filePath + viXML2FileName));
-			}
-			catch(Exception e){}
-
-			//On initialise un nouvel élément racine avec l'élément racine du document.
-			//rootDelta = documentDelta.getDocumentElement();
-			rootViXML1 = documentViXML1.getDocumentElement();
-			rootViXML2 = documentViXML2.getDocumentElement();
-
-
-//			System.out.println("same structure : " + sameStructure(rootViXML1, rootViXML2));
-//			System.out.println("delete : " + containsDelete(rootDelta));
-//			System.out.println("insert : " + containsInsert(rootDelta));
-//			System.out.println("update : " + containsUpdate(rootDelta));
-//			System.out.println("total nb deleted blocks : " + nbDelete(rootDelta));
-//			System.out.println("total nb inserted blocks : " + nbInsert(rootDelta));
-//			System.out.println("total nb updated blocks : " + nbUpdate(rootDelta));
-//			System.out.println("not feature : nb node blocks viXML1 : " + nbNodeBlocks(rootViXML1));
-//			System.out.println("not feature : nb node blocks viXML2 : " + nbNodeBlocks(rootViXML2));
-//
-//			System.out.println("noDeleteNorInsert : " + noInsertionNorDeletion(rootDelta));
-//			System.out.println("has links vixml1 : " + containsLinks(rootViXML1));
-//			System.out.println("has links vixml2 : " + containsLinks(rootViXML2));
-//			System.out.println("has images vixml1 : " + containsImages(rootViXML1));
-//			System.out.println("has images vixml2 : " + containsImages(rootViXML2));
-//			System.out.println("jaccard index links : " + JaccardIndexLinks(rootViXML1, rootViXML2, false));
-//			System.out.println("jaccard index images : " + JaccardIndexImages(rootViXML1, rootViXML2, false));
-//			System.out.println("jaccard index ID links : " + JaccardIndexLinks(rootViXML1, rootViXML2, false));
-//			System.out.println("jaccard index ID images : " + JaccardIndexImages(rootViXML1, rootViXML2, false));
-//			System.out.println("maxRatioDelete : " + maxRatioDelete(rootDelta, rootViXML1, rootViXML2));
-//			System.out.println("minRatioDelete : " + minRatioDelete(rootDelta, rootViXML1, rootViXML2));
-//			System.out.println("maxRatioUpdate : " + maxRatioUpdate(rootDelta, rootViXML1, rootViXML2));
-//			System.out.println("minRatioUpdate : " + minRatioUpdate(rootDelta, rootViXML1, rootViXML2));
-//			System.out.println("maxRatioInsert : " + maxRatioInsert(rootDelta, rootViXML1, rootViXML2));
-//			System.out.println("minRatioInsert : " + minRatioInsert(rootDelta, rootViXML1, rootViXML2));
-//			System.out.println("total nbblocks : " + nbBlocks(rootViXML1));
-//			System.out.println("containsstring : " +  containsStringAdvertisement(rootDelta, "Block", "Insert", "link"));
-//			System.out.println("nb links that are not advertisements " + nbChooseAdvertisement(rootViXML1, "link", false));
-//			System.out.println("nb links that can be advertisements " + nbChooseAdvertisement(rootViXML1, "link", true));
-
-
-
-/*
-
-			tableSameStructure[coupleIndex-1] = sameStructure(rootViXML1, rootViXML2)?1:0;
-			tableContainsDelete[coupleIndex-1] = containsDelete(rootDelta)?1:0;
-			tableContainsInsert[coupleIndex-1] = containsInsert(rootDelta)?1:0;
-			tableContainsNoDeleteNorInsert[coupleIndex-1] = noInsertionNorDeletion(rootDelta)?1:0;
-			tableContainsUpdate[coupleIndex-1] = containsUpdate(rootDelta)?1:0;
-			tableNbDeletedBlocks[coupleIndex-1] = nbDelete(rootDelta);
-			tableNbInsertedBlocks[coupleIndex-1] = nbInsert(rootDelta);
-			tableNbUpdatedBlocks[coupleIndex-1] = nbUpdate(rootDelta);
-
-			tableNbDeleteAllTree[coupleIndex-1] = nbDeleteAllTree(rootDelta);
-			tableNbInsertAllTree[coupleIndex-1] = nbInsertAllTree(rootDelta);
-			tableNbUpdateAllTree[coupleIndex-1] = nbUpdateAllTree(rootDelta);
-
-			tableSourceContainsLinks[coupleIndex-1] = containsLinks(rootViXML1)?1:0;
-			tableVersionContainsLinks[coupleIndex-1] =  containsLinks(rootViXML2)?1:0;
-			tableSourceContainsImages[coupleIndex-1] =  containsImages(rootViXML1)?1:0;
-			tableVersionContainsImages[coupleIndex-1] = containsImages(rootViXML1)?1:0;*/
-			tableJaccardIndexLinks[coupleIndex-1] = JaccardIndexLinks(rootViXML1, rootViXML2, false,"Adr");
-			tableJaccardIndexImages[coupleIndex-1] = JaccardIndexImages(rootViXML1, rootViXML2, false,"Img");
-			/*tableJaccardIndexIDLinks[coupleIndex-1] = JaccardIndexIDLinks(rootViXML1, rootViXML2, false);
-			tableJaccardIndexIDImages[coupleIndex-1] = JaccardIndexIDImages(rootViXML1, rootViXML2, false);
-			tableMaxRatioDelete[coupleIndex-1] = maxRatioDelete(rootDelta, rootViXML1, rootViXML2);
-			tableMinRatioDelete[coupleIndex-1] = minRatioDelete(rootDelta, rootViXML1, rootViXML2);
-			tableMaxRatioUpdate[coupleIndex-1] = maxRatioInsert(rootDelta, rootViXML1, rootViXML2);
-			tableMinRatioUpdate[coupleIndex-1] = minRatioUpdate(rootDelta, rootViXML1, rootViXML2);
-			tableMaxRatioInsert[coupleIndex-1] = maxRatioInsert(rootDelta, rootViXML1, rootViXML2);
-			tableMinRatioInsert[coupleIndex-1] = minRatioInsert(rootDelta, rootViXML1, rootViXML2);
-
-			nbBlocksSourceUpperBounded[coupleIndex-1] = nbBlocksUpperBounded(rootViXML1);
-			nbBlocksVersionUpperBounded[coupleIndex-1] = nbBlocksUpperBounded(rootViXML2);*/
-
-		}
-
-/*
-//		printTable(tableSameStructure, "same structure");
-		writeTable(tableSameStructure, repM);
-//		printTable(tableContainsUpdate, "contains update");
-		writeTable(tableContainsUpdate, repM);
-//		printTable(tableContainsDelete, "contains delete");
-		writeTable(tableContainsDelete, repM);
-//		printTable(tableContainsInsert, "contains insert");
-		writeTable(tableContainsInsert, repM);
-
-
-//		printTable(tableNbUpdateAllTree, "nb update in all tree");
-		writeTable(tableNbUpdateAllTree, repM);
-//		printTable(tableNbDeleteAllTree, "nb Delete in all tree");
-		writeTable(tableNbDeleteAllTree, repM);
-//		printTable(tableNbInsertAllTree, "nb insert in all tree");
-		writeTable(tableNbInsertAllTree, repM);
-//		printTable(tableContainsNoDeleteNorInsert, "contains no delete nor insert");
-		writeTable(tableContainsNoDeleteNorInsert, repM);
-//		printTable(tableNbDeletedBlocks, "nb deleted blocks");
-		writeTable(tableNbDeletedBlocks, repM);
-//		printTable(tableNbInsertedBlocks, "nb inserted blocks");
-		writeTable(tableNbInsertedBlocks, repM);
-//		printTable(tableNbUpdatedBlocks, "nb updates blocks");
-		writeTable(tableNbUpdatedBlocks, repM);
-
-//		printTable(tableSourceContainsLinks, "Source contains links");
-		writeTable(tableSourceContainsLinks, repM);
-//		printTable(tableVersionContainsLinks, "Version contains links");
-		writeTable(tableVersionContainsLinks, repM);
-//		printTable(tableSourceContainsImages, "Source contains images");
-		writeTable(tableSourceContainsImages, repM);
-//		printTable(tableVersionContainsImages, "Version contains images");
-		writeTable(tableVersionContainsImages, repM);
-		*/
-//		printTable(tableJaccardIndexLinks, "jaccard index of links between source and version");
-		writeTable(tableJaccardIndexLinks, repM);
-//		printTable(tableJaccardIndexImages, "jaccard index of images between source and version");
-		writeTable(tableJaccardIndexImages, repM);/*
-//		printTable(tableJaccardIndexIDLinks, "jaccard index of ID links between source and version");
-		writeTable(tableJaccardIndexIDLinks, repM);
-//		printTable(tableJaccardIndexIDImages, "jaccard index of ID images between source and version");
-		writeTable(tableJaccardIndexIDImages, repM);
-		
-//		printTable(tableMaxRatioDelete, "max ratio delete");
-		writeTable(tableMaxRatioDelete, repM);
-//		printTable(tableMinRatioDelete, "min ratio delete");
-		writeTable(tableMinRatioDelete, repM);
-//		printTable(tableMaxRatioUpdate, "max ratio update");
-		writeTable(tableMaxRatioUpdate, repM);
-//		printTable(tableMinRatioUpdate, "min ratio update");
-		writeTable(tableMinRatioUpdate, repM);
-//		printTable(tableMaxRatioInsert, "max ratio insert");
-		writeTable(tableMaxRatioInsert, repM);
-//		printTable(tableMinRatioInsert, "min ratio insert");
-		writeTable(tableMinRatioInsert, repM);
-		
-//		printTable(nbBlocksSourceUpperBounded, "nb blocks in source");
-		writeTable(nbBlocksSourceUpperBounded, repM);
-//		printTable(nbBlocksVersionUpperBounded, "nb blocks in version");
-		writeTable(nbBlocksVersionUpperBounded, repM);*/
-	}
 
 	public static void printTable(int[] table, String s){
 		System.out.print(s + " :");
@@ -694,6 +571,29 @@ public class XMLDescriptors {
 		}
 		return result;
 	}
+	
+	public static HashMap<String, Double> getLinksOrImageMap(Element e, boolean split, String tag, String attribute){
+		HashMap<String, Double> result = new HashMap<String, Double>();
+		NodeList l = e.getElementsByTagName(tag);
+		final int length = l.getLength();
+		for (int i = 0 ; i < length ; ++i){
+			String address = ((Element)l.item(i)).getAttribute(attribute);
+			if (split) {
+				address = address.replace("http://im1c5.internetmemory.org", "");
+				address = address.replace("http://webarchive.nationalarchives.gov.uk","");
+				/*String[] s = address.split("://");
+				address = s[s.length-1];*/
+			}
+			
+			if(result.containsKey(address))
+				result.put(address, result.get(address)+1);
+			else 
+				result.put(address, (double) 1);
+			
+			
+		}
+		return result;
+	}
 
 	public static Hashtable<String, Integer> getLinks(Element e, boolean split){
 		return getLinksOrImage(e, split, "links", "Adr");
@@ -718,7 +618,23 @@ public class XMLDescriptors {
 		}
 		return ((double)nbCommon)/a;
 	}
+	
+	public static double CosineIndex(Element e1, Element e2, boolean split, String tag, String attribute){
+		HashMap<String, Double> hash1 = getLinksOrImageMap(e1, split, tag, attribute);
+		HashMap<String, Double> hash2 = getLinksOrImageMap(e2, split, tag, attribute);
+		if(!hash1.isEmpty()  && !hash2.isEmpty())
+			return CosineSimilarity.calculateCosineSimilarity(hash1, hash2);
+		return -1000;
+	}
 
+	public static double CosineIndexLinks(Element e1, Element e2, boolean split,String attr){
+		return CosineIndex(e1, e2, split, "link", attr);
+	}
+	
+	public static double CosineIndexImages(Element e1, Element e2, boolean split,String attr){
+		return CosineIndex(e1, e2, split, "img", attr);
+	}
+	
 	public static double JaccardIndexLinks(Element e1, Element e2, boolean split,String attr){
 		return JaccardIndex(e1, e2, split, "link", attr);
 	}

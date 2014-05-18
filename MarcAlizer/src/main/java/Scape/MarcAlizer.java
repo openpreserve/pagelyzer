@@ -150,8 +150,10 @@ public class MarcAlizer {
 	public double run(String fichierXml1, String fichierXml2){
 		/* create the visual couple feature descriptors */
 		ArrayList<Double> pairDesc = new ArrayList<Double> ();
-		XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc);
-		return run(pairDesc);
+		boolean sameblocknumber = XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc);
+		if(sameblocknumber)
+			return run(pairDesc);
+		else return -5000; //structural change dissimilar 
 	}
 	/**
 	 * 
@@ -166,9 +168,15 @@ public class MarcAlizer {
 		/* create the visual couple feature descriptors */
 
 			ArrayList<Double> pairDesc = new ArrayList<Double> ();
-			create_features_visual(image1,image2,pairDesc);
-			XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc);
-			return run(pairDesc);
+			
+			boolean sameblocknumber = XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc);
+			
+			if(sameblocknumber)
+			{	create_features_visual(image1,image2,pairDesc);
+				return run(pairDesc);
+			}
+			else return -5000;
+			
 	
 	
 	}
