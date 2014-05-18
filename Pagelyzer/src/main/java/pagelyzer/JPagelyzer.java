@@ -131,7 +131,7 @@ public class JPagelyzer {
     	displayoptions.addOption("url1",true,"First URL to compra");
     	displayoptions.addOption("url2",true,"Second URL to compare");
     	displayoptions.addOption("config",true,"Global configuration file for an example of file: https://github.com/openplanets/pagelyzer/blob/master/config.xml");
-    	displayoptions.addOption("mode",true,"hybrid/content/image it can be also set in config file");
+    	//displayoptions.addOption("mode",true,"hybrid/content/image it can be also set in config file");
 
         CommandLineParser parser = new BasicParser();
         CommandLine cmd;
@@ -152,12 +152,7 @@ public class JPagelyzer {
 			e.printStackTrace();
 		}
         
-		if(displayoptions.getOption("mode").getValue()!=null)
-			
-			comparemode= displayoptions.getOption("mode").getValue();
-		else 
-        
-			comparemode = this.config.getString("pagelyzer.run.default.comparison.mode");
+		comparemode = this.config.getString("pagelyzer.run.default.comparison.mode");
 		
 		
 		cfile = config.getString("pagelyzer.run.default.comparison.subdir")+ "ex_" + config.getString("pagelyzer.run.default.comparison.mode") +".xml";
@@ -300,31 +295,24 @@ public class JPagelyzer {
     
     public double CallMarcalizerResult(Capture capture1, Capture capture2) throws FileNotFoundException
     {
-    	double result=-100; // error code
+       	 double result=-100; // error code
     	
-    	if( capture1.result!=null && capture2.result!=null)
-	        {
-	       
-	        	
-	        	 switch (comparemode) {
-	        	 case MODE_IMAGE     :
-	        		
-	            		result = marcalizer.run(capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
-	             		break;
-	        	 case MODE_CONTENT  : 
-	        		// result = marcalizer.run(new Scanner(new File("/home/pehlivanz/SCAPE_ZP/Roc/page3_1.png.xml")).useDelimiter("\\Z").next(),new Scanner(new File("/home/pehlivanz/SCAPE_ZP/Roc/page3_2.png.xml")).useDelimiter("\\Z").next());
-	            	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML);
-	 				   break;
-	        	 case MODE_HYBRID     : 
-	            	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML,capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
-	 				   break;   
-	 	 
-	         }
-	        }
-			 else
-		     {
-		     	System.out.println("ERROR not able to get captures for " + url1  + " and " + url2 );
-		     }
+    	 switch (comparemode) {
+    	 case MODE_IMAGE     :
+    		
+        		result = marcalizer.run(capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
+         		break;
+    	 case MODE_CONTENT  : 
+    		// result = marcalizer.run(new Scanner(new File("/home/pehlivanz/SCAPE_ZP/Roc/page3_1.png.xml")).useDelimiter("\\Z").next(),new Scanner(new File("/home/pehlivanz/SCAPE_ZP/Roc/page3_2.png.xml")).useDelimiter("\\Z").next());
+        	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML);
+			   break;
+    	 case MODE_HYBRID     : 
+        	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML,capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
+			   break;   
+ 
+     }
+   
+
     	
     	return result;
     }
