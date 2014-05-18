@@ -45,7 +45,7 @@ public class XMLDescriptors {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			//documentDelta  = builder.parse(fichierDelta);
 			// This was used for the files created already on the disk by using VIPS
-			if(false)
+			/*if(false)
 			{
 				documentViXML1 = builder.parse(new File(fichierXml1)); // for test
 				documentViXML2 = builder.parse(new File(fichierXml2));
@@ -53,10 +53,10 @@ public class XMLDescriptors {
 			else // coming from pagelyzer
 			{	
 			
-			
+			*/
 				documentViXML1 = builder.parse(new InputSource(new StringReader(fichierXml1)));
 				documentViXML2 = builder.parse(new InputSource(new StringReader(fichierXml2)));
-			}
+			//}
 			//Le parsing est terminé ;)
 		}
 		catch(Exception e){
@@ -219,8 +219,7 @@ public class XMLDescriptors {
 		    		if(toadd != -1000)
 		    			resultoverblocks += toadd;
 		    		else 
-		    			{//System.out.println("ERROR  ******************************");
-		    			 resultoverblocks += 1;}
+		    			 resultoverblocks += 1;
 		    		
 		    	}
 		    	else
@@ -229,7 +228,7 @@ public class XMLDescriptors {
 		    		if(toadd != -1000)
 		    			resultoverblocks += toadd;
 		    		else 
-		    			{//System.out.println("ERROR  ******************************");
+		    			{
 		    			 resultoverblocks += 1;}
 		    	}
 	    	}
