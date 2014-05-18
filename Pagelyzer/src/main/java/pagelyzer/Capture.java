@@ -39,7 +39,12 @@
 
 package pagelyzer;
 
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,12 +54,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
+
 import org.apache.commons.configuration.XMLConfiguration;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.*;
 
@@ -206,8 +217,10 @@ public class Capture {
             String jqueryJS = "";
             String polyKJS = "";
             String cryptoJS = "";
-                    
+
             System.out.println("getting data using driver: "+this.browser.desc);
+      
+
             
             if (segmentation) {
                 if ((config.getString("pagelyzer.run.internal.server.remote.url")==null)) {
@@ -227,11 +240,34 @@ public class Capture {
                 this.browser.driver.get(url);
                 String title = this.browser.driver.getTitle();
                 result.srcHTML = this.browser.driver.getPageSource();
-                
                 System.out.println("title: "+title);
+               
                 if (screenshot) {
                     result.image =  ((TakesScreenshot)this.browser.driver).getScreenshotAs(OutputType.BYTES);
+                  /*  
+                   * To take a caption a specific element to have less noise but it is costy
+                  
+                    InputStream in = new ByteArrayInputStream(result.image);
+        			BufferedImage fullImg = ImageIO.read(in);
+        			WebElement ele = this.browser.driver.findElement(By.tagName("body")); 
+	                //Get the location of element on the page
+	                 org.openqa.selenium.Point point = ele.getLocation();
+	                  //Get width and height of the element
+	                  int eleWidth = ele.getSize().getWidth();
+	                  int eleHeight = ele.getSize().getHeight();
+	                  //Crop the entire page screenshot to get only element screenshot
+	                  BufferedImage eleScreenshot= fullImg.getSubimage(point.getX(), point.getY(), eleWidth,
+	                      eleHeight);
+	            
+	                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	              	ImageIO.write( eleScreenshot, "png", baos );
+	              	baos.flush();
+	              	result.image = baos.toByteArray();
+	              	baos.close();
+                  */
+                    
                 }
+                
                 if (segmentation) {
                     if (local) {
                         server = new ServerLyzer(config);
@@ -251,7 +287,6 @@ public class Capture {
                    
                     System.out.println("Using BoM algorithm v"+bomversion + " pAC=" + config.getString("bom.granularity"));
                     result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + config.getString("bom.granularity") + "," + config.getString("bom.separation")+ ",false)");
-
 
                     //result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + Capture.granularity + ",50,false);");
                     //if (config.getLogic("pagelyzer.debug.screenshots.active")) {

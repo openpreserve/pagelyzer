@@ -41,9 +41,11 @@ public class Train {
 			
 			while(r.ready()) {
 				String []l=r.readLine().split("\t"); // 0 = url1, 1 = url2, 2 = label
-		        System.out.println(l[0]);
-	            System.out.println(l[1]);
-		        pagelyzer.changeDetection(l[0], l[1], l[2]);
+		       // System.out.println(l[0]);
+	           // System.out.println(l[1]);
+	           // System.out.println(l[2]);
+
+		        pagelyzer.changeDetection(l[0], l[1],l[2]);
 	
 	            
 			}

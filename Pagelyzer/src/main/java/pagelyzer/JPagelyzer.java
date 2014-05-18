@@ -47,8 +47,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -72,7 +75,7 @@ public class JPagelyzer {
 
      Options displayoptions = new Options();
      public String comparemode ;// public to use in test
-     String cfile;
+     public String cfile;
      Boolean isDebugActive = false;
      String debugfilePattern;
      String debugPathtoSave ;
@@ -81,7 +84,7 @@ public class JPagelyzer {
      boolean segmentation;
      boolean isTrain;
      ScapeTrain sc ;
-     MarcAlizer marcalizer;
+     public MarcAlizer marcalizer;
      public String browser1;
      public  String browser2; // public to use in test
      int idcounter = 0; // to count how many time change detection called and use this counter as id to save files if debug mode is on
@@ -158,6 +161,8 @@ public class JPagelyzer {
 		
 		
 		cfile = config.getString("pagelyzer.run.default.comparison.subdir")+ "ex_" + config.getString("pagelyzer.run.default.comparison.mode") +".xml";
+		this.config.setProperty("pagelyzer.run.default.comparison.file","ex_"+comparemode+".xml");
+		
 		isDebugActive =  config.getBoolean("pagelyzer.debug.screenshots.active");
 		debugfilePattern = config.getString("pagelyzer.debug.screenshots.filepattern");
 		debugPathtoSave = config.getString("pagelyzer.debug.screenshots.path");
@@ -165,8 +170,6 @@ public class JPagelyzer {
 		browser1 = config.getString("pagelyzer.run.default.parameter.browser1");
 		browser2 = config.getString("pagelyzer.run.default.parameter.browser2");
 		
-		
-		this.config.setProperty("pagelyzer.run.default.comparison.file","ex_"+comparemode+".xml");
 		
 		if(isTrain)
 		{
@@ -295,18 +298,21 @@ public class JPagelyzer {
     }
     
     
-    public double CallMarcalizerResult(Capture capture1, Capture capture2)
+    public double CallMarcalizerResult(Capture capture1, Capture capture2) throws FileNotFoundException
     {
     	double result=-100; // error code
+    	
     	if( capture1.result!=null && capture2.result!=null)
 	        {
 	       
 	        	
 	        	 switch (comparemode) {
 	        	 case MODE_IMAGE     :
+	        		
 	            		result = marcalizer.run(capture1.result.getBufferedImage(), capture2.result.getBufferedImage());
 	             		break;
 	        	 case MODE_CONTENT  : 
+	        		// result = marcalizer.run(new Scanner(new File("/home/pehlivanz/SCAPE_ZP/Roc/page3_1.png.xml")).useDelimiter("\\Z").next(),new Scanner(new File("/home/pehlivanz/SCAPE_ZP/Roc/page3_2.png.xml")).useDelimiter("\\Z").next());
 	            	   result = marcalizer.run(capture1.result.viXML,capture2.result.viXML);
 	 				   break;
 	        	 case MODE_HYBRID     : 
@@ -328,8 +334,9 @@ public class JPagelyzer {
     * @param url1 the first web page
     * @param url2 the second web page
      * @return 
+     * @throws FileNotFoundException 
     **/
-    public double changeDetection(String url1,String url2, String label) {
+    public double changeDetection(String url1,String url2, String label) throws FileNotFoundException {
     	
     	double result = -100; // train or if it is not train run error code
     	idcounter++;
@@ -337,7 +344,8 @@ public class JPagelyzer {
 	        
 	    Capture capture2 = GetCapture(url2,browser2);
 
-	        if(capture1!=null && capture2!=null)
+	        if(capture1!=null && capture2!=null && capture1.result!=null &&  capture2.result!=null)
+
 	        {
 		        if(isTrain)
 		        {
@@ -357,8 +365,9 @@ public class JPagelyzer {
 	            capture2.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", idcounter + "_2" ));
 	        }
 	        try {  
-	        capture1.cleanup();
-	        capture2.cleanup();
+	        
+	        	capture1.cleanup();
+	        	capture2.cleanup();
 	        
 	        }catch (Exception ex) {
 	        		Logger.getLogger(JPagelyzer.class.getName()).log(Level.SEVERE, null, ex);
@@ -433,7 +442,12 @@ public class JPagelyzer {
          */
          switch(pagelyzer.getConfig().getString("pagelyzer.run.default.parameter.get")) {
              case SCORE:
-                 pagelyzer.changeDetection(pagelyzer.url1,pagelyzer.url2,null); 
+			try {
+				pagelyzer.changeDetection(pagelyzer.url1,pagelyzer.url2,null);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
                  break;
              case SCREENSHOT:
             	 pagelyzer.get(SCREENSHOT,pagelyzer.url);

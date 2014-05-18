@@ -39,13 +39,16 @@
 
 package pagelyzer;
 import com.opera.core.systems.OperaDriver;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.Augmenter;
@@ -113,6 +116,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
                 }
             }
             
+           
             /**
              * Set the selenium driver as local (webdriver instance)
              */
