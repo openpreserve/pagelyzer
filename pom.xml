@@ -12,7 +12,7 @@
     <name>pagelyzer</name>
 
     <description>Compares two web pages</description>    
-    
+
     <modules>
         <module>JDescriptors</module>
         <module>JKernelMachines</module>
@@ -25,6 +25,11 @@
             <id>as</id>
             <name>Andres Sanoja</name>
             <email>sanojaa@lip6.fr</email>
+        </developer>
+        <developer>
+            <id>ml</id>
+            <name>Marc Law</name>
+            <email>lawm@lip6.fr</email>
         </developer>
     </developers>
   
@@ -53,7 +58,8 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-        </plugins>
+    </plugins>
+
     </build>
     
     <properties>
@@ -62,5 +68,5 @@
         <pig.version>0.10.0-cdh3u4</pig.version>
         <jwat.version>1.0.0</jwat.version>
     </properties>
-  
+ 
 </project>
