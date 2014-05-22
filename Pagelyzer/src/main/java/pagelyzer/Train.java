@@ -13,8 +13,8 @@ import java.io.FileReader;
  *	and to create the necessary input for pagelyzer : svm files
  *
  *
- *  First argument shoulb the path to config file same as pagelyzer
- *  Second argument should be a file that has the structure as follows:
+ *  args[0] = First argument should the path to config file same as pagelyzer
+ *  args[1] = Second argument should be a file that has the structure as follows:
  * URL1 \t URL2 \t \ANNOTATION 
  */
 
