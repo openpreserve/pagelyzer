@@ -132,8 +132,11 @@ public class ScapeTrain extends MarcAlizer{
 			System.err.println("You must run the save.");
 		}
 	}
-
-	/* TO TEST TRAINING DIRECTLY 
+	
+	
+	
+/*
+	// TO TEST TRAINING DIRECTLY from files 
 	public static void main(String[] args) {
 		//main_ZP(args);
 		main_Marc(args);
@@ -194,10 +197,10 @@ public class ScapeTrain extends MarcAlizer{
 		}
 		
 		sc.train();
-		sc.saveSVM("/home/pehlivanz/workspace/ext/");
+		sc.saveSVM("/home/pehlivanz/Bureau/SettingsFiles/ext/");
 	}
 
-	
+	/*
 	public static void main_Marc(String[] args) {
 ScapeTrain sc= new ScapeTrain();
 File f = new File(args[0]);
@@ -213,7 +216,7 @@ fr = new FileReader(args[1]);
 r = new BufferedReader(fr);
 }
 catch (FileNotFoundException e) {e.printStackTrace();}
-String parent="/home/pehlivanz/data_doceng/dataset_doceng_2012/";
+String parent="/home/pehlivanz/SCAPE_ZP/Roc/dataset_doceng_2012/";
 System.out.println("parent : " + parent);
 int i=0;
 try {
@@ -245,6 +248,6 @@ e.printStackTrace();
 e.printStackTrace();
 }
 sc.train();
-sc.saveSVM("/home/pehlivanz/workspace/ext/");
+sc.saveSVM("/home/pehlivanz/Bureau/SettingsFiles/ext/");
 }*/
 }
