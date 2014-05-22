@@ -100,7 +100,7 @@ public class SMODensity<T> implements DensityFunction<T>, Serializable {
 
 		C = 1. / size;
 
-		int MAXITE = 1000000;
+		
 		int nChange = 0;
 		boolean bExaminerTout = true;
 
@@ -108,7 +108,7 @@ public class SMODensity<T> implements DensityFunction<T>, Serializable {
 		// On examine les exemples, de préférence ceux qui ne sont pas au bords (qui ne
 		//  sont pas des SV).
 		
-		while ((nChange > 0 || bExaminerTout ) && ite<MAXITE)
+		while (nChange > 0 || bExaminerTout)
 		{
 			nChange = 0;
 			if (bExaminerTout)
