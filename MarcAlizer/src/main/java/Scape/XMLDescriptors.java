@@ -1,5 +1,6 @@
 package Scape;
-import java.io.File;
+
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
@@ -20,57 +21,46 @@ import org.xml.sax.InputSource;
 
 public class XMLDescriptors {
 
-	//static Document documentDelta;
-	//static Document documentViXML1;
-	//static Document documentViXML2;
-
 	static Document documentDelta;
 	static Document documentViXML1;
 	static Document documentViXML2;
-	
+	public static boolean split = true; 
+	// to split the urls like http://archive.org/200924351234/http://anydomaincrawled
+	// after split only the second part of the url with the date is used
+	public static double SVM_VALUE=1;
+	// this value means that if there is no items in blocks like links etc. two blocks are considered as similar
 	public static boolean run(String fichierXml1, String fichierXml2/*, String fichierDelta*/, ArrayList<Double> desc) {
-		// TODO Auto-generated method stub
-		//Element rootDelta;
+		
 		Element rootViXML1;
 		Element rootViXML2;
-
-		//double[] tableJaccardIndex  = new double[2];//Links & Images 
-
-		//On crée une instance de SAXBuilder
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		
 		try
 		{
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			//documentDelta  = builder.parse(fichierDelta);
-			// This was used for the files created already on the disk by using VIPS
-			/*if(false)
-			{
-				documentViXML1 = builder.parse(new File(fichierXml1)); // for test
-				documentViXML2 = builder.parse(new File(fichierXml2));
-			}
-			else // coming from pagelyzer
-			{	
 			
-			*/
-				documentViXML1 = builder.parse(new InputSource(new StringReader(fichierXml1)));
-				documentViXML2 = builder.parse(new InputSource(new StringReader(fichierXml2)));
-			//}
+			// IT was used for the files created already on the disk by using VIPS
+			
+			//	documentViXML1 = builder.parse(new File(fichierXml1)); // for test
+			//	documentViXML2 = builder.parse(new File(fichierXml2));
+			
+			documentViXML1 = builder.parse(new InputSource(new StringReader(fichierXml1)));
+			documentViXML2 = builder.parse(new InputSource(new StringReader(fichierXml2)));
+			
 			//Le parsing est terminé ;)
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 
-		//On initialise un nouvel élément racine avec l'élément racine du document.
+		
 		rootViXML1 = documentViXML1.getDocumentElement();
 		rootViXML2 = documentViXML2.getDocumentElement();
-		//desc.add(JaccardIndexLinks(rootViXML1, rootViXML2, false));
-		//desc.add(JaccardIndexImages(rootViXML1, rootViXML2, false));
-		/*NodeList nodeLstsource = rootViXML1.getElementsByTagName("Block");
+		
+		NodeList nodeLstsource = rootViXML1.getElementsByTagName("Block");
 	    NodeList nodeLstversion = rootViXML2.getElementsByTagName("Block");
-	    if(nodeLstsource.getLength() == nodeLstversion.getLength())
+	    if(nodeLstsource.getLength() == nodeLstversion.getLength() && nodeLstsource.getLength()!=0) // discard pages with no block
 	    {	
 			desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Adr"));// links
 			desc.add(BlockBasedContent(0,nodeLstsource, nodeLstversion,"Name"));// links
@@ -78,112 +68,30 @@ public class XMLDescriptors {
 			desc.add(BlockBasedContent(1,nodeLstsource, nodeLstversion,"Name"));// images
 			desc.add(BlockBasedContent(2,nodeLstsource, nodeLstversion,"Txt"));// Text
 			return true;
-	    }*/
-		
-		desc.add(WithoutBlock(0,rootViXML1, rootViXML2,"Adr"));// links
-		desc.add(WithoutBlock(0,rootViXML1, rootViXML2,"Name"));// links
-		desc.add(WithoutBlock(1,rootViXML1, rootViXML2,"Src"));// images
-		desc.add(WithoutBlock(1,rootViXML1, rootViXML2,"Name"));// images
-		desc.add(WithoutBlock(2,rootViXML1, rootViXML2,"Txt"));// Text
-		
-		if(desc.contains((double)-1000))
-			return false;
-		
-		return true;
-	}
-	
-	private static double WithoutBlock(int type, Element rootViXML1, Element rootViXML2, String atr)
-	{ 
-	    double resultoverblocks = 0;
-
-	    int count = 0;
-	    HashMap<String, Double> temptext1 = null;
-	    HashMap<String, Double> temptext2 = null;
-	    double toadd = 0;
-
-		    	if(type==2) // Txt
-		    	{
-		    
-	
-		    		String text1 = "";
-		    		String text2 = "";
-		    		NodeList txtl = rootViXML1.getElementsByTagName("Txts");
-		    		if(txtl!=null&&txtl.item(0)!=null)
-		    		{
-		    			for(int k=0;k<txtl.getLength();k++)
-		    				text1+=((Element)txtl.item(k)).getAttribute(atr);
-		    			
-		    			temptext1 = CosineSimilarity.getFeaturesFromString(text1);
-		    		}
-		    		
-		    		
-		    		// second document text 
-		    		
-		    		txtl = rootViXML2.getElementsByTagName("Txts");
-		    		if(txtl!=null&&txtl.item(0)!=null)
-		    		{
-		    			for(int k=0;k<txtl.getLength();k++)
-		    				text2+=((Element)txtl.item(k)).getAttribute(atr);
-		    			
-		    			temptext2 = CosineSimilarity.getFeaturesFromString(text2);
-		    		}
-		    		
-		    		
-		    		if(temptext1!=null && temptext2!=null && temptext1.size()!=0 &&temptext2.size()!=0)
-		    			toadd = CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
-		    		if(toadd != -1000)
-		    			resultoverblocks = toadd;
-		    		else 
-		    			{//no image;
-		    			 resultoverblocks = 1;}
-		    		
-		    		
-		    	}
-		    	else if(type==0)
-		    	{
-
-		    		toadd = //JaccardIndexLinks(rootViXML1, rootViXML2, false, atr);//
-		    				CosineIndexLinks(rootViXML1, rootViXML2, true,atr);
-		    		if(toadd != -1000)
-		    			resultoverblocks = toadd;
-		    		else 
-	    			{//no link;
-	    			 resultoverblocks = 1;}
-		    		
-		    	}
-		    	else
-		    	{
-		    		toadd = CosineIndexImages(rootViXML1, rootViXML2, true,atr);
-		    		if(toadd != -1000)
-		    			resultoverblocks = toadd;
-		    		//else resultoverblocks = 1; // most of the  time happens because of segmentation error
-		    		else 
-	    			{
-	    			 resultoverblocks = 1;}
-		    	}
-		    	//resultoverblocks = toadd;
-	    	System.out.println(resultoverblocks);
-	    	
-		return resultoverblocks;
-		
+	    }
+	    
+	    return false;
 		
 	}
+	
+	
+	
 	
 	
 	private static double BlockBasedContent(int type, NodeList nodeLstsource, NodeList nodeLstversion, String atr)
 	{ 
 	    double resultoverblocks = 0;
-
+	    
 	    int count = 0;
 	    HashMap<String, Double> temptext1;
-	    HashMap<String, Double> temptext2;
-	    double toadd;
+	    HashMap<String, Double> temptext2 = null;
+	    double toadd = 0;
 	    for(int i = 0; i< nodeLstsource.getLength();i++ )
 	    {
 	    	
 	    	if(((Element)nodeLstsource.item(i)).getAttribute("ID")!="" ) // 
 	    	{
-	    		count++;
+	    		
 		    
 		    	if(type==2) // Txt
 		    	{
@@ -203,38 +111,34 @@ public class XMLDescriptors {
 		    		txtl = el.getElementsByTagName("Txts");
 		    		
 		    		if(txtl!=null&&txtl.item(0)!=null)
+		    		{
 		    			temptext2 = CosineSimilarity.getFeaturesFromString(((Element)txtl.item(0)).getAttribute(atr));
-		    		else return 0;
+		    			
+		    		}
+		    		else resultoverblocks += SVM_VALUE;
 		    		//System.out.println(temptext1);
 		    		//System.out.println(temptext2);
 		    		//System.out.println(CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2));
-		    		if(temptext1.size()!=0 &&temptext2.size()!=0)
-		    			resultoverblocks+= CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
-	    		
+		    		//if(temptext1.size()!=0 &&temptext2.size()!=0)
+		    		resultoverblocks += CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
+		    		
+
 		    	}
 		    	else if(type == 0)
-		    	{
+		    		resultoverblocks += CosineIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), split,atr);
 
-		    		toadd = CosineIndexLinks((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), true,atr);
-		    		if(toadd != -1000)
-		    			resultoverblocks += toadd;
-		    		else 
-		    			 resultoverblocks += 1;
-		    		
-		    	}
 		    	else
-		    	{
-		    		toadd = CosineIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), true,atr);
-		    		if(toadd != -1000)
-		    			resultoverblocks += toadd;
-		    		else 
-		    			{
-		    			 resultoverblocks += 1;}
-		    	}
+		    		resultoverblocks += CosineIndexImages((Element)nodeLstsource.item(i), (Element)nodeLstversion.item(i), split,atr);
+		    		
+		    	
 	    	}
 	    }
+	   
 	    if(count == 0)
-	    	count = 1;
+	    	return 0.5; // no block detected return 0.5 for training and also for tests
+	   
+	    count = nodeLstsource.getLength() ;
+	   
 		System.out.println(resultoverblocks/(double)count); //+ " -- " + count + " -- " + nodeLstsource.getLength());
 		return resultoverblocks/(double)count;
 		
@@ -577,11 +481,19 @@ public class XMLDescriptors {
 		final int length = l.getLength();
 		for (int i = 0 ; i < length ; ++i){
 			String address = ((Element)l.item(i)).getAttribute(attribute);
-			if (split) {
-				//address = address.replace("http://im1c5.internetmemory.org", "");
-				//address = address.replace("http://webarchive.nationalarchives.gov.uk","");
-				String[] s = address.split("://");
-				address = s[s.length-1];
+			if (split) { // It depends if in the collection links are redirected to links in the archive
+				
+			
+				String[] s = address.split("http://");
+				if(s.length >1) // redirected 
+				{
+					String temp = s[s.length-2];
+					address = s[s.length-1];
+					String[] sredirect = temp.split("/");
+					address =sredirect[sredirect.length-1] +"/" + address  ;
+				}
+				else
+					address = s[s.length-1];
 			}
 			
 			if(result.containsKey(address))
@@ -621,10 +533,10 @@ public class XMLDescriptors {
 	public static double CosineIndex(Element e1, Element e2, boolean split, String tag, String attribute){
 		HashMap<String, Double> hash1 = getLinksOrImageMap(e1, split, tag, attribute);
 		HashMap<String, Double> hash2 = getLinksOrImageMap(e2, split, tag, attribute);
-		if(hash1.isEmpty())
-			hash1.put("no info", 1.0);
-		if (hash2.isEmpty())
-			hash2.put("no info", 1.0);
+		if(hash1.isEmpty()&&hash2.isEmpty())
+			return SVM_VALUE;
+		if(hash1.isEmpty()||hash2.isEmpty())
+			return 0;//dissimilar
 		
 		return CosineSimilarity.calculateCosineSimilarity(hash1, hash2);
 		
@@ -679,3 +591,82 @@ public class XMLDescriptors {
 	}
 
 }
+
+/***** OLD FUNCTION THAT COMPARES WITHOUT BLOCKS************/
+/*private static double WithoutBlock(int type, Element rootViXML1, Element rootViXML2, String atr)
+{ 
+double resultoverblocks = 0;
+
+int count = 0;
+HashMap<String, Double> temptext1 = null;
+HashMap<String, Double> temptext2 = null;
+double toadd = 0;
+
+    	if(type==2) // Txt
+    	{
+    
+
+    		String text1 = "";
+    		String text2 = "";
+    		NodeList txtl = rootViXML1.getElementsByTagName("Txts");
+    		if(txtl!=null&&txtl.item(0)!=null)
+    		{
+    			for(int k=0;k<txtl.getLength();k++)
+    				text1+=((Element)txtl.item(k)).getAttribute(atr);
+    			
+    			temptext1 = CosineSimilarity.getFeaturesFromString(text1);
+    		}
+    		
+    		
+    		// second document text 
+    		
+    		txtl = rootViXML2.getElementsByTagName("Txts");
+    		if(txtl!=null&&txtl.item(0)!=null)
+    		{
+    			for(int k=0;k<txtl.getLength();k++)
+    				text2+=((Element)txtl.item(k)).getAttribute(atr);
+    			
+    			temptext2 = CosineSimilarity.getFeaturesFromString(text2);
+    		}
+    		
+    		
+    		if(temptext1!=null && temptext2!=null && temptext1.size()!=0 &&temptext2.size()!=0)
+    			toadd = CosineSimilarity.calculateCosineSimilarity(temptext1, temptext2);
+    		if(toadd != -1000)
+    			resultoverblocks = toadd;
+    		else 
+    			{//no image;
+    			 resultoverblocks = SVM_VALUE;
+    			 }
+    		
+    		
+    	}
+    	else if(type==0)
+    	{
+
+    		toadd = //JaccardIndexLinks(rootViXML1, rootViXML2, false, atr);//
+    				CosineIndexLinks(rootViXML1, rootViXML2, true,atr);
+    		if(toadd != -1000)
+    			resultoverblocks = toadd;
+    		else 
+			{//no link;
+			 resultoverblocks = SVM_VALUE;}
+    		
+    	}
+    	else
+    	{
+    		toadd = CosineIndexImages(rootViXML1, rootViXML2, true,atr);
+    		if(toadd != -1000)// most of the  time happens because of segmentation error
+    			resultoverblocks = toadd;
+    	
+    		else 
+			{
+			 resultoverblocks = SVM_VALUE;}
+    	}
+    //resultoverblocks = toadd;
+	System.out.println(resultoverblocks);
+	
+return resultoverblocks;
+
+
+}*/
