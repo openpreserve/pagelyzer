@@ -153,7 +153,7 @@ public class MarcAlizer {
 		boolean sameblocknumber = XMLDescriptors.run(fichierXml1, fichierXml2, pairDesc);
 		if(sameblocknumber)
 			return run(pairDesc);
-		else return -5000; //structural change dissimilar 
+		else return -1; //structural change dissimilar 
 	}
 	/**
 	 * 
@@ -175,7 +175,7 @@ public class MarcAlizer {
 			{	create_features_visual(image1,image2,pairDesc);
 				return run(pairDesc);
 			}
-			else return -5000;
+			else return -1;
 			
 	
 	
@@ -239,7 +239,7 @@ public class MarcAlizer {
 			e2.printStackTrace();
 		}
 	}*/
-	
+	/*
 	public static void main(String[] args) {		
 		MarcAlizer sc= new MarcAlizer();
 		sc.init(new File(args[0]), args[1]);
@@ -261,7 +261,7 @@ public class MarcAlizer {
 			e2.printStackTrace();
 		}
 	}
-/*
+
 	public static void main(String[] args) {
 		final String nameListeFile="/home/lechervya/code/MarcAlizer/train/images/labels.txt";
 		ScapeTest sc= new ScapeTest();
