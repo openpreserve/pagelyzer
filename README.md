@@ -25,11 +25,11 @@ SettingsFiles folder is a "must" folder. After downloading it, you can change it
 Then you update the subdir tag in the config file.
 
 
-# Training
+### Training
 
 If you want to define "what is similar" and "what is dissimilar" according to your needs, you can first train the system:
 
----------------------------------------
+
 | parameter 	| description 													|
 | ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
 | config.xml | This is the path to the configuration file. Different examples can be found here: https://github.com/openplanets/pagelyzer/tree/master/Example_configFiles 
@@ -41,12 +41,11 @@ If you want to define "what is similar" and "what is dissimilar" according to yo
 This generates an output file and save it based on the settings on configuration file by "subdir" tag (config.xml). This file contains the information related to decision boundary and SVM and is used for comparison.
 
 
-# Comparison
+### Comparison
 
 We can compare the web pages as follows:
 
 
----------------------------------------
 | parameter 	| arguments 							  	| description 													|
 | ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
 | url1 | URI | First URL |
@@ -63,11 +62,11 @@ not able to decide if the pages are similar or not. It means that the training d
 The suggestion in that case is to train the system again with a bigger dataset. 
 
 
-# Test
+### Test
 
 This section will show you how to make tests with a bunch of url pairs at the same time.
 
----------------------------------------
+
 | parameter 	| description 													|
 | ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
 | test.txt | The path to a file that contains a list of urls that you would like to test URL1 \t URL2
