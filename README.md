@@ -1,8 +1,6 @@
 Pagelyzer 
 ====================================================================
 
-Installation and Configuration Manual - Java (Standalone Version)
-====================================================================
 
 ## Installing Dependencies
 
@@ -75,5 +73,17 @@ This section will show you how to make tests with a bunch of url pairs at the sa
 
     $java  -cp Pagelyzer-libs.jar:Pagelyzer-0.0.1-SNAPSHOT-tests.jar Test test.txt  config.xml results.txt
 
+
+### Configuration file Details 
+
+| Tag 	| Description 							  	| Possible Values 													|
+| ------------ | :----------------------------------------: | ------------------------------------------------------------- |  
+| config:pagelyzer:run:default:parameter:get | String value that tells the sytem what to do | score: to return score; screenshot: just to get screenshots   segmentation: just to do segmentation source: to save html code  |
+| config:pagelyzer:run:default:parameter:browser | default browser | firefox; chrome; opera; |
+| config:pagelyzer:run:default:parameter:browser1 | Browser for the first URL | firefox; chrome; opera;  |
+| config:pagelyzer:run:default:parameter:browser2 | Browser for the second URL | firefox; chrome; opera;  |
+| config:pagelyzer:run:default:parameter:outputfile |  Path to save output for screenshot/source/segmentation | -- |
+| config:pagelyzer:run:default:comparison:mode | Describes the comparison mode | content; hybrid; image;  |
+| config:pagelyzer:run:default:comparison:subdir | Path to ext folder in the SettingsFiles | --  |
 
 
