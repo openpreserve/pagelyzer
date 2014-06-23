@@ -85,5 +85,14 @@ This section will show you how to make tests with a bunch of url pairs at the sa
 | config:pagelyzer:run:default:parameter:outputfile |  Path to save output for screenshot/source/segmentation | -- |
 | config:pagelyzer:run:default:comparison:mode | Describes the comparison mode | content; hybrid; image;  |
 | config:pagelyzer:run:default:comparison:subdir | Path to ext folder in the SettingsFiles | --  |
-
-
+| config:pagelyzer:run:internal:server:remote:url | URL of the remote web server where are located the javascripts injected by selenium   | --  |
+| config:pagelyzer:run:internal:server:local:ip | IP address used by pagelyzer to its internal local web server   | --  |
+| config:pagelyzer:run:internal:server:local:port | Port number used by pagelyzer to its internal local web server   | Default: 8016  |
+| config:pagelyzer:run:internal:server:local:wwwroot | Path used by pagelyzer to its internal local web server   | Default: Current dir  |
+| config:pagelyzer:run:debug:screenshots:active | Activate debuging mode   | Boolean  |
+| config:pagelyzer:run:debug:screenshots:path | Path to store debugging files   | -- |
+| config:pagelyzer:run:debug:screenshots:filepattern | How file should be named   | page#{n}.png becomes page1.png for url1, page2.png for url2 |
+| config:selenium:run:mode | Use Webdriver class (local) or use remote instance (remote)   | local, remote |
+| config:selenium:server:url | URL for the remote instance  | -- |
+| config:bom:granularity | Size of blocks for the web page segmentation  | 0-10 |
+| config:bom:separation | Threshold for separation of blocks for the web page segmentation  | length in pixels |
