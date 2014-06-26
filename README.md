@@ -1,6 +1,17 @@
 Pagelyzer 
 ====================================================================
 
+## Overview of projects
+
+* JKernelMachines: a java library for learning with kernels. It is primary designed to deal with custom kernels that are not easily found in standard libraries, such as kernels on structured data. This library is developed by David Picard and new versions can be found here: https://github.com/davidpicard/jkernelmachines
+
+* JDescriptors: a java library for deffirent color descriptors like SIFT and HSV. This library is developed at LIP6.
+
+* MarcAlizer: a supervised framework. It extracts features to create vectors for training/comparison and calculates the score based on similarities between vectors.  It uses JKernelMachines and JDescriptors.
+
+*  Pagelyzer: Main project that takes the screenshots, does the web segmentation and uses MarcAlizer to return the result.
+
+
 
 ## Installing Dependencies
 
