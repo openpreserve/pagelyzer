@@ -126,7 +126,6 @@ public class MarcAlizer {
 			res = 1;
 		else if(res < -1)
 			res = -1;
-		System.out.println("Distance between the two web-pages:: "+res);
 		return res;		
 	}
 	
@@ -175,7 +174,11 @@ public class MarcAlizer {
 			{	create_features_visual(image1,image2,pairDesc);
 				return run(pairDesc);
 			}
-			else return -1;
+			else 
+			{
+				
+				return -1; //structural change dissimilar 
+			}
 			
 	
 	
@@ -238,8 +241,8 @@ public class MarcAlizer {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-	}*/
-	/*
+	}
+	
 	public static void main(String[] args) {		
 		MarcAlizer sc= new MarcAlizer();
 		sc.init(new File(args[0]), args[1]);
@@ -261,7 +264,7 @@ public class MarcAlizer {
 			e2.printStackTrace();
 		}
 	}
-
+/*
 	public static void main(String[] args) {
 		final String nameListeFile="/home/lechervya/code/MarcAlizer/train/images/labels.txt";
 		ScapeTest sc= new ScapeTest();

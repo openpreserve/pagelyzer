@@ -313,7 +313,7 @@ public class JPagelyzer {
      }
    
 
-    	
+    	System.out.println("Distance between the two web-pages:: "+result);
     	return result;
     }
     
