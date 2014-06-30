@@ -75,7 +75,7 @@ public class CaptureResult {
        /**
    * Used for debugging. Intermediate images.
    */
-   // public byte[] debug;
+    public byte[] debug;
 
     /**
      * Constructor

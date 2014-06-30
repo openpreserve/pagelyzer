@@ -209,7 +209,7 @@ public class Capture {
      * @param segmentation indicates if the segmentation should be done
      * @return CaptureResult the result of the capture
         **/
-        public CaptureResult process(String url,boolean screenshot,boolean segmentation) {
+        public CaptureResult process(String url,boolean screenshot,boolean segmentation, boolean isDebugActive) {
             String serverlink;
             boolean local = true;
             ServerLyzer server = null;
@@ -288,11 +288,11 @@ public class Capture {
                     System.out.println("Using BoM algorithm v"+bomversion + " pAC=" + config.getString("bom.granularity"));
                     result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + config.getString("bom.granularity") + "," + config.getString("bom.separation")+ ",false)");
 
-                    //result.viXML = (String) this.browser.js.executeScript("return startSegmentation(window," + Capture.granularity + ",50,false);");
-                    //if (config.getLogic("pagelyzer.debug.screenshots.active")) {
-                     //   result.debug =  ((TakesScreenshot)this.browser.driver).getScreenshotAs(OutputType.BYTES);
-                    //}
-                    // WHy not to use just image? ZP
+                    
+                    if (isDebugActive) {
+                        result.debug =  ((TakesScreenshot)this.browser.driver).getScreenshotAs(OutputType.BYTES);
+                    }
+                   
                     if (local) {
                         server.stop();
                     }
@@ -338,7 +338,7 @@ public class Capture {
      * @param screenshot indicates if the screenshot should be taken
      * @param segmentation indicates if the segmentation should be done
      */
-    public void run(String url,boolean screenshot,boolean segmentation) {
-            this.result = process(url,screenshot,segmentation);
+    public void run(String url,boolean screenshot,boolean segmentation, boolean isDebugActive) {
+            this.result = process(url,screenshot,segmentation,isDebugActive);
         }
 }
