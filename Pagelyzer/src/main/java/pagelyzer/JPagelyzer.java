@@ -255,12 +255,22 @@ public class JPagelyzer {
     	
     }
     
+    /**
+     * This function returns Capture object that contains image and/or xml file obtained from url1
+     * based on browser used as selenium browser type
+     * 
+     * @param url1 : Url to get the capture ( to get screenshot, to do web segmentation depending on comparison mode)
+     * @param browser: Browser name (ex: "firefox", "chrome")
+     * @return Capture object
+     */
+    
+    
     public Capture GetCapture(String url1, String browser)
     {
     	 Capture capture = new Capture(this.config);
     	 boolean done = capture.setup(browser);
     	 if(done)
-    		 capture.run(url1, screenshot, segmentation); 
+    		 capture.run(url1, screenshot, segmentation,isDebugActive); 
     	 else 
     	{
     		 System.out.println("Capture GetCapture error : Can not get capture for page " + url1);
@@ -269,6 +279,13 @@ public class JPagelyzer {
     	 return capture;
     }
 
+
+    /**
+     * This function takes two capture for two different Urls and annotation for this pair to train the system.
+     * @param capture1: Capture for url1 can be obtained by calling GetCapture
+     * @param capture2: Capture for url2 can be obtained by calling GetCapture
+     * @param label: annotation "0" dissimilar "1" similar 
+     */
     
     public void CallTrain(Capture capture1, Capture capture2, String label)
     {
@@ -291,6 +308,12 @@ public class JPagelyzer {
     	
     	
     }
+    /**
+     * This function takes two capture for two different Urls and returns the similarity score between them
+     * @param capture1: Capture for url1 can be obtained by calling GetCapture
+     * @param capture2: Capture for url2 can be obtained by calling GetCapture
+     *
+     */
     
     
     public double CallMarcalizerResult(Capture capture1, Capture capture2) throws FileNotFoundException
@@ -312,26 +335,34 @@ public class JPagelyzer {
  
      }
    
-
-    	System.out.println("Distance between the two web-pages:: "+result);
+    	System.out.println("Distance between the two web-pages:: " + result);
+    	
     	return result;
     }
     
     /**
-    * Method to detect the changement on two web pages versions. It prints the score
-    * @param url1 the first web page
-    * @param url2 the second web page
-     * @return 
-     * @throws FileNotFoundException 
+    * Method to detect the changes on two web pages versions. It returns the score
+    * @param url1 the first web page URL
+    * @param url2 the second web page URL
+    * @return score
+    * @throws FileNotFoundException 
     **/
     public double changeDetection(String url1,String url2, String label) throws FileNotFoundException {
     	
     	double result = -100; // train or if it is not train run error code
     	idcounter++;
+    	long startTime = System.currentTimeMillis();
+    	
     	Capture capture1 = GetCapture(url1,browser1 );
-	        
+	    
+    	long endTime   = System.currentTimeMillis();
+    	System.out.println("Capture 1 : " + (endTime - startTime));
+    	startTime = System.currentTimeMillis();
 	    Capture capture2 = GetCapture(url2,browser2);
-
+	    endTime   = System.currentTimeMillis();
+	    System.out.println("Capture 2 : " + (endTime - startTime));
+	    
+	    startTime = System.currentTimeMillis();
 	        if(capture1!=null && capture2!=null && capture1.result!=null &&  capture2.result!=null)
 
 	        {
@@ -346,11 +377,14 @@ public class JPagelyzer {
 		            
 		        }
 	      
-	        	
+		        endTime   = System.currentTimeMillis(); 	
+		       
 		    if (isDebugActive && capture1.result!=null && capture2.result!=null) {
-	          
-	            capture1.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", idcounter + "_1" ));
-	            capture2.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", idcounter + "_2" ));
+		    	long timestamp = System.currentTimeMillis();
+	            capture1.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", timestamp + "_1" ));
+	            capture2.result.saveDebugFile(debugPathtoSave + "/" + debugfilePattern.replace("#{n}", timestamp + "_2" ));
+	            System.out.println("timestamp:" + timestamp);
+	            
 	        }
 	        try {  
 	        
@@ -366,7 +400,9 @@ public class JPagelyzer {
     }
     
     /**
-     * Method to call functionalities
+     * Method to call different functionalities of pagelyzer. If you want to just get screenshot of the pages
+     * or just get web page segmentation result  or just to save source code of the URL. 
+     * Target is usually set in config file  "pagelyzer.run.default.parameter.get" tag
      * @param target extra functionality. It can be: screenshot, segmentation, source
      * @param url the web page to process
      */
@@ -374,9 +410,9 @@ public class JPagelyzer {
         Capture capture = new Capture(config);
         capture.setup(this.config.getString("pagelyzer.run.default.parameter.browser"));
         switch(target) {
-            case SCREENSHOT   : capture.run(url,true,false);break;
-            case SEGMENTATION : capture.run(url,false,true);break;
-            case SOURCE       : capture.run(url,false,false);break;
+            case SCREENSHOT   : capture.run(url,true,false,isDebugActive);break;
+            case SEGMENTATION : capture.run(url,false,true,isDebugActive);break;
+            case SOURCE       : capture.run(url,false,false,isDebugActive);break;
         }
         CaptureResult result = capture.result;
 
@@ -415,6 +451,7 @@ public class JPagelyzer {
     }
     
     /**
+     * Main function to create JPagelyzer object based on config file settings
     * @param args the command line arguments
      * @throws URISyntaxException 
     **/
